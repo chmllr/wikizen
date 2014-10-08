@@ -1,8 +1,8 @@
 WikiZen
 =======
 
-> "Like all magnificent things, 
->  it's very simple."
+> "Like all magnificent things,  
+>  it's very simple."  
 > -- _Natalie Babbitt_
 
 WikiZen is a minimal Markdown-based wiki engine for simple and beautiful Wikis.
