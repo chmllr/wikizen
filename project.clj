@@ -4,7 +4,8 @@
 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2311"]
-                 [hiccups "0.3.0"]]
+                 [hiccups "0.3.0"]
+                 [garden "1.2.1"]]
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]
             [lein-simpleton "1.3.0"]]
