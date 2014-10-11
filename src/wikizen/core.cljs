@@ -1,5 +1,9 @@
-(ns wikizen.core)
+(ns wikizen.core
+  (:require
+    [goog.dom :as dom]
+    [wikizen.ui :as ui]))
 
 (enable-console-print!)
 
-(println "Hello world!")
+(def app (dom/getElement "app"))
+(aset app "innerHTML" (ui/wiki-page))
