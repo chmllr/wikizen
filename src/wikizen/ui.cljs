@@ -24,7 +24,10 @@
                     (second %)
                     "open-page"
                     (first %)) (butlast title-path)))
-                (second (last title-path))))]
+                (second (last title-path))))
+  [:div {:align "right"} (interpose " &middot; " 
+                  (map #(event-sender % (str % "-page") location)
+                       ["new" "edit" "delete"]))]]
   [:h1 (wiki :title)]
   [:article (.marked js/window (wiki :body))]
   (when-let [children (wiki :children)]

@@ -2,6 +2,7 @@
   (:require
     [goog.dom :as dom]
     [wikizen.tests :as tests] 
+    [wikizen.storage :as storage]
     [wikizen.ui :as ui]
     [wikizen.engine :as engine]))
 
@@ -9,20 +10,7 @@
 
 (def app (dom/getElement "app"))
 
-(def sample-wiki
-  { :name "SampleWiki"
-    :root { :title "Root Page"
-            :body "This is the *page body*. And __this__ is `code`."
-            :children [ { :title "Nested Page 1"
-                          :body "The __content__ of _nested_ page 1"
-                          :children [ { :title "Nested Page 1_1"
-                                        :body "This _is_ a leaf" } ] }
-                        { :title "Nested Page 2"
-                          :body "The __content__ of _nested_ page 2"
-                          :children [ { :title "Nested Page 2_1"
-                                        :body "This _is_ a leaf" } ]} ] } })
-
-(def root (sample-wiki :root))
+(def root ((storage/get-wiki "fake-id") :root))
 
 (defn open-page
   "Opens the specified page"
