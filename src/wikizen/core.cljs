@@ -22,17 +22,25 @@
                           :children [ { :title "Nested Page 2_1"
                                         :body "This _is_ a leaf" } ]} ] } })
 
-(aset app "innerHTML"
-      (let [root (sample-wiki :root)]
+(def root (sample-wiki :root))
+
+(defn open-page
+  "Opens the specified page"
+  [& location]
+  (aset app "innerHTML"
         (ui/wiki-page
-          (engine/get-path root [1 0])
-          root)))
+          location
+          (engine/get-path root (rest location))
+          (engine/get-node root (rest location)))))
 
 (defn send-event
   "Send generic event to the event bus"
   [event-name & args]
-  (apply println "sending event" event-name "with args:" args))
+  (apply println "sending event" event-name "with args:" args)
+  (let [mapping {"open-page" open-page}
+        f (mapping event-name #(println "event" event-name "is unknown"))]
+    (apply f args)))
 
-(println ui/css-code)
+(send-event "open-page" 0)
 
 (tests/run-tests)
