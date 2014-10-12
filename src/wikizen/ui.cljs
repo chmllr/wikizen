@@ -14,5 +14,16 @@
            [:a:hover { :color "#000" }]))
 
 (hiccups/defhtml
-  wiki-page []
-  [:div "Here comes the <a href=>Zen</a>..."])
+  wiki-page [wiki]
+  [:h1 (wiki :title)]
+  [:article (wiki :body)]
+  (when-let [children (wiki :children)]
+    [:div
+     [:hr]
+    [:h4 "Nested Pages"]
+    [:ul
+      (map
+        #(vector :li [:a
+                     {:href ""}
+                      (% :title)])
+        children)]]))

@@ -1,6 +1,6 @@
 (defproject wikizen "0.1.0-SNAPSHOT"
   :description "Simple Markdown-based Wiki engine"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/chmllr/wikizen"
 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2311"]

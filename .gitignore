@@ -10,3 +10,5 @@ pom.xml
 .idea/
 wikizen.iml
 wikizen.js
+.lein-env
+.nrepl-port
