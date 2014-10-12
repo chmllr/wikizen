@@ -1,20 +1,20 @@
 (ns wikizen.ui
   (:require-macros [hiccups.core :as hiccups])
   (:require [hiccups.runtime :as hiccupsrt]
-            [goog.dom :as dom]
-            [garden.core :refer [css]]))
+            [goog.dom :as dom]))
 
-(defonce css-code
-         (css
-           [:body
-            { :font-family "\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif, Georgia"
-             :font-size "1.1em" }]
-           [:a:link { :color "#0a0" }]
-           [:a:visited { :color "#070" }]
-           [:a:hover { :color "#000" }]))
+(defn- event-sender
+  [text event-name event-params]
+  [:a
+   {:href
+     (str "javascript:wikizen.core.send_event('" event-name "',"
+             (clj->js event-params) ")")} text])
 
 (hiccups/defhtml
-  wiki-page [wiki]
+  wiki-page [path wiki]
+  [:code
+   (interpose " / "
+              (map #(event-sender (second %) :open-page (first %)) path))]
   [:h1 (wiki :title)]
   [:article (wiki :body)]
   (when-let [children (wiki :children)]
@@ -23,7 +23,5 @@
     [:h4 "Nested Pages"]
     [:ul
       (map
-        #(vector :li [:a
-                     {:href ""}
-                      (% :title)])
+        #(vector :li (event-sender (% :title) :open-page "ka"))
         children)]]))

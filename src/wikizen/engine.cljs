@@ -10,3 +10,15 @@
       (nth (root :children) (first path))
       (rest path))))
 
+(defn get-path
+  "Returns the traversed path in form of [<index> <title>] pairs"
+  ([root path] (get-path root path []))
+  ([root path acc]
+  (if (empty? path)
+    []
+    (let [index (first path)
+          acc (conj acc index)
+          child (nth (root :children) index)
+          title (:title child)]
+      (cons [acc title]
+            (get-path child (rest path) acc))))))

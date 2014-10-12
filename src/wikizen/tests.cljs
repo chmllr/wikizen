@@ -1,18 +1,15 @@
 (ns wikizen.tests
   (:require [wikizen.engine :as engine]))
 
-(defn- is
-  [argument description]
-  (let [result (= argument true)]
+(defn- eq
+  [expected got description]
+  (let [result (= expected got)]
     (when-not
         result
       (.error js/console
-              (print-str "Test failed:" description)))
+              (print-str "Test failed:" description "->"
+                         "expected:" expected "but got" got)))
     result))
-
-(defn- isnt
-  [argument description]
-  (is (= false argument) description))
 
 (def engine-tests
   (let [root { :title "Root Page"
@@ -22,11 +19,17 @@
                              :children [ { :title "Nested Page 1_1"
                                            :body "This _is_ a leaf" } ] }
                            { :title "Nested Page 2"
-                             :body "The __content__ of _nested_ page 2" } ] }]
-    [(is (= "Root Page" (:title (engine/get-node root []))) "extracting the root page")
-     (is (= "Nested Page 1" (:title (engine/get-node root [0]))) "extracting first child")
-     (is (= "Nested Page 2" (:title (engine/get-node root [1]))) "extracting first child")
-     (is (= "Nested Page 1_1" (:title (engine/get-node root [0 0]))) "extracting first child")
+                             :body "The __content__ of _nested_ page 2"
+                             :children [ { :title "Nested Page 2_1"
+                                           :body "This _is_ a leaf" } ]} ] }]
+    [(eq "Root Page" (:title (engine/get-node root [])) "extracting the root page")
+     (eq "Nested Page 1" (:title (engine/get-node root [0])) "extracting 1sr child")
+     (eq "Nested Page 2" (:title (engine/get-node root [1])) "extracting 1st child")
+     (eq "Nested Page 1_1" (:title (engine/get-node root [0 0])) "extracting 1st child's child")
+     (eq [[[0] "Nested Page 1"]] (engine/get-path root [0]) "get path to 1st child")
+     (eq [[[1] "Nested Page 2"]] (engine/get-path root [1]) "get path to 2nd child")
+     (eq [[[0] "Nested Page 1"] [[0 0] "Nested Page 1_1"]] (engine/get-path root [0 0]) "get path to 1st child's child")
+     (eq [[[1] "Nested Page 2"] [[1 0] "Nested Page 2_1"]] (engine/get-path root [1 0]) "get path to 2nd child's child")
      ]))
 
 (def tests

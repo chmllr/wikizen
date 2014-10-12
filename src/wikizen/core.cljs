@@ -2,19 +2,12 @@
   (:require
     [goog.dom :as dom]
     [wikizen.tests :as tests] 
-    [wikizen.ui :as ui]))
+    [wikizen.ui :as ui]
+    [wikizen.engine :as engine]))
 
 (enable-console-print!)
 
 (def app (dom/getElement "app"))
-
-; add CSS styling
-(let [style-element (dom/createElement "style")]
-  (aset style-element "type" "text/css")
-  (aset style-element "innerHTML" ui/css-code)
-  (dom/appendChild
-    (.-head js/document)
-    style-element))
 
 (def sample-wiki
   { :name "SampleWiki"
@@ -25,9 +18,21 @@
                           :children [ { :title "Nested Page 1_1"
                                         :body "This _is_ a leaf" } ] }
                         { :title "Nested Page 2"
-                          :body "The __content__ of _nested_ page 2" } ] } })
+                          :body "The __content__ of _nested_ page 2"
+                          :children [ { :title "Nested Page 2_1"
+                                        :body "This _is_ a leaf" } ]} ] } })
 
 (aset app "innerHTML"
-      (ui/wiki-page (sample-wiki :root)))
+      (let [root (sample-wiki :root)]
+        (ui/wiki-page
+          (engine/get-path root [1 0])
+          root)))
+
+(defn send-event
+  "Send generic event to the event bus"
+  [event-name & args]
+  (apply println "sending event" event-name "with args:" args))
+
+(println ui/css-code)
 
 (tests/run-tests)
