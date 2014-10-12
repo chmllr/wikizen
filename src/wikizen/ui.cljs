@@ -1,14 +1,8 @@
 (ns wikizen.ui
   (:require-macros [hiccups.core :as hiccups])
   (:require [hiccups.runtime :as hiccupsrt]
-            [goog.dom :as dom]))
-
-(defn- event-sender
-  [text event-name event-params]
-  [:a {:href "#"
-       :onclick (str "javascript:wikizen.core.send_event("
-                     (apply str (interpose "," (cons (str "'" event-name "'") event-params)))
-                     ")")} text])
+            [goog.dom :as dom]
+            [goog.events :as events]))
 
 (hiccups/defhtml
   wiki-page
@@ -16,18 +10,17 @@
   title-path is a vector of [index title] pairs till the current page,
   wiki is the node of current wiki"
   [location title-path wiki]
-  [:code
+  [:div {:style "display: flex; display: -webkit-flex;"}
+   [:code {:style "flex: 2 1 0; -webkit-flex: 2 1 0;"}
    (interpose " / "
               (conj
                 (into [] (map
-                  #(event-sender
-                    (second %)
-                    "open-page"
-                    (first %)) (butlast title-path)))
-                (second (last title-path))))
-  [:div {:align "right"} (interpose " &middot; " 
-                  (map #(event-sender % (str % "-page") location)
-                       ["new" "edit" "delete"]))]]
+                           #(vector :a {:href (str "/open-page?location=" (first %))}
+                                    (second %)) (butlast title-path)))
+                (second (last title-path))))]
+   [:code (interpose " &middot; "
+                                     (map #(vector :a {:href (str "/" % "-page?location=" location)} %)
+                                          ["new" "edit" "delete"]))]]
   [:h1 (wiki :title)]
   [:article (.marked js/window (wiki :body))]
   (when-let [children (wiki :children)]
@@ -38,7 +31,7 @@
       (map
         #(let [[i child] %]
           (vector :li
-                  (event-sender (child :title)
-                                "open-page"
-                                (concat location [i]))))
+                  [:a {:href (str "/open-page?location="
+                                  (concat location [i]))}
+                   (child :title)]))
         (map list (range) children))]]))

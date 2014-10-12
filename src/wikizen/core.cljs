@@ -4,7 +4,9 @@
     [wikizen.tests :as tests] 
     [wikizen.storage :as storage]
     [wikizen.ui :as ui]
-    [wikizen.engine :as engine]))
+    [wikizen.engine :as engine]
+    [cljs.core.async :refer [put! chan <!]])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
 
@@ -12,23 +14,24 @@
 
 (def root ((storage/get-wiki "fake-id") :root))
 
+(def C (chan))
+
 (defn open-page
   "Opens the specified page"
-  [& location]
+  [location]
   (aset app "innerHTML"
         (ui/wiki-page
           location
           (engine/get-path root location)
           (engine/get-node root location))))
 
-(defn send-event
-  "Send generic event to the event bus"
-  [event-name & args]
-  (apply println "sending event" event-name "with args:" args)
-  (let [mapping {"open-page" open-page}
-        f (mapping event-name #(println "event" event-name "is unknown"))]
-    (apply f args)))
+(go (while true
+      (let [{:keys [name params]} (<! C)
+            mapping {"open-page" open-page}
+            f (mapping name #(println "unknonwn event" name "received"))]
+        (println "event" name "received with args:" params)
+        (apply f params))))
 
-(send-event "open-page")
+(put! C {:name "open-page" :params []})
 
 (tests/run-tests)
