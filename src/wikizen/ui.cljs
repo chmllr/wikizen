@@ -26,7 +26,7 @@
                     (first %)) (butlast title-path)))
                 (second (last title-path))))]
   [:h1 (wiki :title)]
-  [:article (wiki :body)]
+  [:article (.marked js/window (wiki :body))]
   (when-let [children (wiki :children)]
     [:div
      [:hr]
