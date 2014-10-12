@@ -30,7 +30,7 @@
   (when-let [children (wiki :children)]
     [:div
      [:hr]
-     [:h4 "Nested Pages"]
+     [:h3 "Nested Pages"]
      [:ul
       (map
         #(let [[i child] %]

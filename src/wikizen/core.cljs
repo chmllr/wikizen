@@ -12,7 +12,7 @@
 (def sample-wiki
   { :name "SampleWiki"
     :root { :title "Root Page"
-            :body "This is the *page body*."
+            :body "This is the *page body*. And __this__ is `code`."
             :children [ { :title "Nested Page 1"
                           :body "The __content__ of _nested_ page 1"
                           :children [ { :title "Nested Page 1_1"
