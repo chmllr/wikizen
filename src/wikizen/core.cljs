@@ -41,7 +41,7 @@
 (go (while true
       (let [{:keys [name params]} (<! C)
             mapping {"load-page" load-page}
-            f (mapping name #(println "unknonwn event" name "received"))]
+            f (mapping name #(println "no handler for event" name "found"))]
         (println "event" name "received with args:" params)
         (f params))))
 

@@ -27,7 +27,7 @@
                             (butlast title-path)))
                  (second (last title-path))))]
    [:code (interpose " &middot; "
-                     (map #(vector :a {:href (str "/" % "-page" location)} %)
+                     (map #(create-link % (str % "-page") location)
                           ["new" "edit" "delete"]))]]
   [:h1 (wiki :title)]
   [:article (.marked js/window (wiki :body))]
