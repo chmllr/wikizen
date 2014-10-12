@@ -1,6 +1,7 @@
 (ns wikizen.core
   (:require
     [goog.dom :as dom]
+    [wikizen.tests :as tests] 
     [wikizen.ui :as ui]))
 
 (enable-console-print!)
@@ -16,13 +17,17 @@
     style-element))
 
 (def sample-wiki
-  { :name SampleWiki
+  { :name "SampleWiki"
     :root { :title "Root Page"
             :body "This is the *page body*."
             :children [ { :title "Nested Page 1"
-                        :body "The __content__ of _nested_ page 1" }
-                      { :title "Nested Page 2"
-                        :body "The __content__ of _nested_ page 2" } ] } })
+                          :body "The __content__ of _nested_ page 1"
+                          :children [ { :title "Nested Page 1_1"
+                                        :body "This _is_ a leaf" } ] }
+                        { :title "Nested Page 2"
+                          :body "The __content__ of _nested_ page 2" } ] } })
 
 (aset app "innerHTML"
       (ui/wiki-page (sample-wiki :root)))
+
+(tests/run-tests)
