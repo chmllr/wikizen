@@ -1,7 +1,8 @@
 (ns wikizen.core
   (:require
     [goog.dom :as dom]
-    [wikizen.tests :as tests] 
+    [goog.events :as events]
+    [wikizen.tests :as tests]
     [wikizen.storage :as storage]
     [wikizen.ui :as ui]
     [wikizen.engine :as engine]
@@ -16,22 +17,34 @@
 
 (def C (chan))
 
-(defn open-page
+(defn load-page
   "Opens the specified page"
   [location]
-  (aset app "innerHTML"
-        (ui/wiki-page
-          location
-          (engine/get-path root location)
-          (engine/get-node root location))))
+  (let [location (if (= "" location)
+                   []
+                   (map js/parseInt
+                        (.split location ",")))]
+    (aset app "innerHTML"
+          (ui/wiki-page
+            location
+            (engine/get-path root location)
+            (engine/get-node root location))))
+  (let [node-list (.getElementsByTagName js/document "a")]
+    (doseq [i (range 0 (.-length node-list))]
+      (let [node (aget node-list i)
+            name (.getAttribute node "data-event")
+            params (.getAttribute node "data-params")]
+        (events/listen node "click"
+                       (fn [e]
+                         (put! C {:name name :params params})))))))
 
 (go (while true
       (let [{:keys [name params]} (<! C)
-            mapping {"open-page" open-page}
+            mapping {"load-page" load-page}
             f (mapping name #(println "unknonwn event" name "received"))]
         (println "event" name "received with args:" params)
-        (apply f params))))
+        (f params))))
 
-(put! C {:name "open-page" :params []})
+(put! C {:name "load-page" :params ""})
 
 (tests/run-tests)
