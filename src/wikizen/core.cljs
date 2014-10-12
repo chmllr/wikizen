@@ -30,8 +30,8 @@
   (aset app "innerHTML"
         (ui/wiki-page
           location
-          (engine/get-path root (rest location))
-          (engine/get-node root (rest location)))))
+          (engine/get-path root location)
+          (engine/get-node root location))))
 
 (defn send-event
   "Send generic event to the event bus"
@@ -41,6 +41,6 @@
         f (mapping event-name #(println "event" event-name "is unknown"))]
     (apply f args)))
 
-(send-event "open-page" 0)
+(send-event "open-page")
 
 (tests/run-tests)

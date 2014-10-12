@@ -26,10 +26,11 @@
      (eq "Nested Page 1" (:title (engine/get-node root [0])) "extracting 1sr child")
      (eq "Nested Page 2" (:title (engine/get-node root [1])) "extracting 1st child")
      (eq "Nested Page 1_1" (:title (engine/get-node root [0 0])) "extracting 1st child's child")
-     (eq [[[0] "Nested Page 1"]] (engine/get-path root [0]) "get path to 1st child")
-     (eq [[[1] "Nested Page 2"]] (engine/get-path root [1]) "get path to 2nd child")
-     (eq [[[0] "Nested Page 1"] [[0 0] "Nested Page 1_1"]] (engine/get-path root [0 0]) "get path to 1st child's child")
-     (eq [[[1] "Nested Page 2"] [[1 0] "Nested Page 2_1"]] (engine/get-path root [1 0]) "get path to 2nd child's child")
+     (eq [[[] "Root Page"]] (engine/get-path root []) "get root path")
+     (eq [[[] "Root Page"] [[0] "Nested Page 1"]] (engine/get-path root [0]) "get path to 1st child")
+     (eq [[[] "Root Page"] [[1] "Nested Page 2"]] (engine/get-path root [1]) "get path to 2nd child")
+     (eq [[[] "Root Page"] [[0] "Nested Page 1"] [[0 0] "Nested Page 1_1"]] (engine/get-path root [0 0]) "get path to 1st child's child")
+     (eq [[[] "Root Page"] [[1] "Nested Page 2"] [[1 0] "Nested Page 2_1"]] (engine/get-path root [1 0]) "get path to 2nd child's child")
      ]))
 
 (def tests
