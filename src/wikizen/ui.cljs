@@ -8,10 +8,22 @@
   [text event params]
   [:a {:href "#"
        :data-event event
-       :data-params (clj->js params)} text])
+       :data-params (.stringify js/JSON (clj->js params))} text])
 
 (hiccups/defhtml
-  wiki-page
+  edit-page
+  "Generates a page with a text area and a preview for
+  editing and creation of pages"
+  [location mode]
+  [:input#title.full-width.input-fields {:type "text"
+                                         :placeholder "Page name"
+                                         :style "font-weight: bold;"}]
+  [:textarea#body.full-width.input-fields {:rows 30}]
+  [:br]
+  (create-link "save" mode location))
+
+(hiccups/defhtml
+  page
   "Generates a wiki page; location is an index vector of the current page,
   title-path is a vector of [index title] pairs till the current page,
   wiki is the node of current wiki"
@@ -27,10 +39,12 @@
                             (butlast title-path)))
                  (second (last title-path))))]
    [:code (interpose " &middot; "
-                     (map #(create-link % (str % "-page") location)
+                     (map #(create-link % (str % "-page")
+                                        {:location location
+                                         :mode %})
                           ["new" "edit" "delete"]))]]
   [:h1 (wiki :title)]
-  [:article (.marked js/window (wiki :body))]
+  [:article#markdown (.marked js/window (wiki :body))]
   (when-let [children (wiki :children)]
     [:div
      [:hr]

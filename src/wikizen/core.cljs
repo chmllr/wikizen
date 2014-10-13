@@ -17,18 +17,9 @@
 
 (def C (chan))
 
-(defn load-page
-  "Opens the specified page"
-  [location]
-  (let [location (if (= "" location)
-                   []
-                   (map js/parseInt
-                        (.split location ",")))]
-    (aset app "innerHTML"
-          (ui/wiki-page
-            location
-            (engine/get-path root location)
-            (engine/get-node root location))))
+(defn- register-listeners
+  "Registers listener on all found links"
+  []
   (let [node-list (.getElementsByTagName js/document "a")]
     (doseq [i (range 0 (.-length node-list))]
       (let [node (aget node-list i)
@@ -38,13 +29,32 @@
                        (fn [e]
                          (put! C {:name name :params params})))))))
 
+(defn load-page
+  "Opens the specified page"
+  [location]
+  (aset app "innerHTML"
+        (ui/page
+          location
+          (engine/get-path root location)
+          (engine/get-node root location)))
+  (register-listeners))
+
+(defn edit-page
+  "Opens the editing mask"
+  [{:strs [location mode]}]
+  (aset app "innerHTML"
+        (ui/edit-page location mode))
+  (register-listeners))
+
 (go (while true
       (let [{:keys [name params]} (<! C)
-            mapping {"load-page" load-page}
+            mapping {"load-page" load-page
+                     "new-page" edit-page}
+            params (js->clj (.parse js/JSON params))
             f (mapping name #(println "no handler for event" name "found"))]
         (println "event" name "received with args:" params)
         (f params))))
 
-(put! C {:name "load-page" :params ""})
+(put! C {:name "load-page" :params "[]"})
 
 (tests/run-tests)
