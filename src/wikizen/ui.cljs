@@ -1,6 +1,7 @@
 (ns wikizen.ui
   (:require-macros [hiccups.core :as hiccups])
   (:require [hiccups.runtime :as hiccupsrt]
+            [wikizen.template-engine :as te]
             [goog.dom :as dom]
             [goog.events :as events]))
 
@@ -10,17 +11,18 @@
        :data-event event
        :data-params (.stringify js/JSON (clj->js params))} text])
 
-(hiccups/defhtml
+(defn
   edit-page
   "Generates a page with a text area and a preview for
   editing and creation of pages"
   [location mode]
-  [:input#title.full-width.input-fields {:type "text"
-                                         :placeholder "Page name"
-                                         :style "font-weight: bold;"}]
-  [:textarea#body.full-width.input-fields {:rows 30}]
-  [:br]
-  (create-link "save" mode location))
+  (te/template->dom
+    [:input#title.full-width.input-fields {:type "text"
+                                           :style {:font-weight "bold"}
+                                           :placeholder "Page name"}]
+    [:textarea#body.full-width.input-fields {:rows 30}]
+    [:br]
+    [:a {:href "#" :onclick (fn [e] (js/alert "hi there"))} "save"]))
 
 (hiccups/defhtml
   page
@@ -28,7 +30,7 @@
   title-path is a vector of [index title] pairs till the current page,
   wiki is the node of current wiki"
   [location title-path wiki]
-  [:div {:style "display: flex; display: -webkit-flex;"}
+  [:div#headbar {:style "display: flex; display: -webkit-flex;"}
    [:code {:style "flex: 2 1 0; -webkit-flex: 2 1 0;"}
     (interpose " / "
                (conj

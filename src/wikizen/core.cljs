@@ -11,7 +11,12 @@
 
 (enable-console-print!)
 
-(def app (dom/getElement "app"))
+(defn display-ui
+  "Puts the specified DOM element into the main container"
+  [fragment]
+  (let [app (dom/getElement "app")]
+    (aset app "innerHTML" "")
+    (.appendChild app fragment)))
 
 (def root ((storage/get-wiki "fake-id") :root))
 
@@ -32,7 +37,7 @@
 (defn load-page
   "Opens the specified page"
   [location]
-  (aset app "innerHTML"
+  (aset (dom/getElement "app") "innerHTML"
         (ui/page
           location
           (engine/get-path root location)
@@ -42,9 +47,8 @@
 (defn edit-page
   "Opens the editing mask"
   [{:strs [location mode]}]
-  (aset app "innerHTML"
-        (ui/edit-page location mode))
-  (register-listeners))
+  (display-ui
+        (ui/edit-page location mode)))
 
 (go (while true
       (let [{:keys [name params]} (<! C)
