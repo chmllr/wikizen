@@ -15,14 +15,21 @@
   edit-page
   "Generates a page with a text area and a preview for
   editing and creation of pages"
-  [location mode]
+  [event-sender location mode]
   (te/template->dom
     [:input#title.full-width.input-fields {:type "text"
                                            :style {:font-weight "bold"}
                                            :placeholder "Page name"}]
     [:textarea#body.full-width.input-fields {:rows 30}]
     [:br]
-    [:a {:href "#" :onclick (fn [e] (js/alert "hi there"))} "save"]))
+    [:a {:href "#"
+         :onclick
+               (fn [e]
+                 (event-sender {:location location
+                                :mode mode
+                                :title (.-value (dom/getElement "title"))
+                                :body (.-value (dom/getElement "body"))}))}
+     "save"]))
 
 (hiccups/defhtml
   page

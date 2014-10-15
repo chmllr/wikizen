@@ -46,19 +46,21 @@
 
 (defn edit-page
   "Opens the editing mask"
-  [{:strs [location mode]}]
+  [location mode]
   (display-ui
-        (ui/edit-page location mode)))
+        (ui/edit-page #(put! C %) location mode)))
 
 (go (while true
-      (let [{:keys [name params]} (<! C)
+      (let [event (<! C)
             mapping {"load-page" load-page
                      "new-page" edit-page}
-            params (js->clj (.parse js/JSON params))
-            f (mapping name #(println "no handler for event" name "found"))]
-        (println "event" name "received with args:" params)
-        (f params))))
+            ;f (mapping event #(println "no handler for event" name "found"))
+            ]
+        (println "event received:" event)
+        #_(f params))))
 
-(put! C {:name "load-page" :params "[]"})
+;(put! C {:name "load-page" :params "[]"})
+
+(edit-page [] "add")
 
 (tests/run-tests)
