@@ -3,6 +3,8 @@
             [goog.dom :as dom]
             [goog.events :as events]))
 
+(def x (te/element->dom [:hr]))
+
 (defn- create-link
   [text event params]
   [:a {:href "#"
@@ -58,7 +60,7 @@
                                            :mode %})
                             ["new" "edit" "delete"]))]]
     [:h1 (wiki :title)]
-    [:article#markdown (identity #_ js/marked (wiki :body))]
+    [:article#markdown (js/marked (wiki :body))]
     (when-let [children (wiki :children)]
       [:div
        [:hr]

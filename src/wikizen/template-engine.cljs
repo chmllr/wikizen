@@ -8,14 +8,15 @@
   (let [sub-tokens (clojure.string/split (name token) #"-")]
     (apply str
            (first sub-tokens)
-           (map #(str (.toUpperCase (.charAt % 0))
-                      (.slice % 1)) (rest sub-tokens)))))
+           (map string/capitalize (rest sub-tokens)))))
 
 (defn- add-content
   "Appends content of an ellemen as DOM children"
   [element content]
   (cond 
-    (string? content) (.appendChild element (.createTextNode js/document content))
+    (string? content) (let [span (dom/createElement "span")]
+                        (aset span "innerHTML" content)
+                        (.appendChild element span))
     (instance? js/HTMLElement content) (.appendChild element content)
     (coll? content) (doseq [part content]
                       (add-content element part))
@@ -27,6 +28,8 @@
   [element]
   (and (vector? element)
        (keyword? (first element))))
+
+(enable-console-print!)
 
 (defn- deep-set
   "Recursively applies a setter"
@@ -56,7 +59,7 @@
             element (dom/createElement tag)]
         ; set props
         (doseq [[prop value] props]
-          (when value
+          (when-not (string/blank? value)
             (deep-set element prop value)))
         ; set contents
         (add-content element contents)
