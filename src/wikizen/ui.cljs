@@ -51,7 +51,7 @@
                                            :mode %})
                             ["new" "edit" "delete"]))]]
     [:h1 (wiki :title)]
-    [:article#markdown (.marked js/window (wiki :body))]
+    [:article#markdown (identity #_ js/marked (wiki :body))]
     (when-let [children (wiki :children)]
       [:div
        [:hr]
