@@ -22,27 +22,14 @@
 
 (def C (chan))
 
-(defn- register-listeners
-  "Registers listener on all found links"
-  []
-  (let [node-list (.getElementsByTagName js/document "a")]
-    (doseq [i (range 0 (.-length node-list))]
-      (let [node (aget node-list i)
-            name (.getAttribute node "data-event")
-            params (.getAttribute node "data-params")]
-        (events/listen node "click"
-                       (fn [e]
-                         (put! C {:name name :params params})))))))
-
 (defn load-page
   "Opens the specified page"
-  [location]
-  (aset (dom/getElement "app") "innerHTML"
-        (ui/page
-          location
-          (engine/get-path root location)
-          (engine/get-node root location)))
-  (register-listeners))
+  [{:keys [location]}]
+  (display-ui 
+    (ui/page #(put! C %)
+             location
+             (engine/get-path root location)
+             (engine/get-node root location))))
 
 (defn edit-page
   "Opens the editing mask"
@@ -51,14 +38,13 @@
         (ui/edit-page location mode)))
 
 (go (while true
-      (let [{:keys [name params]} (<! C)
-            mapping {"load-page" load-page
-                     "new-page" edit-page}
-            params (js->clj (.parse js/JSON params))
-            f (mapping name #(println "no handler for event" name "found"))]
-        (println "event" name "received with args:" params)
-        (f params))))
+      (let [{:keys [id] :as event} (<! C)
+            mapping {:load-page load-page
+                     :edit-page edit-page}
+            f (mapping id #(println "no handler for event" id "found"))]
+        (println "event received:" event)
+        (f event))))
 
-(put! C {:name "load-page" :params "[]"})
+(put! C {:id :load-page :location []})
 
 (tests/run-tests)
