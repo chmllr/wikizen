@@ -33,13 +33,14 @@
 
 (defn edit-page
   "Opens the editing mask"
-  [location mode]
+  [{:keys [location mode]}]
   (display-ui
         (ui/edit-page #(put! C %) location mode)))
 
 (go (while true
       (let [{:keys [id] :as event} (<! C)
             mapping {:load-page load-page
+                     :new-page edit-page
                      :edit-page edit-page}
             f (mapping id #(println "no handler for event" id "found"))]
         (println "event received:" event)

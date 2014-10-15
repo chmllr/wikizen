@@ -5,30 +5,27 @@
 
 (def x (te/element->dom [:hr]))
 
-(defn- create-link
-  [text event params]
-  [:a {:href "#"
-       :data-event event
-       :data-params (.stringify js/JSON (clj->js params))} text])
-
 (defn
   edit-page
   "Generates a page with a text area and a preview for
   editing and creation of pages"
   [event-sender location mode]
   (te/template->dom
-    [:input#title.full-width.input-fields {:type "text"
-                                           :style {:font-weight "bold"}
-                                           :placeholder "Page name"}]
-    [:textarea#body.full-width.input-fields {:rows 30}]
+    [:input#title.full-width.input-fields
+     {:type "text"
+      :style {:font-weight "bold"}
+      :placeholder "Page name"}]
+    [:textarea#body.full-width.input-fields
+     {:rows 30}]
     [:br]
     [:a {:href "#"
          :onclick
                (fn [e]
-                 (event-sender {:location location
-                                :mode mode
-                                :title (.-value (dom/getElement "title"))
-                                :body (.-value (dom/getElement "body"))}))}
+                 (event-sender
+                   {:location location
+                    :id mode
+                    :title (.-value (dom/getElement "title"))
+                    :body (.-value (dom/getElement "body"))}))}
      "save"]))
 
 (defn
@@ -38,26 +35,30 @@
   wiki is the node of current wiki"
   [event-sender location title-path wiki]
   (te/template->dom
-    [:div#headbar {:style {:display "flex" 
-                           ;:display "-webkit-flex" TODO
-                           }}
-     [:code {:style {:flex "2 1 0" 
+    [:div#headbar {:style {:display "flex"
+                          ;:display "-webkit-flex" TODO
+                          }}
+     [:code {:style {:flex "2 1 0"
                      ; TODO: the camilization will break here?
                      :-webkit-flex "2 1 0"}}
       (interpose " / "
                  (conj
                    (into [] (map
-                              (fn [[location title]] 
+                              (fn [[location title]]
                                 (vector :a {:href "#"
-                                            :onclick #(event-sender {:id :load-page
-                                                                     :location location})} 
+                                            :onclick #(event-sender
+                                                       {:id :load-page
+                                                        :location location})}
                                         title))
                               (butlast title-path)))
                    (second (last title-path))))]
      [:code (interpose " &middot; "
-                       (map #(create-link % (str % "-page")
-                                          {:location location
-                                           :mode %})
+                       (map (fn [label]
+                              [:a {:href "#"
+                                   :onclick #(event-sender
+                                              {:id (keyword (str label "-page"))
+                                               :mode label
+                                               :location location})} label])
                             ["new" "edit" "delete"]))]]
     [:h1 (wiki :title)]
     [:article#markdown (js/marked (wiki :body))]
