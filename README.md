@@ -24,9 +24,9 @@ WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhe
 
 ## Notes For Myself
 
-Q: How to starting the Chrome REPL?
+Q: How to starting the Chrome REPL?  
 A: `(cemerick.austin.repls/exec
              :exec-cmds ["open" "-ga" "/Applications/Google Chrome.app"])`
              
-Q: How to run tests?
+Q: How to run tests?  
 A: At the moment, only god knows.
