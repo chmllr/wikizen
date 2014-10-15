@@ -68,6 +68,6 @@
   "Converts a template into DOM"
   [& elements]
   (let [fragment (.createDocumentFragment js/document)]
-    (doseq [elem (remove nil? elements)]
-      (.appendChild fragment (element->dom elem)))
+    (doseq [elem (remove nil? (map element->dom elements))]
+      (.appendChild fragment elem))
     fragment))
