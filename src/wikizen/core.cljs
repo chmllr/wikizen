@@ -2,7 +2,6 @@
   (:require
     [goog.dom :as dom]
     [goog.events :as events]
-    [wikizen.tests :as tests]
     [wikizen.storage :as storage]
     [wikizen.ui :as ui]
     [wikizen.engine :as engine]
@@ -47,5 +46,3 @@
         (f event))))
 
 (put! C {:id :load-page :location []})
-
-(tests/run-tests)

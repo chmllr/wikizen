@@ -3,8 +3,6 @@
             [goog.dom :as dom]
             [goog.events :as events]))
 
-(def x (te/element->dom [:hr]))
-
 (defn
   edit-page
   "Generates a page with a text area and a preview for

@@ -17,7 +17,16 @@ WikiZen
 
 > "Like all magnificent things,  
 >  it's very simple."  
-> -- _Natalie Babbitt_
+> — _Natalie Babbitt_
 
-WikiZen is a minimal Markdown-based wiki engine for simple and beautiful Wikis.
+WikiZen is a minimal Markdown-based wiki engine for simple Wikis.
 WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhere**.
+
+## Notes For Myself
+
+Q: How to starting the Chrome REPL?
+A: `(cemerick.austin.repls/exec
+             :exec-cmds ["open" "-ga" "/Applications/Google Chrome.app"])`
+             
+Q: How to run tests?
+A: At the moment, only god knows.
