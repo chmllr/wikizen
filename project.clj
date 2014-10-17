@@ -14,11 +14,16 @@
 
             :source-paths ["src"]
 
-            :cljsbuild {:builds [{:id "wikizen"
+            :cljsbuild {:builds [{:id "dev"
                                   :source-paths ["src" "test"]
                                   :compiler {:output-to "wikizen.js"
                                              :output-dir "out"
-                                             :optimizations :none
-                                             :source-map true}}]
+                                             :optimizations :simple
+                                      ;:source-map true
+                                      }}
+                                 {:id "prod"
+                                  :source-paths ["src"]
+                                  :compiler {:output-to "wikizen.js"
+                                             :optimizations :simple}}]
                         :test-commands
                                 {"phantom" ["phantomjs" :runner "wikizen.js"]}})

@@ -13,3 +13,4 @@ wikizen.js
 .lein-env
 .nrepl-port
 .lein-failures
+.repl/
