@@ -35,20 +35,19 @@
 
 (defn apply-delta
   "Apply given delta to the given Wiki"
-  [wiki {:keys [ref property value]}]
-  (let [page (or (engine/get-node wiki ref) {})
+  [wiki {:keys [ref property value] :as delta}]
+  (let [page (engine/get-node wiki ref)
         page (if (= property :title)
                (assoc page :title value)
                (assoc page :body (apply-patch value (page :body))))]
     (engine/set-page wiki ref page)))
 
 (defn get-wiki
-  "Returns the wiki object"
+  "Returns the Wiki object"
   []
-  sample-wiki
-  #_(let [wiki sample-wiki
-        deltas sample-deltas]
-    (reduce apply-delta wiki deltas)))
+  (let [wiki (sample-wiki :root)
+        deltas @sample-deltas]
+    (assoc sample-wiki :root (reduce apply-delta wiki deltas))))
 
 (defn update-wiki
   "Applies the passed deltas"

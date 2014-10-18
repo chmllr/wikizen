@@ -15,38 +15,38 @@
     (aset app "innerHTML" "")
     (.appendChild app fragment)))
 
-(def root ((storage/get-wiki) :root))
-
 (defn show-page
   "Opens the specified page"
-  [event-processor {:keys [ref]}]
+  [wiki event-processor {:keys [ref]}]
   (display-ui
     (ui/page event-processor
              ref
-             (engine/get-path root ref)
-             (engine/get-node root ref))))
+             (engine/get-path wiki ref)
+             (engine/get-node wiki ref))))
 
 (defn show-edit-mask
   "Opens the editing mask"
-  [event-processor {:keys [ref mode]}]
+  [_ event-processor {:keys [ref mode]}]
   (display-ui
     (ui/edit-page event-processor ref mode)))
 
 (defn add-page
   "Sends the received contents to the storage"
-  [_ {:keys [ref title body]}]
-  (storage/update-wiki ref title body))
+  [_ event-processor {:keys [ref title body]}]
+  (storage/update-wiki ref title body)
+  (event-processor {:id :show-page :ref ref}))
 
 (defn event-processor
   "Event processor; all events are blocking"
   [event]
+  (println "event received:" event)
   (let [{:keys [id]} event
         mapping {:show-page show-page
                  :show-edit-mask show-edit-mask
                  :add-page add-page}
-        f (mapping id #(println "no handler for event" id "found"))]
-    (println "event received:" event)
-    (f event-processor event)))
+        f (mapping id #(println "no handler for event" id "found"))
+        wiki ((storage/get-wiki) :root)]
+    (f wiki event-processor event)))
 
 (defn bootstrap
   "Starts the app"
@@ -54,5 +54,5 @@
   (event-processor {:id :show-page :ref []}))
 
 (defn inspect-deltas []
-  (.dir js/console (clj->js @storage/sample-deltas)))
+  (println (.stringify js/JSON (clj->js @storage/sample-deltas))))
 

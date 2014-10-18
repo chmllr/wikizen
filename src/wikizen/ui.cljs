@@ -77,6 +77,6 @@
                     [:a {:href "#"
                          :onclick #(event-processor
                                     {:id :show-page
-                                     :ref (concat ref [i])})}
+                                     :ref (vec (concat ref [i]))})}
                      (child :title)]))
           (map list (range) children))]])))

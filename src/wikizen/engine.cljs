@@ -6,9 +6,10 @@
   [node path]
   (if (empty? path)
     node
-    (get-node
-      (nth (node :children) (first path))
-      (rest path))))
+    (let [[index & indeces] path
+          children (node :children)]
+      (when (< index (count children))
+        (get-node (nth children index) indeces)))))
 
 (defn get-path
   "Returns the traversed path in form of [<index> <title>] pairs"
@@ -37,12 +38,12 @@
   (if (empty? path)
     page
     (let [[index & indeces] path
-          children (wiki :children)
+          children (vec (wiki :children))
           new-children (if (= (count children) index)
                          (conj children page)
                          (set-nth children
-                                index
-                                (set-page (nth children index)
-                                          indeces
-                                          page)))]
+                                  index
+                                  (set-page (nth children index)
+                                            indeces
+                                            page)))]
       (assoc wiki :children new-children))))
