@@ -83,11 +83,12 @@ A delta is defines as a triple:
 
     Delta = {
         ref: [Int], 
-        <property>: String
+        property: String,
+        delta: String
     }
     
 Reference identifies the Wiki Page.
 Property identifies the object property like `title` or `body`.
-The value of the property key is a diff (produced by Diff-Match-Path library), containing the deltas only.
+Delta is diff (produced by Diff-Match-Path library), containing the deltas only.
 
 

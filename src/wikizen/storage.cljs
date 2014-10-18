@@ -28,15 +28,27 @@
   (defn- apply-patch
     "Applies deltas to get the next version"
     [patch text]
-    (let [[result status] (.patch_apply dmp patch text)]
+    (let [[result status] (.patch_apply dmp patch (or text ""))]
       (if (every? identity (js->clj status))
         result
         (throw (print-str "Patch" (.stringify js/JSON patch) "could not be applied"))))))
 
+(defn apply-delta
+  "Apply given delta to the given Wiki"
+  [wiki {:keys [ref property value]}]
+  (let [page (or (engine/get-node wiki ref) {})
+        page (if (= property :title)
+               (assoc page :title value)
+               (assoc page :body (apply-patch value (page :body))))]
+    (engine/set-page wiki ref page)))
+
 (defn get-wiki
   "Returns the wiki object"
   []
-  sample-wiki)
+  sample-wiki
+  #_(let [wiki sample-wiki
+        deltas sample-deltas]
+    (reduce apply-delta wiki deltas)))
 
 (defn update-wiki
   "Applies the passed deltas"
@@ -45,9 +57,10 @@
         page (or (engine/get-node wiki ref) {})
         deltas (if (= title (page :title))
                  []
-                 [{:ref ref, :title title}])
+                 [{:ref ref, :property :title, :value title}])
         deltas (if (= body (page :body))
                  deltas
                  (conj deltas {:ref ref,
-                        :body (get-patch (page :body) body)}))]
+                               :property :body,
+                               :value (get-patch (page :body) body)}))]
     (swap! sample-deltas concat deltas)))
