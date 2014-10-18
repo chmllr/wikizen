@@ -46,19 +46,24 @@
                               (fn [[ref title]]
                                 (vector :a {:href "#"
                                             :onclick #(event-processor
-                                                       {:id :load-page
+                                                       {:id :show-page
                                                         :ref ref})}
                                         title))
                               (butlast title-path)))
                    (second (last title-path))))]
-     [:code (interpose " &middot; "
-                       (map (fn [label]
-                              [:a {:href "#"
-                                   :onclick #(event-processor
-                                              {:id (keyword (str label "-page"))
-                                               :mode label
-                                               :ref ref})} label])
-                            ["new" "edit" "delete"]))]]
+     [:code
+      [:a {:href "#"
+           :onclick #(event-processor
+                      {:id :show-edit-mask
+                       :mode :add-page
+                       :ref (conj ref (count (wiki :children)))})}
+       "new"]
+      " &middot; "
+      "edit"
+      " &middot; "
+      "delete"
+
+      ]]
     [:h1 (wiki :title)]
     [:article#markdown (js/marked (wiki :body))]
     (when-let [children (wiki :children)]
@@ -71,7 +76,7 @@
             (vector :li
                     [:a {:href "#"
                          :onclick #(event-processor
-                                    {:id :load-page
+                                    {:id :show-page
                                      :ref (concat ref [i])})}
                      (child :title)]))
           (map list (range) children))]])))

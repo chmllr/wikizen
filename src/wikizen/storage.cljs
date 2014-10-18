@@ -1,4 +1,7 @@
-(ns wikizen.storage)
+(ns wikizen.storage
+  (:require [wikizen.engine :as engine]))
+
+(enable-console-print!)
 
 (def sample-wiki
   { :name "SampleWiki"
@@ -13,13 +16,15 @@
                           :children [ { :title "Nested Page 2_1"
                                         :body "This _is_ a leaf" } ]} ] } })
 
+(def sample-deltas (atom []))
+
 (let [dmp (js/diff_match_patch.)]
   ;(aset dmp "Diff_Timeout" 1.0)
   ;(aset dmp "Diff_EditCost" "raw")
   (defn- get-patch
     "Diffs two texts and returns the delta"
     [from to]
-    (.patch_make dmp from to))
+    (.patch_make dmp (or from "") (or to "")))
   (defn- apply-patch
     "Applies deltas to get the next version"
     [patch text]
@@ -30,10 +35,19 @@
 
 (defn get-wiki
   "Returns the wiki object"
-  [id]
+  []
   sample-wiki)
 
 (defn update-wiki
   "Applies the passed deltas"
-  [id & deltas]
-  [])
+  [ref title body]
+  (let [wiki (get-wiki)
+        page (or (engine/get-node wiki ref) {})
+        deltas (if (= title (page :title))
+                 []
+                 [{:ref ref, :title title}])
+        deltas (if (= body (page :body))
+                 deltas
+                 (conj deltas {:ref ref,
+                        :body (get-patch (page :body) body)}))]
+    (swap! sample-deltas concat deltas)))
