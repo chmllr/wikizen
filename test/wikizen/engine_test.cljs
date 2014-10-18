@@ -3,7 +3,6 @@
                     :refer (is deftest with-test run-tests testing test-var)])
   (:require
     [cemerick.cljs.test :as t]
-    [cemerick.cljs.test]
     [wikizen.engine :as engine]))
 
 (deftest engine-tests

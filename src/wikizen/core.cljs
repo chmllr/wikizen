@@ -45,4 +45,8 @@
         (println "event received:" event)
         (f event))))
 
-(put! C {:id :load-page :location []})
+
+(defn bootstrap
+  "Starts the app"
+  []
+  (put! C {:id :load-page :location []}))

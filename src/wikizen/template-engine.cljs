@@ -10,26 +10,29 @@
            (first sub-tokens)
            (map string/capitalize (rest sub-tokens)))))
 
+(defn- create-span
+  [content]
+  (let [span (dom/createElement "span")]
+    (aset span "innerHTML" content)
+    span))
+
 (defn- add-content
   "Appends content of an ellemen as DOM children"
   [element content]
-  (cond 
-    (string? content) (let [span (dom/createElement "span")]
-                        (aset span "innerHTML" content)
-                        (.appendChild element span))
+  (cond
     (instance? js/HTMLElement content) (.appendChild element content)
     (coll? content) (doseq [part content]
                       (add-content element part))
-    (nil? content) nil
-    :default (throw "Cannot add content:" content)))
+    (nil? content) :no-op
+    :default (if (string/blank? (aget element "innerHTML"))
+               (aset element "innerHTML" (str content))
+               (.appendChild element (create-span content)))))
 
 (defn- html?
-  "Returns true for alle vectors of type [<keyvord> ...]"
+  "Returns true for alle vectors of type [<keyword> ...]"
   [element]
   (and (vector? element)
        (keyword? (first element))))
-
-(enable-console-print!)
 
 (defn- deep-set
   "Recursively applies a setter"
@@ -71,6 +74,8 @@
   "Converts a template into DOM"
   [& elements]
   (let [fragment (.createDocumentFragment js/document)]
-    (doseq [elem (remove nil? (map element->dom elements))]
+    (doseq [elem (map #(if-not (html? %)
+                        (create-span %)
+                        (element->dom %)) elements)]
       (.appendChild fragment elem))
     fragment))
