@@ -77,7 +77,11 @@ When a Wiki is loaded, it's assembled from the stored deltas.
 
 A delta is defines as a triple:
 
-    (reference, property, delta) 
+    Delta = {
+        ref: [Int], 
+        property: String,
+        delta: String
+    }
     
 Reference identifies the Wiki Page.
 Property identifies the object property like `title` or `body`.
