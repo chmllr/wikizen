@@ -8,17 +8,6 @@
 
 (enable-console-print!)
 
-(defn process-event
-  "Event processor; all events are blocking"
-  [event]
-  (let [{:keys [id]} event
-        mapping {:load-page load-page
-                 :new-page edit-page
-                 :edit-page edit-page}
-        f (mapping id #(println "no handler for event" id "found"))]
-    (println "event received:" event)
-    (f event)))
-
 (defn display-ui
   "Puts the specified DOM element into the main container"
   [fragment]
@@ -30,21 +19,32 @@
 
 (defn load-page
   "Opens the specified page"
-  [{:keys [location]}]
+  [event-processor {:keys [location]}]
   (display-ui 
-    (ui/page process-event
+    (ui/page event-processor
              location
              (engine/get-path root location)
              (engine/get-node root location))))
 
 (defn edit-page
   "Opens the editing mask"
-  [{:keys [location mode]}]
+  [event-processor {:keys [location mode]}]
   (display-ui
-        (ui/edit-page process-event location mode)))
+        (ui/edit-page event-processor location mode)))
+
+(defn event-processor
+  "Event processor; all events are blocking"
+  [event]
+  (let [{:keys [id]} event
+        mapping {:load-page load-page
+                 :new-page edit-page
+                 :edit-page edit-page}
+        f (mapping id #(println "no handler for event" id "found"))]
+    (println "event received:" event)
+    (f event-processor event)))
 
 (defn bootstrap
   "Starts the app"
   []
-  (put! C {:id :load-page :location []}))
+  (event-processor {:id :load-page :location []}))
 

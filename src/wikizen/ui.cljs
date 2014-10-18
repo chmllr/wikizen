@@ -7,7 +7,7 @@
   edit-page
   "Generates a page with a text area and a preview for
   editing and creation of pages"
-  [process-event location mode]
+  [event-processor location mode]
   (te/template->dom
     [:input#title.full-width.input-fields
      {:type "text"
@@ -19,7 +19,7 @@
     [:a {:href "#"
          :onclick
                (fn [e]
-                 (process-event
+                 (event-processor
                    {:location location
                     :id mode
                     :title (.-value (dom/getElement "title"))
@@ -28,10 +28,11 @@
 
 (defn
   page
-  "generates a wiki page; dalocatioddn is an index vector of the current page,
+  "Generates a wiki page; event-processor is a function receiveing events;
+  location is an index vector of the current page,
   title-path is a vector of [location title] pairs till the current page,
   wiki is the node of current wiki"
-  [process-event location title-path wiki]
+  [event-processor location title-path wiki]
   (te/template->dom
     [:div#headbar {:style {:display "flex"
                           ;:display "-webkit-flex" TODO
@@ -44,7 +45,7 @@
                    (into [] (map
                               (fn [[location title]]
                                 (vector :a {:href "#"
-                                            :onclick #(process-event
+                                            :onclick #(event-processor
                                                        {:id :load-page
                                                         :location location})}
                                         title))
@@ -53,7 +54,7 @@
      [:code (interpose " &middot; "
                        (map (fn [label]
                               [:a {:href "#"
-                                   :onclick #(process-event
+                                   :onclick #(event-processor
                                               {:id (keyword (str label "-page"))
                                                :mode label
                                                :location location})} label])
@@ -69,7 +70,8 @@
           (fn [[i child]]
             (vector :li
                     [:a {:href "#"
-                         :onclick #(process-event {:id :load-page
-                                                  :location (concat location [i])})}
+                         :onclick #(event-processor
+                                    {:id :load-page
+                                     :location (concat location [i])})}
                      (child :title)]))
           (map list (range) children))]])))
