@@ -17,6 +17,7 @@
             :cljsbuild {:builds [{:id "dev"
                                   :source-paths ["src"]
                                   :compiler {:output-to "wikizen.js"
+                                             :externs ["lib/marked.min.js" "lib/diff_match_patch.js"]
                                              :output-dir "out"
                                              :optimizations :none
                                              :source-map true}}
@@ -28,6 +29,9 @@
                                  {:id "prod"
                                   :source-paths ["src"]
                                   :compiler {:output-to "wikizen.js"
+                                             :externs ["lib/marked.min.js" "lib/diff_match_patch.js"]
                                              :optimizations :simple}}]
                         :test-commands
-                                {"phantom" ["phantomjs" :runner "wikizen.js"]}})
+                                {"phantom" ["phantomjs" :runner
+                                            "lib/diff_match_patch.js"
+                                            "wikizen.js"]}})
