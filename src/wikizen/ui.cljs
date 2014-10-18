@@ -7,7 +7,7 @@
   edit-page
   "Generates a page with a text area and a preview for
   editing and creation of pages"
-  [event-sender location mode]
+  [process-event location mode]
   (te/template->dom
     [:input#title.full-width.input-fields
      {:type "text"
@@ -19,7 +19,7 @@
     [:a {:href "#"
          :onclick
                (fn [e]
-                 (event-sender
+                 (process-event
                    {:location location
                     :id mode
                     :title (.-value (dom/getElement "title"))
@@ -31,7 +31,7 @@
   "generates a wiki page; dalocatioddn is an index vector of the current page,
   title-path is a vector of [location title] pairs till the current page,
   wiki is the node of current wiki"
-  [event-sender location title-path wiki]
+  [process-event location title-path wiki]
   (te/template->dom
     [:div#headbar {:style {:display "flex"
                           ;:display "-webkit-flex" TODO
@@ -44,7 +44,7 @@
                    (into [] (map
                               (fn [[location title]]
                                 (vector :a {:href "#"
-                                            :onclick #(event-sender
+                                            :onclick #(process-event
                                                        {:id :load-page
                                                         :location location})}
                                         title))
@@ -53,7 +53,7 @@
      [:code (interpose " &middot; "
                        (map (fn [label]
                               [:a {:href "#"
-                                   :onclick #(event-sender
+                                   :onclick #(process-event
                                               {:id (keyword (str label "-page"))
                                                :mode label
                                                :location location})} label])
@@ -69,7 +69,7 @@
           (fn [[i child]]
             (vector :li
                     [:a {:href "#"
-                         :onclick #(event-sender {:id :load-page
+                         :onclick #(process-event {:id :load-page
                                                   :location (concat location [i])})}
                      (child :title)]))
           (map list (range) children))]])))
