@@ -7,7 +7,7 @@
   edit-page
   "Generates a page with a text area and a preview for
   editing and creation of pages"
-  [event-processor location mode]
+  [event-processor ref mode]
   (te/template->dom
     [:input#title.full-width.input-fields
      {:type "text"
@@ -20,7 +20,7 @@
          :onclick
                (fn [e]
                  (event-processor
-                   {:location location
+                   {:ref ref
                     :id mode
                     :title (.-value (dom/getElement "title"))
                     :body (.-value (dom/getElement "body"))}))}
@@ -29,10 +29,10 @@
 (defn
   page
   "Generates a wiki page; event-processor is a function receiveing events;
-  location is an index vector of the current page,
-  title-path is a vector of [location title] pairs till the current page,
+  ref is an index vector of the current page,
+  title-path is a vector of [ref title] pairs till the current page,
   wiki is the node of current wiki"
-  [event-processor location title-path wiki]
+  [event-processor ref title-path wiki]
   (te/template->dom
     [:div#headbar {:style {:display "flex"
                           ;:display "-webkit-flex" TODO
@@ -43,11 +43,11 @@
       (interpose " / "
                  (conj
                    (into [] (map
-                              (fn [[location title]]
+                              (fn [[ref title]]
                                 (vector :a {:href "#"
                                             :onclick #(event-processor
                                                        {:id :load-page
-                                                        :location location})}
+                                                        :ref ref})}
                                         title))
                               (butlast title-path)))
                    (second (last title-path))))]
@@ -57,7 +57,7 @@
                                    :onclick #(event-processor
                                               {:id (keyword (str label "-page"))
                                                :mode label
-                                               :location location})} label])
+                                               :ref ref})} label])
                             ["new" "edit" "delete"]))]]
     [:h1 (wiki :title)]
     [:article#markdown (js/marked (wiki :body))]
@@ -72,6 +72,6 @@
                     [:a {:href "#"
                          :onclick #(event-processor
                                     {:id :load-page
-                                     :location (concat location [i])})}
+                                     :ref (concat ref [i])})}
                      (child :title)]))
           (map list (range) children))]])))

@@ -19,18 +19,18 @@
 
 (defn load-page
   "Opens the specified page"
-  [event-processor {:keys [location]}]
+  [event-processor {:keys [ref]}]
   (display-ui 
     (ui/page event-processor
-             location
-             (engine/get-path root location)
-             (engine/get-node root location))))
+             ref
+             (engine/get-path root ref)
+             (engine/get-node root ref))))
 
 (defn edit-page
   "Opens the editing mask"
-  [event-processor {:keys [location mode]}]
+  [event-processor {:keys [ref mode]}]
   (display-ui
-        (ui/edit-page event-processor location mode)))
+        (ui/edit-page event-processor ref mode)))
 
 (defn event-processor
   "Event processor; all events are blocking"
@@ -46,5 +46,5 @@
 (defn bootstrap
   "Starts the app"
   []
-  (event-processor {:id :load-page :location []}))
+  (event-processor {:id :load-page :ref []}))
 
