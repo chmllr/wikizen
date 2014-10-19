@@ -12,12 +12,20 @@
 
 (def dao (atom {}))
 
+(defn synchronize
+  "Synchronizes DAO with the persistence layer"
+  [& args]
+  (apply swap! dao args)
+  (.log js/console (.stringify js/JSON (clj->js @dao)))
+  (.dir js/console (clj->js @dao))
+  )
+
 (defn create-wiki
   "Creates ne wiki in the persistence layer"
   ([name id] (create-wiki name id default-root))
   ([name id root]
    (swap! dao assoc id {:wiki {:name name :root root}
-                        :deltas  []})
+                        :deltas []})
    id))
 
 (defn get-wiki
@@ -40,16 +48,16 @@
                  (conj deltas {:ref ref,
                                :property :body,
                                :value (engine/get-patch (page :body) body)}))]
-    (swap! dao (fn [storage deltas]
-                 (update-in storage
-                            [id :deltas]
-                            concat deltas)) deltas)))
+    (synchronize (fn [storage deltas]
+                   (update-in storage
+                              [id :deltas]
+                              concat deltas)) deltas)))
 
 (defn delete-page
   "Applies the passed deltas"
   [id ref]
-  (swap! dao (fn [storage deltas]
-               (update-in storage
-                          [id :deltas]
-                          concat deltas))
-         [{:ref ref :property :page :value nil}]))
+  (synchronize (fn [storage deltas]
+                 (update-in storage
+                            [id :deltas]
+                            concat deltas))
+               [{:ref ref :property :page :value nil}]))
