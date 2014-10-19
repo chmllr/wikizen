@@ -67,7 +67,7 @@
                  :add-page save-page
                  :edit-page save-page}
         f (mapping id #(println "no handler for event" id "found"))
-        wiki ((storage/get-root-page wiki-id) :root)]
+        wiki ((storage/get-wiki wiki-id) :root)]
     (f wiki event-processor event)))
 
 (defn bootstrap

@@ -9,14 +9,12 @@
   "Creates ne wiki in the persistence layer"
   ([name] (create-wiki name {}))
   ([name root]
-   (let [id "sample-wiki"]                                   ; TODO: generate the id somehow
+   (let [id (Math/floor (* 10000 (Math/random)))]                                   ; TODO: generate the id somehow
      (swap! dao assoc id {:wiki {:name name :root root}
                           :deltas  []})
      id)))
 
 (let [dmp (js/diff_match_patch.)]
-  ;(aset dmp "Diff_Timeout" 1.0)
-  ;(aset dmp "Diff_EditCost" "raw")
   (defn- get-patch
     "Diffs two texts and returns the delta"
     [from to]
@@ -29,7 +27,7 @@
         result
         (throw (print-str "Patch" (.stringify js/JSON patch) "could not be applied"))))))
 
-(defn apply-delta
+(defn- apply-delta
   "Apply given delta to the given Wiki"
   [wiki {:keys [ref property value]}]
   (let [page (engine/get-node wiki ref)
@@ -39,7 +37,7 @@
                :otherwise value)]
     (engine/set-page wiki ref page)))
 
-(defn get-root-page
+(defn get-wiki
   "Returns the Wiki object"
   [id]
   (let [wiki (get-in @dao [id :wiki])
@@ -49,7 +47,7 @@
 (defn update-page
   "Applies the passed deltas"
   [id ref title body]
-  (let [wiki-root ((get-root-page id) :root)
+  (let [wiki-root ((get-wiki id) :root)
         page (or (engine/get-node wiki-root ref) {})
         deltas (if (= title (page :title))
                  []

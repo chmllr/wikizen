@@ -119,4 +119,20 @@
                                                          :body "This _is_ a leaf" }
                                                        page ]}] }
                            (engine/set-page root [1 1] page)))
-                    )))
+                    (is (= { :title "Root Page"
+                             :body "This is the *page body*."
+                             :children [ { :title "Nested Page 1"
+                                           :body "The __content__ of _nested_ page 1"
+                                           :children [ { :title "Nested Page 1_1"
+                                                         :body "This _is_ a leaf"} ] }
+                                         { :title "Nested Page 2"
+                                           :body "The __content__ of _nested_ page 2"
+                                           :children nil}] }
+                           (engine/set-page root [1 0] nil)))
+                    (is (= { :title "Root Page"
+                             :body "This is the *page body*."
+                             :children [ { :title "Nested Page 1"
+                                           :body "The __content__ of _nested_ page 1"
+                                           :children [ { :title "Nested Page 1_1"
+                                                         :body "This _is_ a leaf"} ] }]}
+                           (engine/set-page root [1] nil))))))
