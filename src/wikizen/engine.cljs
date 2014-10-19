@@ -32,6 +32,19 @@
   (let [[left right] (split-at (inc nth) vec)]
     (concat (butlast left) [value] right)))
 
+(let [dmp (js/diff_match_patch.)]
+  (defn- get-patch
+    "Diffs two texts and returns the delta"
+    [from to]
+    (.patch_make dmp (or from "") (or to "")))
+  (defn- apply-patch
+    "Applies deltas to get the next version"
+    [patch text]
+    (let [[result status] (.patch_apply dmp patch (or text ""))]
+      (if (every? identity (js->clj status))
+        result
+        (throw (print-str "Patch" (.stringify js/JSON patch) "could not be applied"))))))
+
 (defn set-page
   "Sets the page to the given reference"
   [wiki path page]
@@ -49,3 +62,14 @@
           new-children (remove nil? new-children)]
       (assoc wiki :children
                   (when-not (empty? new-children) new-children)))))
+
+
+(defn- apply-delta
+  "Apply given delta to the given Wiki"
+  [wiki {:keys [ref property value]}]
+  (let [page (get-node wiki ref)
+        page (cond
+               (= property :title) (assoc page :title value)
+               (= property :body) (assoc page :body (apply-patch value (page :body)))
+               :otherwise value)]
+    (set-page wiki ref page)))

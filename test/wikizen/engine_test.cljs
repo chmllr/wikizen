@@ -44,6 +44,18 @@
                     (is (= [:a :X :c :d] (engine/set-nth [:a :b :c :d] 1 :X)))
                     (is (= [:a :b :X :d] (engine/set-nth [:a :b :c :d] 2 :X)))
                     (is (= [:a :b :c :X] (engine/set-nth [:a :b :c :d] 3 :X))))
+           (testing "diffing and patching"
+                    (let [text1 "like alll magnificent theengs ,  >  it iss very simple"
+                          text2 "Like all magnificent things, it's very simple."
+                          garbage-patch (engine/get-patch text2 text1)
+                          patch (engine/get-patch text1 text2)
+                          ]
+                      (is (= text2 (engine/apply-patch patch text1)))
+                      (try (do
+                             (engine/apply-patch garbage-patch text1)
+                             (is false "This should have never been executed!"))
+                           (catch :default e
+                             (is (re-matches #".*could not be applied" e))))))
            (testing "set-page"
                     (is (= page (engine/set-page root [] page)))
                     (is (= { :title "Root Page"
