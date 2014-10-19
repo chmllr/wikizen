@@ -3,11 +3,18 @@
 
 (enable-console-print!)
 
+(def default-root
+  {:title "&#9775; WikiZen"
+   :body (str "> _\"One machine can do the work of **fifty** ordinary men.  \n"
+              "> No machine can do the work of **one** extraordinary man.\"_  \n"
+              "> — Elbert Hubbard\n\n"
+              "This is default **root page** of your Wiki powered by [WikiZen](https://github.com/chmllr/wikizen).  \n")})
+
 (def dao (atom {}))
 
 (defn create-wiki
   "Creates ne wiki in the persistence layer"
-  ([name] (create-wiki name {}))
+  ([name] (create-wiki name default-root))
   ([name root]
    (let [id (Math/floor (* 10000 (Math/random)))]                                   ; TODO: generate the id somehow
      (swap! dao assoc id {:wiki {:name name :root root}
