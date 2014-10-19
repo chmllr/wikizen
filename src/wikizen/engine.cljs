@@ -1,30 +1,34 @@
-(ns wikizen.engine)
+(ns wikizen.engine
+  (:require
+    [wikizen.log :as log]))
 
 (defn get-node
   "Traverses the wiki tree and returns the 
   node according the specified path (vector of ints)"
-  [node path]
-  (if (empty? path)
-    node
-    (let [[index & indeces] path
-          children (node :children)]
+  [root ref]
+  (log/! "get-node called for" :ref ref)
+  (if (empty? ref)
+    root
+    (let [[index & indeces] ref
+          children (root :children)]
       (when (< index (count children))
         (get-node (nth children index) indeces)))))
 
 (defn get-path
-  "Returns the traversed path in form of [<index> <title>] pairs"
-  ([node path]
-   (cons [[] (node :title)]
-         (get-path node path [])))
-  ([node path acc]
-   (if (empty? path)
+  "Returns the traversed ref in form of [<index> <title>] pairs"
+  ([root ref]
+   (cons [[] (root :title)]
+         (get-path root ref [])))
+  ([root ref acc]
+   (log/! "get-path called for" :ref ref)
+   (if (empty? ref)
      []
-     (let [index (first path)
+     (let [index (first ref)
            acc (conj acc index)
-           child (nth (node :children) index)
+           child (nth (root :children) index)
            title (:title child)]
        (cons [acc title]
-             (get-path child (rest path) acc))))))
+             (get-path child (rest ref) acc))))))
 
 (defn- set-nth
   "Sets nth element of the given vector to the given value"
@@ -48,10 +52,11 @@
 
 (defn set-page
   "Sets the page to the given reference"
-  [root path page]
-  (if (empty? path)
+  [root ref page]
+  (log/! "set-page called for" :ref ref)
+  (if (empty? ref)
     page
-    (let [[index & indeces] path
+    (let [[index & indeces] ref
           children (vec (root :children))
           new-children (if (= (count children) index)
                          (conj children page)
@@ -68,6 +73,7 @@
 (defn- apply-delta
   "Apply given delta to the given Wiki"
   [root {:keys [ref property value]}]
+  (log/! "apply-delta called for" :ref ref :property property)
   (let [page (get-node root ref)
         page (cond
                (= property "title") (assoc page :title value)
