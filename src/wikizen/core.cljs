@@ -8,17 +8,8 @@
 
 (enable-console-print!)
 
-(def wiki-id (storage/create-wiki "Test Wiki"
-                                  { :title "Root Page"
-                                    :body "This is the *page body* of a fake wiki. And __this__ is `code`."
-                                    :children [ { :title "Nested Page 1"
-                                                  :body "The __content__ of _nested_ page 1"
-                                                  :children [ { :title "Nested Page 1_1"
-                                                                :body "This _is_ a leaf" } ] }
-                                                { :title "Nested Page 2"
-                                                  :body "The __content__ of _nested_ page 2"
-                                                  :children [ { :title "Nested Page 2_1"
-                                                                :body "This _is_ a leaf" } ]} ] }))
+(def wiki-id (storage/create-wiki "Test Wiki"))
+
 (defn display-ui
   "Puts the specified DOM element into the main container"
   [fragment]
@@ -28,18 +19,20 @@
 
 (defn show-page
   "Opens the specified page"
-  [wiki event-processor {:keys [ref]}]
+  [{:keys [name root]} event-processor {:keys [ref]}]
   (display-ui
     (ui/page event-processor
              ref
-             (engine/get-path wiki ref)
-             (engine/get-node wiki ref))))
+             (engine/get-path root ref)
+             (engine/get-node root ref)
+             name)))
 
 (defn show-edit-mask
   "Opens the editing mask"
-  [wiki event-processor {:keys [ref mode]}]
+  [{:keys [root]} event-processor {:keys [ref mode]}]
   (display-ui
-    (ui/edit-page event-processor ref mode (engine/get-node wiki ref))))
+    (ui/edit-page event-processor ref mode
+                  (engine/get-node root ref))))
 
 (defn save-page
   "Sends the received contents to the storage"
@@ -56,6 +49,7 @@
       (storage/delete-page wiki-id ref)
       (event-processor {:id :show-page :ref (butlast ref)}))))
 
+; TODO: add eventing unit tests
 (defn event-processor
   "Event processor; all events are blocking"
   [event]
@@ -67,7 +61,7 @@
                  :add-page save-page
                  :edit-page save-page}
         f (mapping id #(println "no handler for event" id "found"))
-        wiki ((storage/get-wiki wiki-id) :root)]
+        wiki (storage/get-wiki wiki-id)]
     (f wiki event-processor event)))
 
 (defn bootstrap
