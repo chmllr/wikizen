@@ -7,14 +7,15 @@
   edit-page
   "Generates a page with a text area and a preview for
   editing and creation of pages"
-  [event-processor ref mode]
+  [event-processor ref mode wiki]
   (te/template->dom
     [:input#title.full-width.input-fields
      {:type "text"
+      :value (when (= mode :edit-page) (wiki :title))
       :style {:font-weight "bold"}
       :placeholder "Page name"}]
     [:textarea#body.full-width.input-fields
-     {:rows 30}]
+     {:rows 30} (when (= mode :edit-page) (wiki :body))]
     [:br]
     [:a {:href "#"
          :onclick
@@ -59,7 +60,12 @@
                        :ref (conj ref (count (wiki :children)))})}
        "new"]
       " &middot; "
-      "edit"
+      [:a {:href "#"
+           :onclick #(event-processor
+                      {:id :show-edit-mask
+                       :mode :edit-page
+                       :ref ref})}
+       "edit"]
       " &middot; "
       "delete"
 

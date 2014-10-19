@@ -37,11 +37,11 @@
 
 (defn show-edit-mask
   "Opens the editing mask"
-  [_ event-processor {:keys [ref mode]}]
+  [wiki event-processor {:keys [ref mode]}]
   (display-ui
-    (ui/edit-page event-processor ref mode)))
+    (ui/edit-page event-processor ref mode (engine/get-node wiki ref))))
 
-(defn add-page
+(defn save-page
   "Sends the received contents to the storage"
   [_ event-processor {:keys [ref title body]}]
   (storage/update-wiki wiki-id ref title body)
@@ -54,7 +54,8 @@
   (let [{:keys [id]} event
         mapping {:show-page show-page
                  :show-edit-mask show-edit-mask
-                 :add-page add-page}
+                 :add-page save-page
+                 :edit-page save-page}
         f (mapping id #(println "no handler for event" id "found"))
         wiki ((storage/get-wiki wiki-id) :root)]
     (f wiki event-processor event)))
