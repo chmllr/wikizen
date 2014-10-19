@@ -36,22 +36,23 @@
   (defn- get-patch
     "Diffs two texts and returns the delta"
     [from to]
-    (.patch_make dmp (or from "") (or to "")))
+    (.patch_toText dmp
+                   (.patch_make dmp (or from "") (or to ""))))
   (defn- apply-patch
     "Applies deltas to get the next version"
     [patch text]
-    (let [[result status] (.patch_apply dmp patch (or text ""))]
+    (let [[result status] (.patch_apply dmp (.patch_fromText dmp patch) (or text ""))]
       (if (every? identity (js->clj status))
         result
         (throw (print-str "Patch" (.stringify js/JSON patch) "could not be applied"))))))
 
 (defn set-page
   "Sets the page to the given reference"
-  [wiki path page]
+  [root path page]
   (if (empty? path)
     page
     (let [[index & indeces] path
-          children (vec (wiki :children))
+          children (vec (root :children))
           new-children (if (= (count children) index)
                          (conj children page)
                          (set-nth children
@@ -60,16 +61,16 @@
                                             indeces
                                             page)))
           new-children (remove nil? new-children)]
-      (assoc wiki :children
+      (assoc root :children
                   (when-not (empty? new-children) new-children)))))
 
 
 (defn- apply-delta
   "Apply given delta to the given Wiki"
-  [wiki {:keys [ref property value]}]
-  (let [page (get-node wiki ref)
+  [root {:keys [ref property value]}]
+  (let [page (get-node root ref)
         page (cond
-               (= property :title) (assoc page :title value)
-               (= property :body) (assoc page :body (apply-patch value (page :body)))
+               (= property "title") (assoc page :title value)
+               (= property "body") (assoc page :body (apply-patch value (page :body)))
                :otherwise value)]
-    (set-page wiki ref page)))
+    (set-page root ref page)))
