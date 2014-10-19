@@ -17,7 +17,7 @@
 (defn- load
   [id]
   (log/! "load called for wiki" id)
-  (when-not js/testMode
+  (when-not (.-testMode js/window)
     (let [string (.getItem js/localStorage id)
         data-structure (js->clj (.parse js/JSON string) :keywordize-keys true)]
     (swap! dao assoc id data-structure))))
@@ -25,7 +25,7 @@
 (defn- save
   [id]
   (log/! "save called for wiki" id)
-  (when-not js/testMode
+  (when-not (.-testMode js/window)
       (let [string (.stringify js/JSON (clj->js (@dao id)))]
     (.setItem js/localStorage id string))))
 
