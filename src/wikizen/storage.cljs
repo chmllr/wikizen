@@ -10,18 +10,15 @@
               "> — Elbert Hubbard\n\n"
               "This is default **root page** of your Wiki powered by [WikiZen](https://github.com/chmllr/wikizen).  \n")})
 
-
-
 (def dao (atom {}))
 
 (defn create-wiki
   "Creates ne wiki in the persistence layer"
-  ([name] (create-wiki name default-root))
-  ([name root]
-   (let [id (Math/floor (* 10000 (Math/random)))]                                   ; TODO: generate the id somehow
-     (swap! dao assoc id {:wiki {:name name :root root}
-                          :deltas  []})
-     id)))
+  ([name id] (create-wiki name id default-root))
+  ([name id root]
+   (swap! dao assoc id {:wiki {:name name :root root}
+                        :deltas  []})
+   id))
 
 (defn get-wiki
   "Returns the Wiki object"

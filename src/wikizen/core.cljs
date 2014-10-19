@@ -8,7 +8,7 @@
 
 (enable-console-print!)
 
-(def wiki-id (storage/create-wiki "Test Wiki"))
+(def wiki-id (storage/create-wiki "Test Wiki" "dev-wiki"))
 
 (defn display-ui
   "Puts the specified DOM element into the main container"

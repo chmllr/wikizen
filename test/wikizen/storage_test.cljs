@@ -7,13 +7,20 @@
 
 (deftest storage-test
          (testing "storage and updates"
-                  (let [id (storage/create-wiki "Test")]
+                  (let [id (storage/create-wiki "Test" "id1" {})
+                        id2 (storage/create-wiki "Test2" "id2")]
+                    (is (re-matches #".*root page.*"
+                                    (clojure.string/replace
+                                      (get-in (storage/get-wiki id2) [:root :body])
+                                      #"\n" "")))
+                    (storage/update-page id2 [] "Main" "Page")
                     (storage/update-page id [] "Root" "Body")
                     (is (= {:name "Test"
                             :root {:title "Root" :body "Body"}} (storage/get-wiki id)))
                     (storage/update-page id [0] "Child 1" "X")
                     (storage/update-page id [1] "Child 2" "Y")
                     (storage/update-page id [1 0] "Child 2-1" "Y Y")
+                    (storage/update-page id2 [0] "Child" "Page")
                     (is (= {:name "Test"
                             :root {:title "Root" :body "Body"
                                    :children [ {:title "Child 1" :body "X"}
@@ -68,4 +75,8 @@
                     (is (= {:name "Test"
                             :root {:title "Root" :body "Body"
                                    :children nil}}
-                           (storage/get-wiki id))))))
+                           (storage/get-wiki id)))
+                    (is (= {:name "Test2"
+                            :root {:title "Main" :body "Page"
+                                   :children [{:title "Child" :body "Page"}]}}
+                           (storage/get-wiki id2))))))
