@@ -77,4 +77,4 @@
   (log/! "bootstrapping the app...")
   (event-processor {:id :show-page :ref []}))
 
-(log/enable-log)
+;(log/enable-log)

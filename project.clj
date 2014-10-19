@@ -33,5 +33,6 @@
                                              :optimizations :simple}}]
                         :test-commands
                                 {"phantom" ["phantomjs" :runner
+                                            "testMode = true;"
                                             "lib/diff_match_patch.js"
                                             "wikizen.js"]}})
