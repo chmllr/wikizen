@@ -3,20 +3,16 @@
 
 (enable-console-print!)
 
-(def sample-wiki
-  { :name "SampleWiki"
-    :root { :title "Root Page"
-            :body "This is the *page body* of a fake wiki. And __this__ is `code`."
-            :children [ { :title "Nested Page 1"
-                          :body "The __content__ of _nested_ page 1"
-                          :children [ { :title "Nested Page 1_1"
-                                        :body "This _is_ a leaf" } ] }
-                        { :title "Nested Page 2"
-                          :body "The __content__ of _nested_ page 2"
-                          :children [ { :title "Nested Page 2_1"
-                                        :body "This _is_ a leaf" } ]} ] } })
+(def dao (atom {}))
 
-(def sample-deltas (atom []))
+(defn create-wiki
+  "Creates ne wiki in the persistence layer"
+  ([name] (create-wiki name {}))
+  ([name root]
+   (let [id "sample-wiki"]                                   ; TODO: generate the id somehow
+     (swap! dao assoc id {:wiki {:name name :root root}
+                          :deltas  []})
+     id)))
 
 (let [dmp (js/diff_match_patch.)]
   ;(aset dmp "Diff_Timeout" 1.0)
@@ -44,16 +40,16 @@
 
 (defn get-wiki
   "Returns the Wiki object"
-  []
-  (let [wiki (sample-wiki :root)
-        deltas @sample-deltas]
-    (assoc sample-wiki :root (reduce apply-delta wiki deltas))))
+  [id]
+  (let [wiki (get-in @dao [id :wiki])
+        deltas (get-in @dao [id :deltas])]
+    (assoc wiki :root (reduce apply-delta (wiki :root) deltas))))
 
 (defn update-wiki
   "Applies the passed deltas"
-  [ref title body]
-  (let [wiki (get-wiki)
-        page (or (engine/get-node wiki ref) {})
+  [id ref title body]
+  (let [wiki-root ((get-wiki id) :root)
+        page (or (engine/get-node wiki-root ref) {})
         deltas (if (= title (page :title))
                  []
                  [{:ref ref, :property :title, :value title}])
@@ -62,4 +58,7 @@
                  (conj deltas {:ref ref,
                                :property :body,
                                :value (get-patch (page :body) body)}))]
-    (swap! sample-deltas concat deltas)))
+    (swap! dao (fn [storage deltas]
+                 (update-in storage
+                            [id :deltas]
+                            concat deltas)) deltas)))
