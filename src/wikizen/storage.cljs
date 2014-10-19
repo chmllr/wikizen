@@ -12,27 +12,42 @@
 
 (def dao (atom {}))
 
-(defn synchronize
-  "Synchronizes DAO with the persistence layer"
-  [& args]
-  (apply swap! dao args)
-  (.log js/console (.stringify js/JSON (clj->js @dao)))
-  (.dir js/console (clj->js @dao))
-  )
+(defn- store-wiki
+  "Stores a new wiki"
+  [id wiki]
+  (swap! dao assoc id wiki))
+
+(defn- restore-wiki
+  "Restores a wiki from id"
+  [id]
+  (get-in @dao [id :wiki]))
+
+(defn- store-deltas
+  "Saves deltas"
+  [id deltas]
+  (swap! dao (fn [storage deltas]
+               (update-in storage
+                          [id :deltas]
+                          concat deltas)) deltas))
+
+(defn- restore-deltas
+  "Restores all deltas for a wiki id"
+  [id]
+  (get-in @dao [id :deltas]))
 
 (defn create-wiki
   "Creates ne wiki in the persistence layer"
   ([name id] (create-wiki name id default-root))
   ([name id root]
-   (swap! dao assoc id {:wiki {:name name :root root}
-                        :deltas []})
+   (store-wiki id {:wiki {:name name :root root}
+                        :deltas []})
    id))
 
 (defn get-wiki
   "Returns the Wiki object"
   [id]
-  (let [wiki (get-in @dao [id :wiki])
-        deltas (get-in @dao [id :deltas])]
+  (let [wiki (restore-wiki id)
+        deltas (restore-deltas id)]
     (assoc wiki :root (reduce engine/apply-delta (wiki :root) deltas))))
 
 (defn update-page
@@ -48,16 +63,9 @@
                  (conj deltas {:ref ref,
                                :property :body,
                                :value (engine/get-patch (page :body) body)}))]
-    (synchronize (fn [storage deltas]
-                   (update-in storage
-                              [id :deltas]
-                              concat deltas)) deltas)))
+    (store-deltas id deltas)))
 
 (defn delete-page
   "Applies the passed deltas"
   [id ref]
-  (synchronize (fn [storage deltas]
-                 (update-in storage
-                            [id :deltas]
-                            concat deltas))
-               [{:ref ref :property :page :value nil}]))
+  (store-deltas id [{:ref ref :property :page :value nil}]))
