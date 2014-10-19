@@ -31,24 +31,25 @@
 
 (defn apply-delta
   "Apply given delta to the given Wiki"
-  [wiki {:keys [ref property value] :as delta}]
+  [wiki {:keys [ref property value]}]
   (let [page (engine/get-node wiki ref)
-        page (if (= property :title)
-               (assoc page :title value)
-               (assoc page :body (apply-patch value (page :body))))]
+        page (cond
+               (= property :title) (assoc page :title value)
+               (= property :body) (assoc page :body (apply-patch value (page :body)))
+               :otherwise value)]
     (engine/set-page wiki ref page)))
 
-(defn get-wiki
+(defn get-root-page
   "Returns the Wiki object"
   [id]
   (let [wiki (get-in @dao [id :wiki])
         deltas (get-in @dao [id :deltas])]
     (assoc wiki :root (reduce apply-delta (wiki :root) deltas))))
 
-(defn update-wiki
+(defn update-page
   "Applies the passed deltas"
   [id ref title body]
-  (let [wiki-root ((get-wiki id) :root)
+  (let [wiki-root ((get-root-page id) :root)
         page (or (engine/get-node wiki-root ref) {})
         deltas (if (= title (page :title))
                  []
@@ -62,3 +63,12 @@
                  (update-in storage
                             [id :deltas]
                             concat deltas)) deltas)))
+
+(defn delete-page
+  "Applies the passed deltas"
+  [id ref]
+  (swap! dao (fn [storage deltas]
+               (update-in storage
+                          [id :deltas]
+                          concat deltas))
+         [{:ref ref :property :page :value nil}]))

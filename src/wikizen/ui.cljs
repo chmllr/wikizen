@@ -36,7 +36,7 @@
   [event-processor ref title-path wiki]
   (te/template->dom
     [:div#headbar {:style {:display "flex"
-                          ;:display "-webkit-flex" TODO
+                          ;:display "-webkit-flex" (TODO)
                           }}
      [:code {:style {:flex "2 1 0"
                      ; TODO: the camilization will break here?
@@ -57,19 +57,19 @@
            :onclick #(event-processor
                       {:id :show-edit-mask
                        :mode :add-page
-                       :ref (conj ref (count (wiki :children)))})}
-       "new"]
+                       :ref (conj ref (count (wiki :children)))})} "new"]
       " &middot; "
       [:a {:href "#"
            :onclick #(event-processor
                       {:id :show-edit-mask
                        :mode :edit-page
-                       :ref ref})}
-       "edit"]
+                       :ref ref})} "edit"]
       " &middot; "
-      "delete"
-
-      ]]
+      ; TODO: hide for root page
+      [:a {:href "#"
+           :onclick #(event-processor
+                      {:id :delete-page
+                       :ref ref})} "delete"]]]
     [:h1 (wiki :title)]
     [:article#markdown (js/marked (wiki :body))]
     (when-let [children (wiki :children)]

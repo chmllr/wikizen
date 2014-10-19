@@ -88,7 +88,11 @@ A delta is defines as a triple:
     }
     
 Reference identifies the Wiki Page.
-Property identifies the object property like `title` or `body`.
-Delta is diff (produced by Diff-Match-Path library), containing the deltas only.
+Property identifies the object property like `title`, `body` or `page`.
+Delta is different for every property:
+  - for title it is the new title;
+  - for body it is a diff (produced by Diff-Match-Path library), containing the deltas only;
+  - for page it can be an arbitrary JSON object or even `null` (it the page was deleted).
+  
 
 

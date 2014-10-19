@@ -44,8 +44,17 @@
 (defn save-page
   "Sends the received contents to the storage"
   [_ event-processor {:keys [ref title body]}]
-  (storage/update-wiki wiki-id ref title body)
+  (storage/update-page wiki-id ref title body)
   (event-processor {:id :show-page :ref ref}))
+
+(defn delete-page
+  "Deletes the page if it is not the root page"
+  [_ event-processor {:keys [ref]}]
+  (if (empty? ref)
+    (js/alert "Root page cannot be deleted.")
+    (do
+      (storage/delete-page wiki-id ref)
+      (event-processor {:id :show-page :ref (butlast ref)}))))
 
 (defn event-processor
   "Event processor; all events are blocking"
@@ -54,10 +63,11 @@
   (let [{:keys [id]} event
         mapping {:show-page show-page
                  :show-edit-mask show-edit-mask
+                 :delete-page delete-page
                  :add-page save-page
                  :edit-page save-page}
         f (mapping id #(println "no handler for event" id "found"))
-        wiki ((storage/get-wiki wiki-id) :root)]
+        wiki ((storage/get-root-page wiki-id) :root)]
     (f wiki event-processor event)))
 
 (defn bootstrap

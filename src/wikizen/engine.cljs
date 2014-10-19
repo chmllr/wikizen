@@ -45,5 +45,7 @@
                                   index
                                   (set-page (nth children index)
                                             indeces
-                                            page)))]
-      (assoc wiki :children new-children))))
+                                            page)))
+          new-children (remove nil? new-children)]
+      (assoc wiki :children
+                  (when-not (empty? new-children) new-children)))))
