@@ -10,22 +10,28 @@
    :body (str "> _\"One machine can do the work of **fifty** ordinary men.  \n"
               "> No machine can do the work of **one** extraordinary man.\"_  \n"
               "> — Elbert Hubbard\n\n"
-              "This is default **root page** of your Wiki powered by [WikiZen](https://github.com/chmllr/wikizen).\n")})
+              "This is default **root page** of your Wiki powered by"
+              "[WikiZen](https://github.com/chmllr/wikizen).\n")})
 
+; single data access object which is a mapping:
+; wiki ID -> { :wiki {...}, :deltas [...]}
 (def dao (atom {}))
 
-; to avoid delta applications if no updates happened
+; cache used to avoid delta applications if no updates happened
 (def cache (atom {}))
 
 (defn- load
+  "Loads a wiki, deserializes and assings to dao;
+  has to be called only once! (to fill the dao; afterwards, all updates go to dao)"
   [id]
   (log/! "load called for wiki" id)
   (when-not (.-testMode js/window)
-      (let [string (.getItem js/localStorage id)
-            data-structure (js->clj (.parse js/JSON string) :keywordize-keys true)]
-        (swap! dao assoc id data-structure))))
+    (let [string (.getItem js/localStorage id)
+          data-structure (js->clj (.parse js/JSON string) :keywordize-keys true)]
+      (swap! dao assoc id data-structure))))
 
 (defn- save
+  "Clears the cache, serializes the wiki and sends it to the storage"
   [id]
   (log/! "save called for wiki" id)
   (swap! cache hash-map)
@@ -38,18 +44,17 @@
   ([id name] (create-wiki id name default-root))
   ([id name root]
    (log/! "create-wiki called for wiki" id)
-   (let [obj {:deltas []
-              :wiki {:name name :root root}}] 
-     (load id)
-     (if (@dao id)
-       (println "Wiki" id "exists already.")
-       (do
-         (swap! dao assoc id obj)
-         (save id)))
-     id)))
+   (load id)
+   (if (@dao id)
+     (println "Wiki" id "exists already.")
+     (do
+       (swap! dao assoc id {:deltas []
+                            :wiki   {:name name :root root}})
+       (save id)))
+   id))
 
 (defn- store-deltas
-  "Saves deltas"
+  "Saves deltas to dao and storage"
   [id deltas]
   (log/! "store-deltas called for wiki" id)
   (swap! dao (fn [storage deltas]
@@ -58,12 +63,13 @@
                           concat deltas)) deltas)
   (save id))
 
+; TODO: think how it relates to create-wiki and load.
 (defn get-wiki
   "Returns the Wiki object"
   [id]
   (log/! "get-wiki called for wiki" id)
-  (if (@cache id) 
-    (@cache id) 
+  (if (@cache id)
+    (@cache id)
     (let [obj (@dao id)
           wiki (obj :wiki)
           deltas (obj :deltas)
@@ -72,7 +78,7 @@
       assembled-wiki)))
 
 (defn update-page
-  "Applies the passed deltas"
+  "Applies the passed deltas to the wiki with passed id"
   [id ref title body]
   (log/! "update-page called for wiki" id "with params" :ref ref :title title :body body)
   (let [wiki-root ((get-wiki id) :root)

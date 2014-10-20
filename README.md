@@ -38,9 +38,11 @@ Following shortcuts are supported:
 - `1` till `9` opens the corresponding child page;
 - `Left Arrow` navigates back;
 
-## Specification
+## Development
 
-### Wiki and Wiki Pages
+### Specification
+
+#### Wiki and Wiki Pages
 
 A __Wiki__ is one single JSON object, containing all the settings and __Wiki Pages__.
 In terms of abstract types, we can describe Wiki and Wiki Pages as follows.
@@ -72,7 +74,7 @@ Here is an example of a valid Wiki JSON object:
 This simple Wiki has a main Wiki Page, which has one child.
 Obviously, a Wiki is wrapper for Wiki Pages represented as a simple _ordered_ tree data structure.
 
-### References
+#### References
 
 Remember, a Wiki Page is just a node of a tree.
 This node can have arbitrarily many child nodes.
@@ -86,7 +88,7 @@ Since the sequence is empty, we do not have to open any child notes.
 A sequence `[i]` references `i`th child of `p`.
 A sequence `[i j]` references `j`th child of `p`'s `i`'th child.
 
-### Update Deltas
+#### Update Deltas
 
 WikiZen handles Wikis as immutable data structures. All updates are stored separately as deltas.
 When a Wiki is loaded, it's assembled from the stored deltas.

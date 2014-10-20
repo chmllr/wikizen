@@ -14,7 +14,7 @@
         (get-node (nth children index) indeces)))))
 
 (defn get-path
-  "Returns all titles of the specified ref"
+  "Returns all titles of all pages down to the page under ref"
   [{:keys [title children]} [i & is :as ref]]
   (if (empty? ref)
     [title]
@@ -28,12 +28,12 @@
 
 (let [dmp (js/diff_match_patch.)]
   (defn- get-patch
-    "Diffs two texts and returns the delta"
+    "Diffs two texts and returns the delta as text"
     [from to]
     (.patch_toText dmp
                    (.patch_make dmp (or from "") (or to ""))))
   (defn- apply-patch
-    "Applies deltas to get the next version"
+    "Applies delta as text to get the next version"
     [patch text]
     (let [[result status] (.patch_apply dmp (.patch_fromText dmp patch) (or text ""))]
       (if (every? identity (js->clj status))
@@ -41,7 +41,7 @@
         (throw (print-str "Patch" (.stringify js/JSON patch) "could not be applied"))))))
 
 (defn set-page
-  "Sets the page to the given reference"
+  "Sets the specifed ref to the specified page"
   [root ref page]
   (if (empty? ref)
     page
@@ -59,7 +59,7 @@
                   (when-not (empty? new-children) new-children)))))
 
 (defn- apply-delta
-  "Apply given delta to the given Wiki"
+  "Applies given delta to the given Wiki"
   [root {:keys [ref property value]}]
   (log/! "apply-delta called for" :ref ref :property property)
   (let [page (get-node root ref)

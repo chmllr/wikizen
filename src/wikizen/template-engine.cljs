@@ -11,6 +11,7 @@
            (map string/capitalize (rest sub-tokens)))))
 
 (defn- create-span
+  "Creates a simple <span> element with content"
   [content]
   (let [span (dom/createElement "span")]
     (aset span "innerHTML" content)

@@ -9,25 +9,29 @@
 
 (enable-console-print!)
 
-(def wiki-id (storage/create-wiki "dev-wiki" "Test Wiki"))
+(def wiki-id (storage/create-wiki "dev-wiki" "Test Wiki"))  ; TODO: do better than always trying to create
 
-(def current-page (atom nil))
+; holds the relevant information for the currently displayed UI
+(def current-ui (atom nil))
 
+; maps keycode to the corresponding event;
+; some events contain a function computing the necessary ref
+; from the ref of the page the key code was issued
 (def key->link-id
   (reduce
     (fn [m i] (assoc m (+ 48 i)
-                       {:id :show-page
+                       {:id          :show-page
                         :compute-ref (fn [page] (conj (page :ref) (dec i)))}))
-    {27 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))}  ; cancel
-     37 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))}  ; back
+    {27 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))} ; cancel
+     37 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))} ; back
      68 {:id :delete-page}                                  ; delete
      69 {:mode :edit-page :id :show-edit-mask}              ; edit
-     78 {:mode :add-page                                    ; new
-         :id :show-edit-mask
+     78 {:mode        :add-page                             ; new
+         :id          :show-edit-mask
          :compute-ref (fn [{:keys [ref page]}]
                         (conj ref
                               (count (page :children))))}}
-    (range 1 10)) )
+    (range 1 10)))
 
 (defn display-ui
   "Puts the specified DOM element into the main container"
@@ -38,14 +42,14 @@
     (.appendChild app fragment)))
 
 (defn show-page
-  "Opens the specified page"
+  "Opens the page under the specified ref"
   [_ {:keys [name root]} event-processor {:keys [ref]}]
   (log/! "show-page called with params:" :name name :ref ref)
   (let [page (engine/get-node root ref)]
-    (reset! current-page {:page page
-                          :ref ref
-                          :shortcuts (into #{37 68 69 78}
-                                           (range 49 (+ 49 (count (page :children)))))})
+    (reset! current-ui {:page      page
+                        :ref       ref
+                        :shortcuts (into #{37 68 69 78}
+                                         (range 49 (+ 49 (count (page :children)))))})
     (display-ui
       (ui/page event-processor
                ref
@@ -54,16 +58,17 @@
                name))))
 
 (defn show-edit-mask
-  "Opens the editing mask"
+  "Opens the UI with the editing mask"
   [_ {:keys [root]} event-processor {:keys [ref mode]}]
   (log/! "show-edit-mask called with params:" :ref ref :mode mode)
-  (reset! current-page {:ref ref :shortcuts #{27}})
+  (reset! current-ui {:ref ref :shortcuts #{27}})
   (display-ui
     (ui/edit-page event-processor ref mode
                   (engine/get-node root ref))))
 
 (defn save-page
-  "Sends the received contents to the storage"
+  "Sends the received contents to the storage and opens the new page;
+  storaging is intended to be synchronous!"
   [wiki-id _ event-processor {:keys [ref title body]}]
   (log/! "save-page called with params:" :wiki-id wiki-id :ref ref :title title :body body)
   (storage/update-page wiki-id ref title body)
@@ -80,16 +85,17 @@
         (storage/delete-page wiki-id ref)
         (event-processor {:id :show-page :ref (butlast ref)})))))
 
+; event ID -> handler mapping
 (def event->fn
-  {:show-page show-page
+  {:show-page      show-page
    :show-edit-mask show-edit-mask
-   :delete-page delete-page
-   :add-page save-page
-   :edit-page save-page})
+   :delete-page    delete-page
+   :add-page       save-page
+   :edit-page      save-page})
 
 ; TODO: add eventing unit tests
 (defn event-processor
-  "Event processor; all events are blocking"
+  "Event processor; all events are blocking!"
   [event]
   (log/! "event received:" event)
   (let [{:keys [id]} event
@@ -102,7 +108,7 @@
         (log/error "Error during execution of event" id ":" (.-message e))))))
 
 (defn bootstrap
-  "Starts the app"
+  "Starts the app, sets shortcut listener, open the main page"
   []
   (log/! "bootstrapping the app...")
   (events/listen (dom/getWindow)
@@ -110,11 +116,11 @@
                  (fn [e]
                    (let [code (.-keyCode e)]
                      (log/! "keydown event send with keycode" code)
-                     (when (contains? (@current-page :shortcuts) code)
+                     (when (contains? (@current-ui :shortcuts) code)
                        (when-let [event (key->link-id code)]
                          (let [f (event :compute-ref #(% :ref))
                                event (assoc (select-keys event [:id :mode])
-                                       :ref (f @current-page))]
+                                       :ref (f @current-ui))]
                            (event-processor event)))))))
   (event-processor {:id :show-page :ref []}))
 

@@ -3,6 +3,8 @@
             [goog.dom :as dom]
             [goog.events :as events]))
 
+; TODO: generate CSS
+
 (defn
   edit-page
   "Generates a page with a text area and a preview for
@@ -56,6 +58,7 @@
                      ; TODO: the camilization will break here?
                      :-webkit-flex "2 1 0"}}
       name ": " ; TODO: set root title to empty and no return to this page is ever possible
+                ; TODO: refactoring: pull this into an extra function
       (interpose " / "
                  (concat
                    (map
