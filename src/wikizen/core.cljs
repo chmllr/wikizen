@@ -75,6 +75,9 @@
   "Starts the app"
   []
   (log/! "bootstrapping the app...")
+  (events/listen (dom/getWindow)
+                 "keypress"
+                 #(log/! "key pressed:" (.-keyCode %)))
   (event-processor {:id :show-page :ref []}))
 
 ;(log/enable-log)
