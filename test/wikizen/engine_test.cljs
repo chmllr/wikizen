@@ -27,17 +27,12 @@
                     (is (= "Nested Page 1_1" (:title (engine/get-node root [0 0])))
                         "extracting 1st child's child"))
            (testing "get-path"
-                    (is (= [[[] "Root Page"]] (engine/get-path root []))
-                        "get root path")
-                    (is (= [[[] "Root Page"] [[0] "Nested Page 1"]] (engine/get-path root [0]))
-                        "get path to 1st child")
-                    (is (= [[[] "Root Page"] [[1] "Nested Page 2"]] (engine/get-path root [1]))
-                        "get path to 2nd child")
-                    (is (= [[[] "Root Page"] [[0] "Nested Page 1"] [[0 0] "Nested Page 1_1"]]
-                           (engine/get-path root [0 0]))
+                    (is (= ["Root Page"] (engine/get-path root [])) "get root path")
+                    (is (= ["Root Page" "Nested Page 1"] (engine/get-path root [0])) "get path to 1st child")
+                    (is (= ["Root Page" "Nested Page 2"] (engine/get-path root [1])) "get path to 2nd child")
+                    (is (= ["Root Page" "Nested Page 1" "Nested Page 1_1"] (engine/get-path root [0 0]))
                         "get path to 1st child's child")
-                    (is (= [[[] "Root Page"] [[1] "Nested Page 2"] [[1 0] "Nested Page 2_1"]]
-                           (engine/get-path root [1 0]))
+                    (is (= ["Root Page" "Nested Page 2" "Nested Page 2_1"] (engine/get-path root [1 0]))
                         "get path to 2nd child's child"))
            (testing "set-nth"
                     (is (= [:X :b :c :d] (engine/set-nth [:a :b :c :d] 0 :X)))

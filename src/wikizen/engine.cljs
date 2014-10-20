@@ -14,19 +14,11 @@
         (get-node (nth children index) indeces)))))
 
 (defn get-path
-  "Returns the traversed ref in form of [<index> <title>] pairs"
-  ([root ref]
-   (cons [[] (root :title)]
-         (get-path root ref [])))
-  ([root ref acc]
-   (if (empty? ref)
-     []
-     (let [index (first ref)
-           acc (conj acc index)
-           child (nth (root :children) index)
-           title (:title child)]
-       (cons [acc title]
-             (get-path child (rest ref) acc))))))
+  "Returns all titles of the specified ref"
+  [{:keys [title children]} [i & is :as ref]]
+  (if (empty? ref)
+    [title]
+    (cons title (get-path (nth children i) is))))
 
 (defn- set-nth
   "Sets nth element of the given vector to the given value"

@@ -59,15 +59,15 @@
       (interpose " / "
                  (concat
                    (map
-                     (fn [[page-ref title]]
+                     (fn [[i title]]
                        (vector :a
                                {:href "#"
                                 :onclick #(event-processor
                                            {:id :show-page
-                                            :ref page-ref})}
+                                            :ref (take i ref)})}
                                title))
-                     (butlast title-path))
-                   [(second (last title-path))]))]
+                     (map list (range) (butlast title-path)))
+                   [(last title-path)]))]
      [:code
       [:a
        {:href "#"

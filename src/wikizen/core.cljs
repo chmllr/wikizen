@@ -42,9 +42,10 @@
   [_ {:keys [name root]} event-processor {:keys [ref]}]
   (log/! "show-page called with params:" :name name :ref ref)
   (let [page (engine/get-node root ref)]
-    (reset! current-page {:page page :ref ref :shortcuts (into #{37 68 69 78}
-                                                               (range 49
-                                                                      (+ 49 (count (page :children)))))})
+    (reset! current-page {:page page
+                          :ref ref
+                          :shortcuts (into #{37 68 69 78}
+                                           (range 49 (+ 49 (count (page :children)))))})
     (display-ui
       (ui/page event-processor
                ref
@@ -118,7 +119,3 @@
   (event-processor {:id :show-page :ref []}))
 
 ;(log/enable-log)
-
-(defn inspect-current-page
-  []
-  (.dir js/console (clj->js @current-page)))
