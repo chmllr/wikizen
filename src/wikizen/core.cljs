@@ -9,7 +9,7 @@
 
 (enable-console-print!)
 
-(def wiki-id (storage/create-wiki "Test Wiki" "dev-wiki"))
+(def wiki-id (storage/create-wiki "dev-wiki" "Test Wiki"))
 
 (defn display-ui
   "Puts the specified DOM element into the main container"
@@ -79,7 +79,6 @@
         wiki (storage/get-wiki wiki-id)]
     (log/! "apply event handler for" id)
     (f wiki-id wiki event-processor event)))
-
 
 (defn bootstrap
   "Starts the app"

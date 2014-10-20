@@ -45,10 +45,7 @@
 
 (defn
   page
-  "Generates a wiki page; event-processor is a function receiveing events;
-  ref is an index vector of the current page,
-  title-path is a vector of [ref title] pairs till the current page,
-  wiki is the node of current wiki"
+  "Generates a wiki page"
   [event-processor ref title-path root name]
   (te/template->dom
     [:div#headbar {:style {:display "flex"

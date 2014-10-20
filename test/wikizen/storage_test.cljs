@@ -7,8 +7,8 @@
 
 (deftest storage-test
          (testing "storage and updates"
-                  (let [id (storage/create-wiki "Test" "id1" {})
-                        id2 (storage/create-wiki "Test2" "id2")]
+                  (let [id (storage/create-wiki "id1" "Test" {})
+                        id2 (storage/create-wiki "id2" "Test2")]
                     (is (re-matches #".*root page.*"
                                     (clojure.string/replace
                                       (get-in (storage/get-wiki id2) [:root :body])

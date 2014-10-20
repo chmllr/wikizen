@@ -51,7 +51,6 @@
 (defn set-page
   "Sets the page to the given reference"
   [root ref page]
-  (log/! "set-page called for" :ref ref)
   (if (empty? ref)
     page
     (let [[index & indeces] ref

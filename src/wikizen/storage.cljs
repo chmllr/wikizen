@@ -14,37 +14,39 @@
 
 (def dao (atom {}))
 
+; to avoid delta applications if no updates happened
+(def cache (atom {}))
+
 (defn- load
   [id]
   (log/! "load called for wiki" id)
   (when-not (.-testMode js/window)
-    (let [string (.getItem js/localStorage id)
-          data-structure (js->clj (.parse js/JSON string) :keywordize-keys true)]
-      (swap! dao assoc id data-structure))))
+      (let [string (.getItem js/localStorage id)
+            data-structure (js->clj (.parse js/JSON string) :keywordize-keys true)]
+        (swap! dao assoc id data-structure))))
 
 (defn- save
   [id]
   (log/! "save called for wiki" id)
+  (swap! cache hash-map)
   (when-not (.-testMode js/window)
     (let [string (.stringify js/JSON (clj->js (@dao id)))]
       (.setItem js/localStorage id string))))
 
-(defn- store-wiki
+(defn create-wiki
   "Stores a new wiki"
-  [id wiki]
-  (log/! "store-wiki called for wiki" id)
-  (load id)
-  (if (@dao id)
-    (println "Wiki" id "exists already.")
-    (do
-      (swap! dao assoc id wiki)
-      (save id))))
-
-(defn- restore-wiki
-  "Restores a wiki from id"
-  [id]
-  (log/! "restore-wiki called for wiki" id)
-  (get-in @dao [id :wiki]))
+  ([id name] (create-wiki id name default-root))
+  ([id name root]
+   (log/! "create-wiki called for wiki" id)
+   (let [obj {:deltas []
+              :wiki {:name name :root root}}] 
+     (load id)
+     (if (@dao id)
+       (println "Wiki" id "exists already.")
+       (do
+         (swap! dao assoc id obj)
+         (save id)))
+     id)))
 
 (defn- store-deltas
   "Saves deltas"
@@ -56,28 +58,18 @@
                           concat deltas)) deltas)
   (save id))
 
-(defn- restore-deltas
-  "Restores all deltas for a wiki id"
-  [id]
-  (log/! "restore-deltas called for wiki" id)
-  (get-in @dao [id :deltas]))
-
-(defn create-wiki
-  "Creates ne wiki in the persistence layer"
-  ([name id] (create-wiki name id default-root))
-  ([name id root]
-   (log/! "create wiki called for wiki" id "with name" name)
-   (store-wiki id {:wiki {:name name :root root}
-                   :deltas []})
-   id))
-
 (defn get-wiki
   "Returns the Wiki object"
   [id]
   (log/! "get-wiki called for wiki" id)
-  (let [wiki (restore-wiki id)
-        deltas (restore-deltas id)]
-    (assoc wiki :root (reduce engine/apply-delta (wiki :root) deltas))))
+  (if (@cache id) 
+    (@cache id) 
+    (let [obj (@dao id)
+          wiki (obj :wiki)
+          deltas (obj :deltas)
+          assembled-wiki (assoc wiki :root (reduce engine/apply-delta (wiki :root) deltas))]
+      (swap! cache assoc id assembled-wiki)
+      assembled-wiki)))
 
 (defn update-page
   "Applies the passed deltas"
