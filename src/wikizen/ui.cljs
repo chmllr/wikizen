@@ -15,7 +15,13 @@
       :style {:font-weight "bold"}
       :placeholder "Page name"}]
     [:textarea#body.full-width.input-fields
-     {:rows 30} (when (= mode :edit-page) (wiki :body))]
+     {:rows 20 
+      :onkeyup (fn [_]
+                    (aset (dom/getElement "markdown") 
+                          "innerHTML" 
+                          (js/marked (aget (dom/getElement "body") 
+                                           "value"))))}
+     (when (= mode :edit-page) (wiki :body))]
     [:br]
     [:a {:href "#"
          :onclick
@@ -33,7 +39,9 @@
            (event-processor
              {:ref (butlast ref)
               :id :show-page }))}
-     "cancel"]))
+     "cancel"]
+    [:hr]
+    [:article#markdown]))
 
 (defn
   page
@@ -49,7 +57,7 @@
      [:code {:style {:flex "2 1 0"
                      ; TODO: the camilization will break here?
                      :-webkit-flex "2 1 0"}}
-      name ": "                                             ; TODO: set root title to empty and no return to this page is ever possible
+      name ": " ; TODO: set root title to empty and no return to this page is ever possible
       (interpose " / "
                  (conj
                    (into [] (map
