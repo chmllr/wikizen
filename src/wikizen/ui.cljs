@@ -13,6 +13,7 @@
      {:type "text"
       :value (when (= mode :edit-page) (wiki :title))
       :style {:font-weight "bold"}
+      :autofocus "autofocus"
       :placeholder "Page name"}]
     [:textarea#body.full-width.input-fields
      {:rows 20
@@ -33,9 +34,9 @@
                     :body (.-value (dom/getElement "body"))}))}
      "save"]
     "&nbsp;"
-    [:a#cancel-link {:href "#"
+    [:a {:href "#"
                      :onclick
-                           (fn [e]
+                           (fn [_]
                              (event-processor
                                {:ref (butlast ref)
                                 :id :show-page }))}
@@ -59,7 +60,7 @@
                  (concat
                    (map
                      (fn [[page-ref title]]
-                       (vector (if (= (drop-last ref) page-ref) :a#back :a)
+                       (vector :a
                                {:href "#"
                                 :onclick #(event-processor
                                            {:id :show-page
@@ -68,14 +69,14 @@
                      (butlast title-path))
                    [(second (last title-path))]))]
      [:code
-      [:a#new-page-link
+      [:a
        {:href "#"
         :onclick #(event-processor
                    {:id :show-edit-mask
                     :mode :add-page
                     :ref (conj ref (count (root :children)))})} "new"]
       " &middot; "
-      [:a#edit-page-link
+      [:a
        {:href "#"
         :onclick #(event-processor
                    {:id :show-edit-mask
@@ -83,7 +84,7 @@
                     :ref ref})} "edit"]
       " &middot; "
       ; TODO: hide for root page
-      [:a#delete-page-link
+      [:a
        {:href "#"
         :onclick #(event-processor
                    {:id :delete-page
