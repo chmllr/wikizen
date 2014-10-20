@@ -6,7 +6,6 @@
   "Traverses the wiki tree and returns the 
   node according the specified path (vector of ints)"
   [root ref]
-  (log/! "get-node called for" :ref ref)
   (if (empty? ref)
     root
     (let [[index & indeces] ref
@@ -20,7 +19,6 @@
    (cons [[] (root :title)]
          (get-path root ref [])))
   ([root ref acc]
-   (log/! "get-path called for" :ref ref)
    (if (empty? ref)
      []
      (let [index (first ref)
