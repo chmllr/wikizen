@@ -26,6 +26,18 @@ WikiZen
 WikiZen is a minimal Markdown-based wiki engine for simple Wikis.
 WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhere**.
 
+## Usability
+
+### Shortcuts
+
+Following shortcuts are supported:
+
+- `e` opens a page in editing mode;
+- `n` opens the new-page mask;
+- `d` deletes a page;
+- `1` till `9` opens the corresponding child page;
+- `Left Arrow` navigates back;
+
 ## Specification
 
 ### Wiki and Wiki Pages

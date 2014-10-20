@@ -51,7 +51,7 @@
   (log/! "delete-page called with params:" :wiki-id wiki-id :ref ref)
   (if (empty? ref)
     (js/alert "Root page cannot be deleted.")
-    (when (js/confirm "Do you really want to delete this page?") 
+    (when (js/confirm "Do you really want to delete this page?")
       (do
         (storage/delete-page wiki-id ref)
         (event-processor {:id :show-page :ref (butlast ref)})))))
@@ -64,10 +64,13 @@
    :edit-page save-page})
 
 (def key->link-id
-  {27 "cancel-link"
-   69 "edit-page-link"
-   68 "delete-page-link"
-   78 "new-page-link"})
+  (reduce
+    (fn [m i] (assoc m (+ 48 i) (str "child-page-" i)))
+    {27 "cancel-link"
+     37 "back"
+     68 "delete-page-link"
+     69 "edit-page-link"
+     78 "new-page-link"} (range 1 10)) )
 
 ; TODO: add eventing unit tests
 (defn event-processor
@@ -86,9 +89,13 @@
   (log/! "bootstrapping the app...")
   (events/listen (dom/getWindow)
                  "keydown"
-                 #(when-let [link (key->link-id (.-keyCode %))]
-                     (.onclick
-                       (dom/getElement link))))
+                 #(let [code (.-keyCode %)]
+                   (log/! "keydown event send with keycode" code)
+                   (when-let [link (key->link-id code)]
+                     (when-let [element (dom/getElement link)]
+                       (.onclick element)))))
   (event-processor {:id :show-page :ref []}))
 
 ;(log/enable-log)
+
+(def x (clj->js key->link-id))
