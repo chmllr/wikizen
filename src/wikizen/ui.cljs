@@ -25,7 +25,15 @@
               :id mode
               :title (.-value (dom/getElement "title"))
               :body (.-value (dom/getElement "body"))}))}
-     "save"]))
+     "save"]
+    "&nbsp;"
+    [:a#cancel-link {:href "#"
+         :onclick
+         (fn [e]
+           (event-processor
+             {:ref (butlast ref)
+              :id :show-page }))}
+     "cancel"]))
 
 (defn
   page

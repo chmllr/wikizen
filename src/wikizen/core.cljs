@@ -64,9 +64,10 @@
    :edit-page save-page})
 
 (def key->link-id
-  {101 "edit-page-link"
-   100 "delete-page-link"
-   110 "new-page-link"})
+  {27 "cancel-link"
+   69 "edit-page-link"
+   68 "delete-page-link"
+   78 "new-page-link"})
 
 ; TODO: add eventing unit tests
 (defn event-processor
@@ -85,7 +86,7 @@
   []
   (log/! "bootstrapping the app...")
   (events/listen (dom/getWindow)
-                 "keypress"
+                 "keydown"
                  #(when-let [link (key->link-id (.-keyCode %))]
                      (.onclick
                        (dom/getElement link))))
