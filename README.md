@@ -31,7 +31,7 @@ WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhe
 ### Wiki and Wiki Pages
 
 A __Wiki__ is one single JSON object, containing all the settings and __Wiki Pages__.
-In terms of abstract types, we can describe Wikie and Wiki Pages as follows.
+In terms of abstract types, we can describe Wiki and Wiki Pages as follows.
 
     Wiki = { name: String, root: WikiPage}
     

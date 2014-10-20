@@ -69,7 +69,6 @@
       (assoc root :children
                   (when-not (empty? new-children) new-children)))))
 
-
 (defn- apply-delta
   "Apply given delta to the given Wiki"
   [root {:keys [ref property value]}]
