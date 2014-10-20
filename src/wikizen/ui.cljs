@@ -19,12 +19,12 @@
     [:br]
     [:a {:href "#"
          :onclick
-               (fn [e]
-                 (event-processor
-                   {:ref ref
-                    :id mode
-                    :title (.-value (dom/getElement "title"))
-                    :body (.-value (dom/getElement "body"))}))}
+         (fn [e]
+           (event-processor
+             {:ref ref
+              :id mode
+              :title (.-value (dom/getElement "title"))
+              :body (.-value (dom/getElement "body"))}))}
      "save"]))
 
 (defn
@@ -36,8 +36,8 @@
   [event-processor ref title-path root name]
   (te/template->dom
     [:div#headbar {:style {:display "flex"
-                          ;:display "-webkit-flex" (TODO)
-                          }}
+                           ;:display "-webkit-flex" (TODO)
+                           }}
      [:code {:style {:flex "2 1 0"
                      ; TODO: the camilization will break here?
                      :-webkit-flex "2 1 0"}}
@@ -48,29 +48,32 @@
                               (fn [[ref title]]
                                 (vector :a {:href "#"
                                             :onclick #(event-processor
-                                                       {:id :show-page
-                                                        :ref ref})}
+                                                        {:id :show-page
+                                                         :ref ref})}
                                         title))
                               (butlast title-path)))
                    (second (last title-path))))]
      [:code
-      [:a {:href "#"
-           :onclick #(event-processor
-                      {:id :show-edit-mask
-                       :mode :add-page
-                       :ref (conj ref (count (root :children)))})} "new"]
+      [:a#new-page-link 
+       {:href "#"
+        :onclick #(event-processor
+                    {:id :show-edit-mask
+                     :mode :add-page
+                     :ref (conj ref (count (root :children)))})} "new"]
       " &middot; "
-      [:a {:href "#"
-           :onclick #(event-processor
-                      {:id :show-edit-mask
-                       :mode :edit-page
-                       :ref ref})} "edit"]
+      [:a#edit-page-link 
+       {:href "#"
+        :onclick #(event-processor
+                    {:id :show-edit-mask
+                     :mode :edit-page
+                     :ref ref})} "edit"]
       " &middot; "
       ; TODO: hide for root page
-      [:a {:href "#"
-           :onclick #(event-processor
-                      {:id :delete-page
-                       :ref ref})} "delete"]]]
+      [:a#delete-page-link 
+       {:href "#"
+        :onclick #(event-processor
+                    {:id :delete-page
+                     :ref ref})} "delete"]]]
     [:h1 (root :title)]
     [:article#markdown (js/marked (or (root :body) ""))]
     (when-let [children (root :children)]
@@ -83,7 +86,7 @@
             (vector :li
                     [:a {:href "#"
                          :onclick #(event-processor
-                                    {:id :show-page
-                                     :ref (vec (concat ref [i]))})}
+                                     {:id :show-page
+                                      :ref (vec (concat ref [i]))})}
                      (child :title)]))
           (map list (range) children))]])))

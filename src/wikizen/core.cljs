@@ -51,9 +51,22 @@
   (log/! "delete-page called with params:" :wiki-id wiki-id :ref ref)
   (if (empty? ref)
     (js/alert "Root page cannot be deleted.")
-    (do
-      (storage/delete-page wiki-id ref)
-      (event-processor {:id :show-page :ref (butlast ref)}))))
+    (when (js/confirm "Do you really want to delete this page?") 
+      (do
+        (storage/delete-page wiki-id ref)
+        (event-processor {:id :show-page :ref (butlast ref)})))))
+
+(def event->fn
+  {:show-page show-page
+   :show-edit-mask show-edit-mask
+   :delete-page delete-page
+   :add-page save-page
+   :edit-page save-page})
+
+(def key->link-id
+  {101 "edit-page-link"
+   100 "delete-page-link"
+   110 "new-page-link"})
 
 ; TODO: add eventing unit tests
 (defn event-processor
@@ -61,15 +74,11 @@
   [event]
   (log/! "event received:" event)
   (let [{:keys [id]} event
-        mapping {:show-page show-page
-                 :show-edit-mask show-edit-mask
-                 :delete-page delete-page
-                 :add-page save-page
-                 :edit-page save-page}
-        f (mapping id #(log/error "no handler for event" id "found"))
+        f (event->fn id #(log/error "no handler for event" id "found"))
         wiki (storage/get-wiki wiki-id)]
     (log/! "apply event handler for" id)
     (f wiki-id wiki event-processor event)))
+
 
 (defn bootstrap
   "Starts the app"
@@ -77,7 +86,9 @@
   (log/! "bootstrapping the app...")
   (events/listen (dom/getWindow)
                  "keypress"
-                 #(log/! "key pressed:" (.-keyCode %)))
+                 #(when-let [link (key->link-id (.-keyCode %))]
+                     (.onclick
+                       (dom/getElement link))))
   (event-processor {:id :show-page :ref []}))
 
 ;(log/enable-log)
