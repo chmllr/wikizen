@@ -88,5 +88,12 @@ Delta is different for every property:
   - for body it is a diff (produced by Diff-Match-Path library), containing the deltas only;
   - for page it can be an arbitrary JSON object or even `null` (it the page was deleted).
   
+### Serialization
 
+A Wiki is stored in one single JSON object, whose structure can be described in the same type abstraction used above as follows:
+
+   {
+      wiki: Wiki,
+      deltas: [Delta]
+   }
 
