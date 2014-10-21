@@ -20,15 +20,16 @@
 ; cache used to avoid delta applications if no updates happened
 (def cache (atom {}))
 
-(defn- load
+(defn load
   "Loads a wiki, deserializes and assings to dao;
   has to be called only once! (to fill the dao; afterwards, all updates go to dao)"
   [id]
   (log/! "load called for wiki" id)
   (when-not (.-testMode js/window)
-    (let [string (.getItem js/localStorage id)
-          data-structure (js->clj (.parse js/JSON string) :keywordize-keys true)]
-      (swap! dao assoc id data-structure))))
+    (when-let [string (.getItem js/localStorage id)]
+      (swap! dao assoc id (js->clj
+                            (.parse js/JSON string)
+                            :keywordize-keys true)))))
 
 (defn- save
   "Clears the cache, serializes the wiki and sends it to the storage"

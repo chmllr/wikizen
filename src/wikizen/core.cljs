@@ -9,7 +9,12 @@
 
 (enable-console-print!)
 
-(def wiki-id (storage/create-wiki "dev-wiki" "Test Wiki"))  ; TODO: do better than always trying to create
+(def wiki-id
+  (let [id (clojure.string/replace (.-search js/location) #"\?" "")
+        response (storage/load id)]
+    (when-not response
+      (storage/create-wiki id id))
+    id))
 
 ; holds the relevant information for the currently displayed UI
 (def current-ui (atom nil))
@@ -124,4 +129,4 @@
                            (event-processor event)))))))
   (event-processor {:id :show-page :ref []}))
 
-;(log/enable-log)
+(log/enable-log)
