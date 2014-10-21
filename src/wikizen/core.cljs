@@ -108,7 +108,7 @@
         wiki (storage/get-wiki wiki-id)]
     (log/! "apply event handler for" id)
     (try
-      (f wiki-id wiki event-processor event)
+      (f wiki-id wiki event-processor (update-in event [:ref] vec))
       (catch :default e
         (log/error "Error during execution of event" id ":" (.-message e))))))
 
@@ -129,4 +129,4 @@
                            (event-processor event)))))))
   (event-processor {:id :show-page :ref []}))
 
-(log/enable-log)
+;(log/enable-log)

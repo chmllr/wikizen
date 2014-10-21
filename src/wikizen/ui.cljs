@@ -72,5 +72,5 @@
        [:ol
         (map
           (fn [[i child]]
-            (vector :li (link channel {:id :show-page :ref (vec (concat ref [i]))} (child :title))))
+            (vector :li (link channel {:id :show-page :ref (concat ref [i])} (child :title))))
           (map list (range) children))]])))
