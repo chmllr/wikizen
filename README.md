@@ -30,25 +30,25 @@ In terms of abstract types, we can describe Wiki and Wiki Pages as follows.
     Wiki = { name: String, root: WikiPage}
     
     WikiPage = {
-        title: String,
-        body: String,
-        children: [WikiPage]
+      title: String,
+      body: String,
+      children: [WikiPage]
     }
 
 Here is an example of a valid Wiki JSON object:
 
     {
-        "name": "Demo Wiki",
-        "root": { 
-                "title": "Main Page",
-                "body": "Hello *world*!",
+      "name": "Demo Wiki",
+      "root": { 
+        "title": "Main Page",
+        "body": "Hello *world*!",
                 "children" [
-                    {
-                        "title": "Child Page",
-                        "body": "Hello _back_!" 
-                    }
-                ]
-            }
+                  {
+                    "title": "Child Page",
+                    "body": "Hello _back_!" 
+                  }
+               ]
+        }
     }
                 
 This simple Wiki has a main Wiki Page, which has one child.
@@ -76,9 +76,9 @@ When a Wiki is loaded, it's assembled from the stored deltas.
 A delta is defines as a triple:
 
     Delta = {
-        ref: [Int], 
-        property: String,
-        delta: String
+      ref: [Int], 
+      property: String,
+      delta: String
     }
     
 Reference identifies the Wiki Page.
@@ -92,8 +92,8 @@ Delta is different for every property:
 
 A Wiki is stored in one single JSON object, whose structure can be described in the same type abstraction used above as follows:
 
-   {
+    {
       wiki: Wiki,
       deltas: [Delta]
-   }
+    }
 
