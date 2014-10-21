@@ -1,23 +1,5 @@
-WikiZen
+&#9775; WikiZen
 =======
-
-                    .  
-             .............##  
-          .................####  
-        ...........###......#####  
-       ...........#####......#####  
-      .............###......#######   
-     ......................#########   
-     .....................##########   
-    .................################   
-     ..........#####################   
-     .........######################   
-      .......######...#############   
-       .....######.....###########   
-        .....######...###########   
-          ....#################   
-             ..#############   
-                    #   
 
 > "Like all magnificent things,  
 >  it's very simple."  
@@ -32,11 +14,11 @@ WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhe
 
 Following shortcuts are supported:
 
-- `e` opens a page in editing mode;
+- `e` opens the current page in editing mode;
 - `n` opens the new-page mask;
-- `d` deletes a page;
-- `1` till `9` opens the corresponding child page;
-- `Left Arrow` navigates back;
+- `d` deletes the current page;
+- `1` till `9` opens the `n`th child of the current page;
+- `Left Arrow` navigates to previous page.
 
 ## Specification
 
