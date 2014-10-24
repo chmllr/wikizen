@@ -27,8 +27,8 @@
     (fn [m i] (assoc m (+ 48 i)
                        {:id          :show-page
                         :compute-ref (fn [page] (conj (page :ref) (dec i)))}))
-    {27 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))} ; cancel
-     37 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))} ; back
+    {37 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))} ; back
+     27 {:id :show-page}                                    ; cancel
      68 {:id :delete-page}                                  ; delete
      69 {:mode :edit-page :id :show-edit-mask}              ; edit
      78 {:mode        :add-page                             ; new
