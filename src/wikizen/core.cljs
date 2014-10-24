@@ -28,7 +28,9 @@
                        {:id          :show-page
                         :compute-ref (fn [page] (conj (page :ref) (dec i)))}))
     {37 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))} ; back
-     27 {:id :show-page}                                    ; cancel
+     27 {:id :show-page :compute-ref (fn [page] ((if (= :edit-page (@current-ui :mode))
+                                                   identity
+                                                   drop-last) (page :ref)))} ; cancel
      68 {:id :delete-page}                                  ; delete
      69 {:mode :edit-page :id :show-edit-mask}              ; edit
      78 {:mode        :add-page                             ; new
@@ -66,7 +68,7 @@
   "Opens the UI with the editing mask"
   [_ {:keys [root]} event-processor {:keys [ref mode]}]
   (log/! "show-edit-mask called with params:" :ref ref :mode mode)
-  (reset! current-ui {:ref ref :shortcuts #{27}})
+  (reset! current-ui {:ref ref :mode mode :shortcuts #{27}})
   (display-ui
     (ui/edit-page event-processor ref mode
                   (engine/get-node root ref))))
