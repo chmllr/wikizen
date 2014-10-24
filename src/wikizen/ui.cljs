@@ -13,13 +13,13 @@
   [channel ref mode wiki]
   (te/template->dom
     [:input#title.full-width.input-fields
-     {:type "text"
-      :value (when (= mode :edit-page) (wiki :title))
-      :style {:font-weight "bold"}
-      :autofocus "autofocus"
+     {:type        "text"
+      :value       (when (= mode :edit-page) (wiki :title))
+      :style       {:font-weight "bold"}
+      :autofocus   "autofocus"
       :placeholder "Page name"}]
     [:textarea#body.full-width.input-fields
-     {:rows 20
+     {:rows    20
       :onkeyup (fn [_]
                  (aset (dom/getElement "markdown")
                        "innerHTML"
@@ -44,10 +44,10 @@
     [:div#headbar {:style {:display "flex"
                           ;:display "-webkit-flex" (TODO)
                           }}
-     [:code {:style {:flex "2 1 0"
+     [:code {:style {:flex         "2 1 0"
                      ; TODO: the camilization will break here?
                      :-webkit-flex "2 1 0"}}
-      name ": " ; TODO: set root title to empty and no return to this page is ever possible
+      name ": "                                             ; TODO: set root title to empty and no return to this page is ever possible
                 ; TODO: refactoring: pull this into an extra function
       (interpose " / "
                  (concat
@@ -63,7 +63,6 @@
       " &middot; "
       ; TODO: hide for root page
       (link channel {:id :delete-page :ref ref} "delete")]]
-    [:h1 (root :title)]
     [:article#markdown (js/marked (or (root :body) ""))]
     (when-let [children (root :children)]
       [:div
