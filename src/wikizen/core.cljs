@@ -1,6 +1,7 @@
 (ns wikizen.core
   (:require
     [goog.dom :as dom]
+    [goog.style :as style]
     [goog.events :as events]
     [wikizen.storage :as storage]
     [wikizen.log :as log]
@@ -18,6 +19,11 @@
 
 ; holds the relevant information for the currently displayed UI
 (def current-ui (atom nil))
+
+; establish some references to DOM elements
+(def app (dom/getElement "app"))
+(def overlay (dom/getElement "overlay"))
+(def modal (dom/getElement "modal"))
 
 ; maps keycode to the corresponding event;
 ; some events contain a function computing the necessary ref
@@ -40,13 +46,13 @@
                               (count (page :children))))}}
     (range 1 10)))
 
-(defn display-ui
+(defn display-in
   "Puts the specified DOM element into the main container"
-  [fragment]
-  (log/! "setting a new ui")
-  (let [app (dom/getElement "app")]
-    (aset app "innerHTML" "")
-    (.appendChild app fragment)))
+  [id fragment]
+  (log/! "setting a new ui into" id)
+  (let [element ({:app app :modal modal} id)]
+    (aset element "innerHTML" "")
+    (.appendChild element fragment)))
 
 (defn show-page
   "Opens the page under the specified ref"
@@ -57,8 +63,8 @@
                         :ref       ref
                         :shortcuts (into #{37 68 69 78}
                                          (range 49 (+ 49 (count (page :children)))))})
-    (display-ui
-      (ui/page event-processor
+    (display-in :app
+                (ui/page event-processor
                ref
                (engine/get-path root ref)
                page
@@ -69,7 +75,7 @@
   [_ {:keys [root]} event-processor {:keys [ref mode]}]
   (log/! "show-edit-mask called with params:" :ref ref :mode mode)
   (reset! current-ui {:ref ref :mode mode :shortcuts #{27}})
-  (display-ui
+  (display-in :app
     (ui/edit-page event-processor ref mode
                   (engine/get-node root ref))))
 
@@ -92,13 +98,22 @@
         (storage/delete-page wiki-id ref)
         (event-processor {:id :show-page :ref (butlast ref)})))))
 
+(defn enable-search
+  "Shows the search mask in a modal window"
+  [_ _ event-processor _]
+  (log/! "enable-search called with params")
+  (display-in :modal (ui/search-mask event-processor))
+  (style/setStyle overlay "display" "block"))
+
 ; event ID -> handler mapping
 (def event->fn
   {:show-page      show-page
    :show-edit-mask show-edit-mask
    :delete-page    delete-page
    :add-page       save-page
-   :edit-page      save-page})
+   :edit-page     save-page
+   :enable-search enable-search
+   :close-modal   #(style/setStyle overlay "display" "none")})
 
 ; TODO: add eventing unit tests
 (defn event-processor

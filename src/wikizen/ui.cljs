@@ -10,13 +10,13 @@
   editing and creation of pages"
   [channel ref mode wiki]
   (te/template->dom
-    [:input#title.full-width.input-fields
+    [:input#title.full-width.input-field
      {:type        "text"
       :value       (when (= mode :edit-page) (wiki :title))
       :style       {:font-weight "bold"}
       :autofocus   "autofocus"
       :placeholder "Page name"}]
-    [:textarea#body.full-width.input-fields
+    [:textarea#body.full-width.input-field
      {:rows    20
       :onkeyup (fn [_]
                  (aset (dom/getElement "markdown")
@@ -77,3 +77,12 @@
           (fn [[i child]]
             (vector :li (link (child :title) channel {:id :show-page :ref (concat ref [i])})))
           (map list (range) children))]])))
+
+(defn search-mask
+  [channel]
+  (te/template->dom
+    [:input.input-field.full-width {:placeholder "Enter text to search here"
+                                    :autofocus   "autofocus"}]
+    [:div#search-results]
+    [:hr]
+    (link "close" channel {:id :close-modal})))
