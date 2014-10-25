@@ -2,7 +2,7 @@
 
 (defmacro link
   "Produces a link which sends the passed event to the event processor"
-  [channel event label]
+  [label channel event]
   `[:a {:href "#"
         :onclick
               #(do

@@ -25,42 +25,48 @@
                                         "value"))))}
      (when (= mode :edit-page) (wiki :body))]
     [:br]
-    (link channel {:ref   ref
-                   :id    mode
-                   :title (.-value (dom/getElement "title"))
-                   :body  (.-value (dom/getElement "body"))} "save")
+    (link "save" channel {:ref   ref
+                          :id    mode
+                          :title (.-value (dom/getElement "title"))
+                          :body  (.-value (dom/getElement "body"))})
     "&nbsp;"
-    (link channel {:ref (butlast ref) :id :show-page} "cancel")
+    (link "cancel" channel {:ref (butlast ref) :id :show-page})
     [:hr]
     [:article#markdown]))
+
+(defn- menu
+  "Renders the links and menu at the right"
+  [channel title-path ref root name]
+  [:div#headbar {:style {:display "flex"
+                         ;:display "-webkit-flex" (TODO)
+                         }}
+   [:code {:style {:flex         "2 1 0"
+                   ; TODO: the camilization will break here?
+                   :-webkit-flex "2 1 0"}}
+    name ": "                                               ; TODO: set root title to empty and no return to this page is ever possible
+    (interpose " / "
+               (concat
+                 (map
+                   (fn [[i title]]
+                     (link title channel {:id :show-page :ref (take i ref)}))
+                   (map list (range) (butlast title-path)))
+                 [(last title-path)]))]
+   [:code
+    (interpose " &middot; "
+               (remove nil?
+                       [(link "new" channel {:id  :show-edit-mask :mode :add-page
+                                             :ref (conj ref (count (root :children)))})
+                        (link "edit" channel {:id :show-edit-mask :mode :edit-page :ref ref})
+                        (when-not (empty? ref)
+                          (link "delete" channel {:id :delete-page :ref ref}))
+                        (link "search" channel {:id :enable-search})]))]])
 
 (defn
   page
   "Generates a wiki page"
   [channel ref title-path root name]
   (te/template->dom
-    [:div#headbar {:style {:display "flex"
-                           ;:display "-webkit-flex" (TODO)
-                           }}
-     [:code {:style {:flex         "2 1 0"
-                     ; TODO: the camilization will break here?
-                     :-webkit-flex "2 1 0"}}
-      name ": "                                             ; TODO: set root title to empty and no return to this page is ever possible
-      ; TODO: refactoring: pull this into an extra function
-      (interpose " / "
-                 (concat
-                   (map
-                     (fn [[i title]]
-                       (link channel {:id :show-page :ref (take i ref)} title))
-                     (map list (range) (butlast title-path)))
-                   [(last title-path)]))]
-     [:code
-      (link channel {:id :show-edit-mask :mode :add-page :ref (conj ref (count (root :children)))} "new")
-      " &middot; "
-      (link channel {:id :show-edit-mask :mode :edit-page :ref ref} "edit")
-      " &middot; "
-      ; TODO: hide for root page
-      (link channel {:id :delete-page :ref ref} "delete")]]
+    (menu channel title-path ref root name)
     [:article#markdown (js/marked (or (root :body) ""))]
     (when-let [children (root :children)]
       [:div
@@ -69,5 +75,5 @@
        [:ol
         (map
           (fn [[i child]]
-            (vector :li (link channel {:id :show-page :ref (concat ref [i])} (child :title))))
+            (vector :li (link (child :title) channel {:id :show-page :ref (concat ref [i])})))
           (map list (range) children))]])))
