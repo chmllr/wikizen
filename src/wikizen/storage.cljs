@@ -7,11 +7,13 @@
 
 (def default-root
   {:title "&#9775; WikiZen"
-   :body (str "> _\"One machine can do the work of **fifty** ordinary men.  \n"
-              "> No machine can do the work of **one** extraordinary man.\"_  \n"
-              "> — Elbert Hubbard\n\n"
-              "This is default **root page** of your Wiki powered by"
-              "[WikiZen](https://github.com/chmllr/wikizen).\n")})
+   :body (str
+           "# Welcome"
+           "> _\"One machine can do the work of **fifty** ordinary men.  \n"
+           "> No machine can do the work of **one** extraordinary man.\"_  \n"
+           "> — Elbert Hubbard\n\n"
+           "This is default **root page** of your Wiki powered by"
+           "[WikiZen](https://github.com/chmllr/wikizen).\n")})
 
 ; single data access object which is a mapping:
 ; wiki ID -> { :wiki {...}, :deltas [...]}
