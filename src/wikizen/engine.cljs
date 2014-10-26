@@ -68,3 +68,23 @@
                (= property "body") (assoc page :body (apply-patch value (page :body)))
                :otherwise value)]
     (set-page root ref page)))
+
+(defn- create-re
+  "Creates one RE from the given terms"
+  [terms]
+  (let [re-terms (apply str (interpose ".*" terms))
+        re-terms (str "(?i).*" re-terms ".*")]
+    (re-pattern re-terms)))
+
+(defn- do-search
+  "search helper"
+  [root ref pattern]
+  (concat (map #(vector ref %) (re-seq pattern
+                                       (str (root :title) "\n" (root :body))))
+          (mapcat (fn [[i child]] (do-search child (conj ref i) pattern))
+                  (map list (range) (root :children)))))
+
+(defn search
+  "Simple regex-based text search over the wiki"
+  [root terms]
+  (do-search root [] (create-re terms)))

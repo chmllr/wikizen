@@ -7,16 +7,36 @@
 
 (deftest engine-tests
          (let [root { :title "Root Page"
-                      :body "This is the *page body*."
-                      :children [ { :title "Nested Page 1"
-                                    :body "The __content__ of _nested_ page 1"
-                                    :children [ { :title "Nested Page 1_1"
-                                                  :body "This _is_ a leaf" } ] }
-                                  { :title "Nested Page 2"
-                                    :body "The __content__ of _nested_ page 2"
-                                    :children [ { :title "Nested Page 2_1"
-                                                  :body "This _is_ a leaf" } ]} ] }
+                     :body     "This is the *page body*."
+                     :children [{:title    "Nested Page 1"
+                                 :body     "The __content__ of _nested_ page 1"
+                                 :children [{:title "Nested Page 1_1"
+                                             :body  "This _is_ a leaf text"}]}
+                                {:title    "Nested Page 2"
+                                 :body     "The __content__ of _nested_ page 2"
+                                 :children [{:title "Nested Page 2_1"
+                                             :body  "This _is_ a leaf text"}]}]}
+               rootX (update-in root [:children] conj {:title "regex search" :body "can be used to\n search in textes"})
                page {:title "New Page" :body "The body of the new page."}]
+           (testing "search"
+                    (is (= [] (engine/search root ["XXX"])))
+                    (is (= '([[] "This is the *page body*."]
+                             [[0 0] "This _is_ a leaf text"]
+                             [[1 0] "This _is_ a leaf text"])
+                           (engine/search root ["is"])))
+                    (is (= '([[0] "The __content__ of _nested_ page 1"]
+                             [[1] "The __content__ of _nested_ page 2"])
+                           (engine/search root ["of"])))
+                    (is (= '([[] "This is the *page body*."])
+                           (engine/search root ["this" "Body"])))
+                    (is (= '([[] "Root Page"])
+                           (engine/search root ["root"])))
+                    (is (= '([[2] "regex search"])
+                           (engine/search rootX ["regex"])))
+                    (is (= '([[2] "regex search"] [[2] " search in textes"])
+                           (engine/search rootX ["search"])))
+                    (is (= '([[0 0] "This _is_ a leaf text"] [[1 0] "This _is_ a leaf text"] [[2] " search in textes"])
+                           (engine/search rootX ["text"]))))
            (testing "get-node"
                     (is (= "Root Page" (:title (engine/get-node root [])))
                         "extracting the root page")
@@ -54,92 +74,92 @@
            (testing "set-page"
                     (is (= page (engine/set-page root [] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ page
-                                         { :title "Nested Page 2"
-                                           :body "The __content__ of _nested_ page 2"
-                                           :children [ { :title "Nested Page 2_1"
-                                                         :body "This _is_ a leaf" } ]} ] }
+                            :body     "This is the *page body*."
+                            :children [page
+                                       {:title    "Nested Page 2"
+                                        :body     "The __content__ of _nested_ page 2"
+                                        :children [{:title "Nested Page 2_1"
+                                                    :body  "This _is_ a leaf text"}]}]}
                            (engine/set-page root [0] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ { :title "Nested Page 1_1"
-                                                         :body "This _is_ a leaf" } ] }
-                                         page ] }
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [{:title "Nested Page 1_1"
+                                                    :body  "This _is_ a leaf text"}]}
+                                       page]}
                            (engine/set-page root [1] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ { :title "Nested Page 1_1"
-                                                         :body "This _is_ a leaf" } ] }
-                                         { :title "Nested Page 2"
-                                           :body "The __content__ of _nested_ page 2"
-                                           :children [ page ]} ] }
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [{:title "Nested Page 1_1"
+                                                    :body  "This _is_ a leaf text"}]}
+                                       {:title    "Nested Page 2"
+                                        :body     "The __content__ of _nested_ page 2"
+                                        :children [page]}]}
                            (engine/set-page root [1 0] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ page ] }
-                                         { :title "Nested Page 2"
-                                           :body "The __content__ of _nested_ page 2"
-                                           :children [ page ]} ] }
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [page]}
+                                       {:title    "Nested Page 2"
+                                        :body     "The __content__ of _nested_ page 2"
+                                        :children [page]}]}
                            (engine/set-page
                              (engine/set-page root [1 0] page)
                              [0 0] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ { :title "Nested Page 1_1"
-                                                         :body "This _is_ a leaf" } ] }
-                                         { :title "Nested Page 2"
-                                           :body "The __content__ of _nested_ page 2"
-                                           :children [ { :title "Nested Page 2_1"
-                                                         :body "This _is_ a leaf" } ]}
-                                         page] }
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [{:title "Nested Page 1_1"
+                                                    :body  "This _is_ a leaf text"}]}
+                                       {:title    "Nested Page 2"
+                                        :body     "The __content__ of _nested_ page 2"
+                                        :children [{:title "Nested Page 2_1"
+                                                    :body  "This _is_ a leaf text"}]}
+                                       page]}
                            (engine/set-page root [2] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ { :title "Nested Page 1_1"
-                                                         :body "This _is_ a leaf"
-                                                         :children [page]} ] }
-                                         { :title "Nested Page 2"
-                                           :body "The __content__ of _nested_ page 2"
-                                           :children [ { :title "Nested Page 2_1"
-                                                         :body "This _is_ a leaf" } ]}] }
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [{:title    "Nested Page 1_1"
+                                                    :body     "This _is_ a leaf text"
+                                                    :children [page]}]}
+                                       {:title    "Nested Page 2"
+                                        :body     "The __content__ of _nested_ page 2"
+                                        :children [{:title "Nested Page 2_1"
+                                                    :body  "This _is_ a leaf text"}]}]}
                            (engine/set-page root [0 0 0] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ { :title "Nested Page 1_1"
-                                                         :body "This _is_ a leaf"} ] }
-                                         { :title "Nested Page 2"
-                                           :body "The __content__ of _nested_ page 2"
-                                           :children [ { :title "Nested Page 2_1"
-                                                         :body "This _is_ a leaf" }
-                                                       page ]}] }
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [{:title "Nested Page 1_1"
+                                                    :body  "This _is_ a leaf text"}]}
+                                       {:title    "Nested Page 2"
+                                        :body     "The __content__ of _nested_ page 2"
+                                        :children [{:title "Nested Page 2_1"
+                                                    :body  "This _is_ a leaf text"}
+                                                   page]}]}
                            (engine/set-page root [1 1] page)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ { :title "Nested Page 1_1"
-                                                         :body "This _is_ a leaf"} ] }
-                                         { :title "Nested Page 2"
-                                           :body "The __content__ of _nested_ page 2"
-                                           :children nil}] }
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [{:title "Nested Page 1_1"
+                                                    :body  "This _is_ a leaf text"}]}
+                                       {:title    "Nested Page 2"
+                                        :body     "The __content__ of _nested_ page 2"
+                                        :children nil}]}
                            (engine/set-page root [1 0] nil)))
                     (is (= { :title "Root Page"
-                             :body "This is the *page body*."
-                             :children [ { :title "Nested Page 1"
-                                           :body "The __content__ of _nested_ page 1"
-                                           :children [ { :title "Nested Page 1_1"
-                                                         :body "This _is_ a leaf"} ] }]}
+                            :body     "This is the *page body*."
+                            :children [{:title    "Nested Page 1"
+                                        :body     "The __content__ of _nested_ page 1"
+                                        :children [{:title "Nested Page 1_1"
+                                                    :body  "This _is_ a leaf text"}]}]}
                            (engine/set-page root [1] nil))))))
