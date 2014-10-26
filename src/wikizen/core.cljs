@@ -65,10 +65,10 @@
                                          (range 49 (+ 49 (count (page :children)))))})
     (display-in :app
                 (ui/page event-processor
-               ref
-               (engine/get-path root ref)
-               page
-               name))))
+                         ref
+                         (engine/get-path root ref)
+                         page
+                         name))))
 
 (defn show-edit-mask
   "Opens the UI with the editing mask"
@@ -76,8 +76,8 @@
   (log/! "show-edit-mask called with params:" :ref ref :mode mode)
   (reset! current-ui {:ref ref :mode mode :shortcuts #{27}})
   (display-in :app
-    (ui/edit-page event-processor ref mode
-                  (engine/get-node root ref))))
+              (ui/edit-page event-processor ref mode
+                            (engine/get-node root ref))))
 
 (defn save-page
   "Sends the received contents to the storage and opens the new page;
@@ -138,7 +138,8 @@
                  (fn [e]
                    (let [code (.-keyCode e)]
                      (log/! "keydown event send with keycode" code)
-                     (when (contains? (@current-ui :shortcuts) code)
+                     (when (and (= "none" (style/getStyle overlay "display"))
+                                (contains? (@current-ui :shortcuts) code))
                        (when-let [event (key->link-id code)]
                          (let [f (event :compute-ref #(% :ref))
                                event (assoc (select-keys event [:id :mode])
@@ -146,4 +147,4 @@
                            (event-processor event)))))))
   (event-processor {:id :show-page :ref []}))
 
-;(log/enable-log)
+(log/enable-log)

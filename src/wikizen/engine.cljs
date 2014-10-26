@@ -77,7 +77,7 @@
     (re-pattern re-terms)))
 
 (defn- do-search
-  "search helper"
+  "Helper of the fn search"
   [root ref pattern]
   (concat (map #(vector ref %) (re-seq pattern
                                        (str (root :title) "\n" (root :body))))

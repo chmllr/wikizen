@@ -81,8 +81,13 @@
 (defn search-mask
   [channel]
   (te/template->dom
-    [:input.input-field.full-width {:placeholder "Enter text to search here"
-                                    :autofocus   "autofocus"}]
+    [:input#search-field.input-field.full-width
+     {:placeholder "Enter text to search here"
+      :autofocus   "autofocus"
+      :onkeyup     #(do
+                     (channel {:id    :search
+                               :terms (.-value (dom/getElement "search-field"))})
+                     false)}]
     [:div#search-results]
     [:hr]
     (link "close" channel {:id :close-modal})))
