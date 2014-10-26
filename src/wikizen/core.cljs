@@ -4,6 +4,7 @@
     [goog.style :as style]
     [goog.events :as events]
     [wikizen.storage :as storage]
+    [wikizen.events :as wz-events]
     [wikizen.log :as log]
     [wikizen.ui :as ui]
     [wikizen.engine :as engine]))
@@ -102,7 +103,8 @@
   "Shows the search mask in a modal window"
   [_ _ event-processor _]
   (log/! "enable-search called with params")
-  (display-in :modal (ui/search-mask event-processor))
+  (display-in :modal (ui/search-mask
+                       (wz-events/delay-channel event-processor 400 false)))
   (style/setStyle overlay "display" "block"))
 
 ; event ID -> handler mapping
@@ -138,7 +140,7 @@
                  (fn [e]
                    (let [code (.-keyCode e)]
                      (log/! "keydown event send with keycode" code)
-                     (when (and (= "none" (style/getStyle overlay "display"))
+                     (when (and (not= "block" (style/getStyle overlay "display"))
                                 (contains? (@current-ui :shortcuts) code))
                        (when-let [event (key->link-id code)]
                          (let [f (event :compute-ref #(% :ref))
@@ -147,4 +149,4 @@
                            (event-processor event)))))))
   (event-processor {:id :show-page :ref []}))
 
-(log/enable-log)
+;(log/enable-log)

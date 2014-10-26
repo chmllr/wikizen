@@ -1,8 +1,7 @@
 (ns wikizen.ui
   (:require-macros [wikizen.macros :refer [link]])
   (:require [wikizen.template-engine :as te]
-            [goog.dom :as dom]
-            [goog.events :as events]))
+            [goog.dom :as dom]))
 
 (defn
   edit-page
@@ -84,10 +83,9 @@
     [:input#search-field.input-field.full-width
      {:placeholder "Enter text to search here"
       :autofocus   "autofocus"
-      :onkeyup     #(do
-                     (channel {:id    :search
-                               :terms (.-value (dom/getElement "search-field"))})
-                     false)}]
+      :onkeyup #(channel
+                 {:id    :search
+                  :terms (.-value (dom/getElement "search-field"))})}]
     [:div#search-results]
     [:hr]
     (link "close" channel {:id :close-modal})))
