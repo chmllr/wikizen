@@ -5,6 +5,16 @@
 
 (enable-console-print!)
 
+(defn- store
+  "Store function"
+  [key value]
+  (.setItem js/localStorage key value))
+
+(defn- restore
+  "Restore function"
+  [key]
+  (.getItem js/localStorage key))
+
 (def default-root
   {:title "&#9775; WikiZen"
    :body (str
@@ -28,7 +38,7 @@
   [id]
   (log/! "load called for wiki" id)
   (when-not (.-testMode js/window)
-    (when-let [string (.getItem js/localStorage id)]
+    (when-let [string (restore id)]
       (swap! dao assoc id (js->clj
                             (.parse js/JSON string)
                             :keywordize-keys true)))))
@@ -40,7 +50,7 @@
   (swap! cache hash-map)
   (when-not (.-testMode js/window)
     (let [string (.stringify js/JSON (clj->js (@dao id)))]
-      (.setItem js/localStorage id string))))
+      (store id string))))
 
 (defn create-wiki
   "Stores a new wiki"
@@ -66,7 +76,6 @@
                           concat deltas)) deltas)
   (save id))
 
-; TODO: think how it relates to create-wiki and load.
 (defn get-wiki
   "Returns the Wiki object"
   [id]
