@@ -47,7 +47,7 @@
   "Clears the cache, serializes the wiki and sends it to the storage"
   [id]
   (log/! "save called for wiki" id)
-  (reset! cache hash-map)
+  (reset! cache {})
   (when-not (.-testMode js/window)
     (let [string (.stringify js/JSON (clj->js (@dao id)))]
       (store id string))))
