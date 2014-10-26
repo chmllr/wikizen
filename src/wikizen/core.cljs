@@ -34,7 +34,7 @@
                        {:id          :show-page
                         :compute-ref (fn [page] (conj (page :ref) (dec i)))}))
     {37 {:id :show-page :compute-ref (fn [page] (drop-last (page :ref)))} ; back
-     27 {:id :show-page :compute-ref (fn [page] ((if (= :edit-page (@current-ui :mode))
+     27 {:id :show-page :compute-ref (fn [page] ((if (= :edit-page (page :mode))
                                                    identity
                                                    drop-last) (page :ref)))} ; cancel
      68 {:id :delete-page}                                  ; delete
@@ -50,12 +50,9 @@
   "Puts the specified DOM element into the main container"
   [id fragment]
   (log/! "setting a new ui into" id)
-  (let [element ({:app app :modal modal} id)]
+  (let [element ({:app app :modal modal} id (dom/getElement id))]
     (aset element "innerHTML" "")
-    (.appendChild element fragment)
-    (channel {:id (if (= :modal id)
-                    :show-modal
-                    :close-modal)})))
+    (.appendChild element fragment)))
 
 (defn show-page
   "Opens the page under the specified ref"
@@ -114,12 +111,9 @@
   (when (< 3 (count terms))
     (let [results (engine/search
                     (wiki :root)
-                    (clojure.string/split terms #"\s+"))
-          dom-elem (dom/getElement "search-results")]
-      (println :DEBUG results)
-      (aset dom-elem "innerHTML" "")
-      (.appendChild dom-elem
-                    (ui/search-results channel results)))))
+                    (clojure.string/split terms #"\s+"))]
+      (display-in "search-results"
+                  (ui/search-results channel results)))))
 
 ; event ID -> handler mapping
 (def event->fn
@@ -138,14 +132,15 @@
   "Event processor; all events are blocking!"
   [event]
   (log/! "event received:" event)
-  (let [{:keys [id]} event
+  (let [{:keys [id trigger]} event
         f (event->fn id #(log/error "no handler for event" id "found"))
         wiki (storage/get-wiki wiki-id)]
     (log/! "applying event handler for" id)
     (try
       (f wiki-id wiki channel (update-in event [:ref] vec))
       (catch :default e
-        (log/error "Error during execution of event" id ":" (.-message e))))))
+        (log/error "Error during execution of event" id ":" (.-message e))))
+    (when trigger (channel trigger))))
 
 (defn bootstrap
   "Starts the app, sets shortcut listener, open the main page"

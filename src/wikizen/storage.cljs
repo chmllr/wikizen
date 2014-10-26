@@ -17,13 +17,13 @@
 
 (def default-root
   {:title "&#9775; WikiZen"
-   :body (str
-           "# Welcome"
-           "> _\"One machine can do the work of **fifty** ordinary men.  \n"
-           "> No machine can do the work of **one** extraordinary man.\"_  \n"
-           "> — Elbert Hubbard\n\n"
-           "This is default **root page** of your Wiki powered by"
-           "[WikiZen](https://github.com/chmllr/wikizen).\n")})
+   :body  (str
+            "# Welcome\n  "
+            "> _\"One machine can do the work of **fifty** ordinary men.  \n"
+            "> No machine can do the work of **one** extraordinary man.\"_  \n"
+            "> — Elbert Hubbard\n\n"
+            "This is default **root page** of your Wiki powered by"
+            "[WikiZen](https://github.com/chmllr/wikizen).\n")})
 
 ; single data access object which is a mapping:
 ; wiki ID -> { :wiki {...}, :deltas [...]}
@@ -100,9 +100,9 @@
                  [{:ref ref, :property "title", :value title}])
         deltas (if (= body (page :body))
                  deltas
-                 (conj deltas {:ref ref,
+                 (conj deltas {:ref      ref,
                                :property "body",
-                               :value (engine/get-patch (page :body) body)}))]
+                               :value    (engine/get-patch (page :body) body)}))]
     (store-deltas id deltas)))
 
 (defn delete-page

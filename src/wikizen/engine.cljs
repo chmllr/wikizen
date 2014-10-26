@@ -88,7 +88,7 @@
 (defn search
   "Simple regex-based text search over the wiki"
   [root terms]
-  (reduce (fn [acc [key value]] (assoc acc key (map #(last (last %)) value)))
+  (reduce (fn [acc [key value]] (assoc acc key (distinct (map #(last (last %)) value))))
           {}
           (group-by first
                     (map #(split-at 2 %)

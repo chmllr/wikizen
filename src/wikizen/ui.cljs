@@ -84,10 +84,10 @@
     [:input#search-field.input-field.full-width
      {:placeholder "Enter text to search here"
       :autofocus   "autofocus"
-      :onkeyup (let [channel (events/delay-channel channel 400 false)]
-                 #(channel
-                   {:id    :search
-                    :terms (.-value (dom/getElement "search-field"))}))}]
+      :onkeyup     (let [channel (events/delay-channel channel 400 false)]
+                     #(channel
+                       {:id    :search
+                        :terms (.-value (dom/getElement "search-field"))}))}]
     [:div#search-results]
     [:hr]
     (link "close" channel {:id :close-modal})))
@@ -96,6 +96,6 @@
   [channel results]
   (te/template->dom
     [:ul (map (fn [[[ref title] sub-results]]
-                [:li (link title channel {:id :show-page :ref ref}) ": "
+                [:li (link title channel {:id :show-page :ref ref :trigger {:id :close-modal}}) ": "
                  [:ul (map #(vector :li %) sub-results)]])
               results)]))
