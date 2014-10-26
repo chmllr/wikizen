@@ -79,10 +79,11 @@
 (defn- do-search
   "Helper of the fn search"
   [root ref pattern]
-  (concat (map #(vector ref %) (re-seq pattern
-                                       (str (root :title) "\n" (root :body))))
-          (mapcat (fn [[i child]] (do-search child (conj ref i) pattern))
-                  (map list (range) (root :children)))))
+  (distinct
+    (concat (map #(vector ref (root :title) %) (re-seq pattern
+                                                       (str (root :title) "\n" (root :body))))
+            (mapcat (fn [[i child]] (do-search child (conj ref i) pattern))
+                    (map list (range) (root :children))))))
 
 (defn search
   "Simple regex-based text search over the wiki"

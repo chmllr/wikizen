@@ -4,7 +4,6 @@
     [goog.style :as style]
     [goog.events :as events]
     [wikizen.storage :as storage]
-    [wikizen.events :as wz-events]
     [wikizen.log :as log]
     [wikizen.ui :as ui]
     [wikizen.engine :as engine]))
@@ -53,11 +52,14 @@
   (log/! "setting a new ui into" id)
   (let [element ({:app app :modal modal} id)]
     (aset element "innerHTML" "")
-    (.appendChild element fragment)))
+    (.appendChild element fragment)
+    (channel {:id (if (= :modal id)
+                    :show-modal
+                    :close-modal)})))
 
 (defn show-page
   "Opens the page under the specified ref"
-  [_ {:keys [name root]} event-processor {:keys [ref]}]
+  [_ {:keys [name root]} channel {:keys [ref]}]
   (log/! "show-page called with params:" :name name :ref ref)
   (let [page (engine/get-node root ref)]
     (reset! current-ui {:page      page
@@ -65,7 +67,7 @@
                         :shortcuts (into #{37 68 69 78}
                                          (range 49 (+ 49 (count (page :children)))))})
     (display-in :app
-                (ui/page event-processor
+                (ui/page channel
                          ref
                          (engine/get-path root ref)
                          page
@@ -73,39 +75,48 @@
 
 (defn show-edit-mask
   "Opens the UI with the editing mask"
-  [_ {:keys [root]} event-processor {:keys [ref mode]}]
+  [_ {:keys [root]} channel {:keys [ref mode]}]
   (log/! "show-edit-mask called with params:" :ref ref :mode mode)
   (reset! current-ui {:ref ref :mode mode :shortcuts #{27}})
   (display-in :app
-              (ui/edit-page event-processor ref mode
+              (ui/edit-page channel ref mode
                             (engine/get-node root ref))))
 
 (defn save-page
   "Sends the received contents to the storage and opens the new page;
   storaging is intended to be synchronous!"
-  [wiki-id _ event-processor {:keys [ref title body]}]
+  [wiki-id _ channel {:keys [ref title body]}]
   (log/! "save-page called with params:" :wiki-id wiki-id :ref ref :title title :body body)
   (storage/update-page wiki-id ref title body)
-  (event-processor {:id :show-page :ref ref}))
+  (channel {:id :show-page :ref ref}))
 
 (defn delete-page
   "Deletes the page if it is not the root page"
-  [wiki-id _ event-processor {:keys [ref]}]
+  [wiki-id _ channel {:keys [ref]}]
   (log/! "delete-page called with params:" :wiki-id wiki-id :ref ref)
   (if (empty? ref)
     (js/alert "Root page cannot be deleted.")
     (when (js/confirm "Do you really want to delete this page?")
       (do
         (storage/delete-page wiki-id ref)
-        (event-processor {:id :show-page :ref (butlast ref)})))))
+        (channel {:id :show-page :ref (butlast ref)})))))
 
 (defn enable-search
   "Shows the search mask in a modal window"
-  [_ _ event-processor _]
+  [_ _ channel _]
   (log/! "enable-search called with params")
-  (display-in :modal (ui/search-mask
-                       (wz-events/delay-channel event-processor 400 false)))
-  (style/setStyle overlay "display" "block"))
+  (display-in :modal (ui/search-mask channel))
+  (channel {:id :show-modal}))
+
+(defn search
+  "Adds search results to the modal dialog"
+  [_ wiki channel {:keys [terms]}]
+  (when (< 3 (count terms))
+    (let [results (engine/search
+                    (wiki :root)
+                    (clojure.string/split terms #"\s+"))]
+      (.appendChild (dom/getElement "search-results")
+                    (ui/search-results channel results)))))
 
 ; event ID -> handler mapping
 (def event->fn
@@ -115,19 +126,21 @@
    :add-page       save-page
    :edit-page     save-page
    :enable-search enable-search
+   :search     search
+   :show-modal #(style/setStyle overlay "display" "block")
    :close-modal   #(style/setStyle overlay "display" "none")})
 
 ; TODO: add eventing unit tests
-(defn event-processor
+(defn channel
   "Event processor; all events are blocking!"
   [event]
   (log/! "event received:" event)
   (let [{:keys [id]} event
         f (event->fn id #(log/error "no handler for event" id "found"))
         wiki (storage/get-wiki wiki-id)]
-    (log/! "apply event handler for" id)
+    (log/! "applying event handler for" id)
     (try
-      (f wiki-id wiki event-processor (update-in event [:ref] vec))
+      (f wiki-id wiki channel (update-in event [:ref] vec))
       (catch :default e
         (log/error "Error during execution of event" id ":" (.-message e))))))
 
@@ -146,7 +159,7 @@
                          (let [f (event :compute-ref #(% :ref))
                                event (assoc (select-keys event [:id :mode])
                                        :ref (f @current-ui))]
-                           (event-processor event)))))))
-  (event-processor {:id :show-page :ref []}))
+                           (channel event)))))))
+  (channel {:id :show-page :ref []}))
 
 ;(log/enable-log)

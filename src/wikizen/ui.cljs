@@ -1,6 +1,7 @@
 (ns wikizen.ui
   (:require-macros [wikizen.macros :refer [link]])
   (:require [wikizen.template-engine :as te]
+            [wikizen.events :as events]
             [goog.dom :as dom]))
 
 (defn
@@ -83,9 +84,18 @@
     [:input#search-field.input-field.full-width
      {:placeholder "Enter text to search here"
       :autofocus   "autofocus"
-      :onkeyup #(channel
-                 {:id    :search
-                  :terms (.-value (dom/getElement "search-field"))})}]
+      :onkeyup (let [channel (events/delay-channel channel 400 false)]
+                 #(channel
+                   {:id    :search
+                    :terms (.-value (dom/getElement "search-field"))}))}]
     [:div#search-results]
     [:hr]
     (link "close" channel {:id :close-modal})))
+
+(defn search-results
+  [channel results]
+  (te/template->dom
+    [:div (map (fn [[ref title text]]
+                 [:div (link title channel {:id :show-page :ref ref}) ": " text
+                  [:hr]])
+               results)]))
