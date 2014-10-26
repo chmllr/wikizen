@@ -49,7 +49,7 @@
    (log/! "create-wiki called for wiki" id)
    (load id)
    (if (@dao id)
-     (println "Wiki" id "exists already.")
+     (log/! "cannot create new wiki: wiki" id "exists already.")
      (do
        (swap! dao assoc id {:deltas []
                             :wiki   {:name name :root root}})

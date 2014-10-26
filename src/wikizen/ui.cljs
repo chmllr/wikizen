@@ -95,7 +95,7 @@
 (defn search-results
   [channel results]
   (te/template->dom
-    [:div (map (fn [[ref title text]]
-                 [:div (link title channel {:id :show-page :ref ref}) ": " text
-                  [:hr]])
-               results)]))
+    [:ul (map (fn [[[ref title] sub-results]]
+                [:li (link title channel {:id :show-page :ref ref}) ": "
+                 [:ul (map #(vector :li %) sub-results)]])
+              results)]))

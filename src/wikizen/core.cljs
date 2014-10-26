@@ -114,8 +114,11 @@
   (when (< 3 (count terms))
     (let [results (engine/search
                     (wiki :root)
-                    (clojure.string/split terms #"\s+"))]
-      (.appendChild (dom/getElement "search-results")
+                    (clojure.string/split terms #"\s+"))
+          dom-elem (dom/getElement "search-results")]
+      (println :DEBUG results)
+      (aset dom-elem "innerHTML" "")
+      (.appendChild dom-elem
                     (ui/search-results channel results)))))
 
 ; event ID -> handler mapping

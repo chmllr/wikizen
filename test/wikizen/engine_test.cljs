@@ -19,23 +19,25 @@
                rootX (update-in root [:children] conj {:title "regex search" :body "can be used to\n search in textes"})
                page {:title "New Page" :body "The body of the new page."}]
            (testing "search"
-                    (is (= [] (engine/search root ["XXX"])))
-                    (is (= '([[] "This is the *page body*."]
-                             [[0 0] "This _is_ a leaf text"]
-                             [[1 0] "This _is_ a leaf text"])
+                    (is (= {} (engine/search root ["XXX"])))
+                    (is (= {'([] "Root Page")          '("This is the *page body*."),
+                            '([0 0] "Nested Page 1_1") '("This _is_ a leaf text"),
+                            '([1 0] "Nested Page 2_1") '("This _is_ a leaf text")}
                            (engine/search root ["is"])))
-                    (is (= '([[0] "The __content__ of _nested_ page 1"]
-                             [[1] "The __content__ of _nested_ page 2"])
+                    (is (= {'([0] "Nested Page 1") '("The __content__ of _nested_ page 1"),
+                            '([1] "Nested Page 2") '("The __content__ of _nested_ page 2")}
                            (engine/search root ["of"])))
-                    (is (= '([[] "This is the *page body*."])
+                    (is (= {'([] "Root Page") '("This is the *page body*.")}
                            (engine/search root ["this" "Body"])))
-                    (is (= '([[] "Root Page"])
+                    (is (= {'([] "Root Page") '("Root Page")}
                            (engine/search root ["root"])))
-                    (is (= '([[2] "regex search"])
+                    (is (= {'([2] "regex search") '("regex search")}
                            (engine/search rootX ["regex"])))
-                    (is (= '([[2] "regex search"] [[2] " search in textes"])
+                    (is (= {'([2] "regex search") '("regex search" " search in textes")}
                            (engine/search rootX ["search"])))
-                    (is (= '([[0 0] "This _is_ a leaf text"] [[1 0] "This _is_ a leaf text"] [[2] " search in textes"])
+                    (is (= {'([0 0] "Nested Page 1_1") '("This _is_ a leaf text"),
+                            '([1 0] "Nested Page 2_1") '("This _is_ a leaf text"),
+                            '([2] "regex search")      '(" search in textes")}
                            (engine/search rootX ["text"]))))
            (testing "get-node"
                     (is (= "Root Page" (:title (engine/get-node root [])))
