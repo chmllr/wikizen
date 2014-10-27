@@ -96,6 +96,6 @@
   [channel results]
   (te/template->dom
     [:ul (map (fn [[[ref title] sub-results]]
-                [:li (link title channel {:id :show-page :ref ref :trigger {:id :close-modal}}) ": "
-                 [:ul (map #(vector :li %) sub-results)]])
+                [:li (link title channel {:id :show-page :ref ref :trigger {:id :close-modal}})
+                 [:ol (map #(vector :li %) sub-results)]])
               results)]))
