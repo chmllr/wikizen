@@ -1,15 +1,2 @@
-pom.xml
-*jar
-/classes/
-/out/
-/target/
-.lein-deps-sum
-.lein-repl-history
-.lein-plugins/
 .idea/
-wikizen.iml
-wikizen.js
-.lein-env
-.nrepl-port
-.lein-failures
-.repl/
+node_modules/
