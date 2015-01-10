@@ -25,3 +25,41 @@ exports.patching = function (test) {
     test.equal(wrongOutput, undefined, "wrong patch application returns nil");
     test.done();
 };
+
+var testWiki = {
+    title: "Root Page",
+    body: "This is the *page body*.",
+    children: [
+        {
+            title: "Nested Page 1",
+            body: "The __content__ of _nested_ page 1",
+            children: [
+                { title: "Nested Page 1_1", body: "This _is_ a leaf text"},
+                { title: "Nested Page 1_2", body: "This _is_ another leaf text"}]
+        },
+        {
+            title: "Nested Page 2",
+            body: "The __content__ of _nested_ page 2",
+            children: [{ title: "Nested Page 2_1", body: "This _is_ a leaf text"}]
+        }
+    ]
+};
+
+exports.retrieving = function (test) {
+    var page;
+    page = engine.retrievePage(testWiki, []);
+    test.equals(page, testWiki, "empty ref check");
+    page = engine.retrievePage(testWiki, [0]);
+    test.equals(page.title, "Nested Page 1", "1st child retrieval check");
+    page = engine.retrievePage(testWiki, [1]);
+    test.equals(page.title, "Nested Page 2", "2nd child retrieval check");
+    page = engine.retrievePage(testWiki, [0, 0]);
+    test.equals(page.title, "Nested Page 1_1", "page retrieval check");
+    page = engine.retrievePage(testWiki, [0, 1]);
+    test.equals(page.title, "Nested Page 1_2", "page retrieval check");
+    page = engine.retrievePage(testWiki, [1, 0]);
+    test.equals(page.title, "Nested Page 2_1", "page retrieval check");
+    test.throws(function () { engine.retrievePage(testWiki, [2]) });
+    test.throws(function () { engine.retrievePage(testWiki, [0, 0, 0]) });
+    test.done();
+};

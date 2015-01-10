@@ -22,3 +22,15 @@ module.exports.applyPatch = (patch, text) => {
     if(_.every(status)) return result[0];
     console.error("Patch couldn't be applied");
 };
+
+var retrievePage = (page, ref) => {
+    if(_.isEmpty(ref)) return page;
+    var step = ref[0];
+    var children = page.children;
+    if(children.length <= step)
+        throw "Cannot retrieve page: the reference " + ref + " is broken.";
+    return retrievePage(children[step], ref.slice(1));
+
+};
+
+module.exports.retrievePage = retrievePage;
