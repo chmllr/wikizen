@@ -1,8 +1,8 @@
 "use strict";
 
 var React = require('react');
-var DiffMatchPatch = require('diff-match-patch');
 var EventBus = require('eventbus');
+var engine = require('./engine');
 
 var id = x => x;
 

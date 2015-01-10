@@ -94,7 +94,7 @@ A delta is defined as a triple:
 A Wiki is stored in one single JSON object, whose structure can be described in the same type abstraction used above as follows:
 
     {
-      wiki: Wiki,
+      root: Wiki,
       deltas: [Delta]
     }
 
