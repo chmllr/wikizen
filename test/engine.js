@@ -1,6 +1,7 @@
 "use strict";
 
 var engine = require('./builds/engine');
+var _ = require("lodash");
 
 exports.instantiations = function (test) {
     var title = "Hello World";
@@ -61,5 +62,20 @@ exports.retrieving = function (test) {
     test.equals(page.title, "Nested Page 2_1", "page retrieval check");
     test.throws(function () { engine.retrievePage(testWiki, [2]) });
     test.throws(function () { engine.retrievePage(testWiki, [0, 0, 0]) });
+    test.done();
+};
+
+exports.inserting = function (test) {
+    var clone;
+    clone = _.clone(testWiki);
+    test.deepEqual(clone, testWiki, "clonging worked");
+    engine.insertPage(clone, [], { title: "Title", body: "Body"});
+    test.equal(engine.retrievePage(clone, [2]).title, "Title", "insertion check");
+    clone = _.clone(testWiki);
+    engine.insertPage(clone, [0], { title: "Title", body: "Body"});
+    test.equal(engine.retrievePage(clone, [0, 2]).title, "Title", "insertion check");
+    clone = _.clone(testWiki);
+    engine.insertPage(clone, [0, 0], { title: "Title", body: "Body"});
+    test.equal(engine.retrievePage(clone, [0, 0, 0]).title, "Title", "insertion check");
     test.done();
 };

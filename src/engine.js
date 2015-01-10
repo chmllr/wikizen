@@ -23,10 +23,10 @@ module.exports.applyPatch = (patch, text) => {
     console.error("Patch couldn't be applied");
 };
 
-var retrievePage = (page, ref) => {
-    if(_.isEmpty(ref)) return page;
+var retrievePage = (root, ref) => {
+    if(_.isEmpty(ref)) return root;
     var step = ref[0];
-    var children = page.children;
+    var children = root.children;
     if(children.length <= step)
         throw "Cannot retrieve page: the reference " + ref + " is broken.";
     return retrievePage(children[step], ref.slice(1));
@@ -34,3 +34,12 @@ var retrievePage = (page, ref) => {
 };
 
 module.exports.retrievePage = retrievePage;
+
+var insertPage = (root, ref, child) => {
+    var page = retrievePage(root, ref);
+    var children = page.children || [];
+    children.push(child);
+    page.children = children;
+};
+
+module.exports.insertPage = insertPage;
