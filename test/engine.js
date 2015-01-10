@@ -14,3 +14,14 @@ exports.instantiations = function (test) {
     test.equal(wiki.root, page, "root page check");
     test.done();
 };
+
+exports.patching = function (test) {
+    var line1 = "When a man lies, he murders some part of the world";
+    var line2 = "These are the pale deaths which men miscall their lives";
+    var diff = engine.getPatch(line1, line2);
+    test.ok(diff, "diff is ok");
+    test.equal(engine.applyPatch(diff, line1), line2);
+    var wrongOutput = engine.applyPatch(diff, line2);
+    test.equal(wrongOutput, undefined, "wrong patch application returns nil");
+    test.done();
+};
