@@ -1,9 +1,8 @@
 &#9775; WikiZen
 =======
 
-> "Like all magnificent things,  
->  it's very simple."  
-> — _Natalie Babbitt_
+> "Simplicity is prerequisite for reliability."
+> — _Dijkstra_
 
 WikiZen is a minimal Markdown-based wiki engine for simple Wikis.
 WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhere**.
