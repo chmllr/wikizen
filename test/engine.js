@@ -27,27 +27,29 @@ exports.patching = function (test) {
     test.done();
 };
 
-var testWiki = {
-    title: "Root Page",
-    body: "This is the *page body*.",
-    children: [
-        {
-            title: "Nested Page 1",
-            body: "The __content__ of _nested_ page 1",
-            children: [
-                { title: "Nested Page 1_1", body: "This _is_ a leaf text"},
-                { title: "Nested Page 1_2", body: "This _is_ another leaf text"}]
-        },
-        {
-            title: "Nested Page 2",
-            body: "The __content__ of _nested_ page 2",
-            children: [{ title: "Nested Page 2_1", body: "This _is_ a leaf text"}]
-        }
-    ]
+var getTestWiki = function () {
+    return _.clone({
+        title: "Root Page",
+        body: "This is the *page body*.",
+        children: [
+            {
+                title: "Nested Page 1",
+                body: "The __content__ of _nested_ page 1",
+                children: [
+                    { title: "Nested Page 1_1", body: "This _is_ a leaf text"},
+                    { title: "Nested Page 1_2", body: "This _is_ another leaf text"}]
+            },
+            {
+                title: "Nested Page 2",
+                body: "The __content__ of _nested_ page 2",
+                children: [{ title: "Nested Page 2_1", body: "This _is_ a leaf text"}]
+            }
+        ]
+    });
 };
 
 exports.retrieving = function (test) {
-    var page;
+    var page, testWiki = getTestWiki();
     page = engine.retrievePage(testWiki, []);
     test.equals(page, testWiki, "empty ref check");
     page = engine.retrievePage(testWiki, [0]);
@@ -66,16 +68,40 @@ exports.retrieving = function (test) {
 };
 
 exports.inserting = function (test) {
-    var clone;
-    clone = _.clone(testWiki);
-    test.deepEqual(clone, testWiki, "clonging worked");
-    engine.insertPage(clone, [], { title: "Title", body: "Body"});
+    var clone = getTestWiki();
+    engine.insertPage(clone, [], engine.createPage("Title", "Body"));
     test.equal(engine.retrievePage(clone, [2]).title, "Title", "insertion check");
-    clone = _.clone(testWiki);
-    engine.insertPage(clone, [0], { title: "Title", body: "Body"});
-    test.equal(engine.retrievePage(clone, [0, 2]).title, "Title", "insertion check");
-    clone = _.clone(testWiki);
-    engine.insertPage(clone, [0, 0], { title: "Title", body: "Body"});
+    clone = getTestWiki();
+    engine.insertPage(clone, [0], engine.createPage("Title", "Body"));
+    test.equal(engine.retrievePage(clone, [0, 2]).body, "Body", "insertion check");
+    clone = getTestWiki();
+    engine.insertPage(clone, [0, 0], engine.createPage("Title", "Body"));
     test.equal(engine.retrievePage(clone, [0, 0, 0]).title, "Title", "insertion check");
     test.done();
+};
+
+exports.deleting = function (test) {
+    var clone = getTestWiki();
+    test.throws(function (){ engine.deletePage(clone, []) });
+    engine.insertPage(clone, [0, 0], engine.createPage("Title", "Body"));
+    test.equal(engine.retrievePage(clone, [0, 0, 0]).title, "Title", "insertion check");
+    test.deepEqual(engine.retrievePage(clone, [0, 0]).children, [engine.createPage("Title", "Body")]);
+    engine.deletePage(clone, [0, 0, 0]);
+    test.deepEqual(engine.retrievePage(clone, [0, 0]).children, []);
+    test.throws(function (){ engine.deletePage(clone, [0,0,0]) });
+    engine.deletePage(clone, [0, 0]);
+    test.deepEqual(engine.retrievePage(clone, [0]).children, [{ title: "Nested Page 1_2",
+        body: "This _is_ another leaf text"}]);
+    engine.deletePage(clone, [0]);
+    engine.deletePage(clone, [0, 0]);
+    test.deepEqual(engine.retrievePage(clone, []).children, [{
+        title: "Nested Page 2",
+        body: "The __content__ of _nested_ page 2",
+        children: []
+    }]);
+    test.throws(function (){ engine.deletePage(clone, [1]) });
+    engine.deletePage(clone, [0]);
+    test.deepEqual(engine.retrievePage(clone, []),
+        {title: "Root Page", body: "This is the *page body*.", children: []});
+    test.done()
 };

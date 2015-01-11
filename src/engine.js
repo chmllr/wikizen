@@ -43,3 +43,16 @@ var insertPage = (root, ref, child) => {
 };
 
 module.exports.insertPage = insertPage;
+
+var deletePage = (root, ref) => {
+    var children = root.children;
+    var step = ref[0];
+    if(ref.length == 1) {
+        if(children.length <= step)
+            throw "Cannot delete page: the reference " + ref + " is broken.";
+        return children.splice(step, 1);
+    } else
+        return deletePage(children[step], ref.slice(1));
+};
+
+module.exports.deletePage = deletePage;
