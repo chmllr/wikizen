@@ -1,7 +1,7 @@
 &#9775; WikiZen
 =======
 
-> "Simplicity is prerequisite for reliability."
+> "Simplicity is prerequisite for reliability."  
 > — _Dijkstra_
 
 WikiZen is a minimal Markdown-based wiki engine for simple Wikis.
