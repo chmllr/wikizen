@@ -4,19 +4,7 @@ var DiffMatchPatch = require('diff-match-patch');
 var dmp = new DiffMatchPatch();
 var _ = require('lodash');
 
-module.exports.createPage = (title, body, children) => ({
-    title: title,
-    body: body,
-    children: children
-});
-
-module.exports.createWiki = (rootPage, deltas) => ({
-    root: rootPage,
-    deltas: deltas
-});
-
-module.exports.getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
-module.exports.applyPatch = (patch, text) => {
+var applyPatch = (patch, text) => {
     var result = dmp.patch_apply(dmp.patch_fromText(patch), text);
     var status = result[1];
     if(_.every(status)) return result[0];
@@ -33,16 +21,12 @@ var retrievePage = (root, ref) => {
 
 };
 
-module.exports.retrievePage = retrievePage;
-
 var insertPage = (root, ref, child) => {
     var page = retrievePage(root, ref);
     var children = page.children || [];
     children.push(child);
     page.children = children;
 };
-
-module.exports.insertPage = insertPage;
 
 var deletePage = (root, ref) => {
     var children = root.children;
@@ -55,4 +39,34 @@ var deletePage = (root, ref) => {
         return deletePage(children[step], ref.slice(1));
 };
 
+module.exports.applyDelta = (root, delta) => {
+    var page = retrievePage(root, delta, ref);
+    switch (delta.property) {
+        case "title":
+            page.title = delta.payload;
+            break;
+        case "body":
+            page.body = applyPatch(delta.payload, page.body);
+            break;
+        case "page":
+            _.assign(page, delta.payload);
+            break;
+        default:
+            throw "Corrupted delta property: " + delta.property;
+    }
+};
+
+module.exports.getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
+module.exports.createPage = (title, body, children) => ({
+    title: title,
+    body: body,
+    children: children
+});
+module.exports.createWiki = (rootPage, deltas) => ({
+    root: rootPage,
+    deltas: deltas
+});
 module.exports.deletePage = deletePage;
+module.exports.insertPage = insertPage;
+module.exports.retrievePage = retrievePage;
+module.exports.applyPatch = applyPatch;

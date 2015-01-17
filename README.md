@@ -1,7 +1,7 @@
 &#9775; WikiZen
 =======
 
-> "Simplicity is prerequisite for reliability."  
+> "Simplicity is prerequisite for reliability."
 > — _Dijkstra_
 
 WikiZen is a minimal Markdown-based wiki engine for simple Wikis.
@@ -79,15 +79,15 @@ A delta is defined as a triple:
     Delta = {
       ref: [Int], 
       property: String,
-      delta: String
+      payload: Object
     }
     
 `ref` identifies the Wiki Page to be changed.
-`property` identifies the object property like `title`, `body` or `page`.
-`delta` is different for every property:
-  - for title it is the new title;
-  - for body it is a diff (produced by Diff-Match-Path library), containing the deltas only;
-  - for page it can be an arbitrary JSON object or even `null` (it the page was deleted).
+`property` identifies the object property like `title`, `body` or `child`.
+`payload` is different for every property:
+  - for `title` it is the new title;
+  - for `body` it is a diff (produced by Diff-Match-Path library), containing the deltas only;
+  - for `child` it can be an arbitrary JSON object or even `null` (it the page was deleted).
   
 ### Serialization
 
