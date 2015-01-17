@@ -11,32 +11,42 @@ var applyPatch = (patch, text) => {
     console.error("Patch couldn't be applied");
 };
 
-var retrievePage = (root, ref) => {
-    if(_.isEmpty(ref)) return root;
-    var step = ref[0];
-    var children = root.children;
-    if(children.length <= step)
-        throw "Cannot retrieve page: the reference " + ref + " is broken.";
-    return retrievePage(children[step], ref.slice(1));
-
+var computeIndex = wiki => {
+    var index = {};
+    var walker = page => {
+        index.ids[page.id] = page.id;
+        if (page.children)
+            page.children.forEach(walker);
+    };
+    walker(wiki.root);
+    return index;
 };
 
-var insertPage = (root, ref, child) => {
-    var page = retrievePage(root, ref);
-    var children = page.children || [];
-    children.push(child);
-    page.children = children;
+var retrievePage = (wiki, id) => {
+    var walker = page => {
+        if(id == page.id) return page;
+        for(var i in page.children) {
+            var result = walker(page.children[i]);
+            if(result) {
+                // ...
+            }
+        }
+    }
 };
 
-var deletePage = (root, ref) => {
-    var children = root.children;
-    var step = ref[0];
-    if(ref.length == 1) {
-        if(children.length <= step)
-            throw "Cannot delete page: the reference " + ref + " is broken.";
-        return children.splice(step, 1);
-    } else
-        return deletePage(children[step], ref.slice(1));
+var insertPage = (wiki, id, title, body) => {
+    var child = {
+        id: ++wiki.id,
+        title: title,
+        body: body
+    };
+    page.children.push(child);
+};
+
+var deletePage = (wiki, id) => {
+    var index = computeIndex(wiki);
+    let parent = index.parents[id];
+    parent.children = parent.children.filter(child => child.id != id);
 };
 
 module.exports.applyDelta = (root, delta) => {
@@ -57,16 +67,12 @@ module.exports.applyDelta = (root, delta) => {
 };
 
 module.exports.getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
-module.exports.createPage = (title, body, children) => ({
-    title: title,
-    body: body,
-    children: children
-});
 module.exports.createWiki = (rootPage, deltas) => ({
     root: rootPage,
+    freeId: 0,
     deltas: deltas
 });
 module.exports.deletePage = deletePage;
 module.exports.insertPage = insertPage;
-module.exports.retrievePage = retrievePage;
+module.exports.computeIndex = computeIndex;
 module.exports.applyPatch = applyPatch;
