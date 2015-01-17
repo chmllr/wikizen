@@ -28,46 +28,27 @@ Following shortcuts are supported:
 A __Wiki__ is one single JSON object, containing settings and __Wiki Pages__.
 In terms of abstract types, we can describe a Wiki and Wiki Pages as follows.
 
-    Wiki = { name: String, root: WikiPage}
+    Wiki = {
+      name: String,
+      root: WikiPage,
+      deltas: [Delta]
+    }
     
     WikiPage = {
+      id: Int,
       title: String,
       body: String,
       children: [WikiPage]
     }
 
-Here is an example of a valid Wiki JSON object:
-
-    {
-      "name": "Demo Wiki",
-      "root": { 
-        "title": "Main Page",
-        "body": "Hello *world*!",
-                "children" [
-                  {
-                    "title": "Child Page",
-                    "body": "Hello _back_!" 
-                  }
-               ]
-        }
-    }
-                
 This simple Wiki has a root Wiki Page, which has one child.
 Obviously, a Wiki is wrapper for Wiki Pages represented as a simple _ordered_ tree data structure.
 
-#### References
+#### IDs
 
-Remember, a Wiki Page is just a node of a tree.
-This node can have arbitrarily many child nodes.
-Child nodes are stored in an _ordered_ list.
-
-Hence, we can identify any node in this tree by a unique sequence of indices, which we call a _reference_.
-A reference denotes a "path": each step of this path is the number of a child we have to open, starting from the root.
-
-That is, for any given Wiki Page `p` (it doesn't have to be the root, obviously), a reference `[]` returns `p` itself:
-since the sequence is empty, we do not have to open any child notes.
-A sequence `[i]` references `i`th child of `p`.
-A sequence `[i j]` references `j`th child of `p`'s `i`'th child.
+Every page has a unique ID used to identify this page in the Wiki tree.
+The Wiki object holds the next free id used for adding of new pages.
+After a new page is added, the id will be incremented.
 
 #### Update Deltas
 
@@ -77,17 +58,18 @@ When a Wiki is loaded, it's assembled from the stored deltas.
 A delta is defined as a triple:
 
     Delta = {
-      ref: [Int], 
+      pageID: Int,
       property: String,
-      payload: Object
+      value: Object
     }
     
-`ref` identifies the Wiki Page to be changed.
-`property` identifies the object property like `title`, `body` or `child`.
-`payload` is different for every property:
+`pageID` identifies the page to be changed.
+`property` specifies the property to be changed. Following properties are : `title`, `body` and `page`.
+`value` is different for every property:
   - for `title` it is the new title;
   - for `body` it is a diff (produced by Diff-Match-Path library), containing the deltas only;
-  - for `child` it can be an arbitrary JSON object or even `null` (it the page was deleted).
+  - for `page` it can be an arbitrary JSON object (interpreted as a child) or
+  `null` (if the page was deleted).
   
 ### Serialization
 
