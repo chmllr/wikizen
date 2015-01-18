@@ -15,6 +15,9 @@ var Page = React.createClass({
         return <div>
             <h1>{page.title}</h1>
             <div>{page.body}</div>
+            <hr/>
+            <h2>{page.children.length == 0 ? null : "Nested Pages"}</h2>
+            <ul>{page.children.map(child => <li>{child.title}</li>)}</ul>
         </div>
     }
 });
