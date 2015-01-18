@@ -32,7 +32,7 @@ var Page = React.createClass({
 });
 
 router.addHandler("page=:id", params =>
-    React.render(<Page page={runtimeArtifact.index.ids[params.id]} />, container));
+    React.render(<Page page={runtimeArtifact.index.pages[params.id]} />, container));
 
 router.addHandler("edit=:id", params => console.log("page editor", params));
 router.addHandler("delete=:id", params => console.log("page deleter", params));

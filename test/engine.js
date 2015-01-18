@@ -71,23 +71,23 @@ var testWikiResult = {
 
 exports.wikiAssemblingAndRetrieving = function (test) {
     test.deepEqual(getTestWiki(), getTestWiki());
-    var testWiki = getTestWiki(), testWikiSerialized = JSON.stringify(testWiki);
+    var testWiki = getTestWiki();
     var wiki = engine.assembleRuntimeWiki(testWiki);
     test.equals(JSON.stringify(testWiki), JSON.stringify(testWiki), "assebmling is not modifying");
     test.equals(wiki.name, "Test Wiki");
     test.deepEqual(wiki.root, testWikiResult, "assembling works");
-    var page, ids = wiki.index.ids;
-    page = ids[0];
+    var page, pages = wiki.index.pages;
+    page = pages[0];
     test.equals(page.title, "Root Page", "root page title check");
-    page = ids[1];
+    page = pages[1];
     test.equals(page.title, "Nested Page 1", "1st child retrieval check");
-    page = ids[4];
+    page = pages[4];
     test.equals(page.title, "Nested Page 2", "2nd child retrieval check");
-    page = ids[2];
+    page = pages[2];
     test.equals(page.title, "Nested Page 1_1", "page retrieval check");
-    page = ids[3];
+    page = pages[3];
     test.equals(page.title, "Nested Page 1_2", "page retrieval check");
-    page = ids[5];
+    page = pages[5];
     test.equals(page.title, "Nested Page 2_1", "page retrieval check");
     test.done();
 };
@@ -99,19 +99,19 @@ exports.pageModifications = function (test) {
     test.equals(JSON.stringify(wiki), wikiSer);
     var id = engine.addPage(wiki, 0, "Title", "Body");
     var rta = engine.assembleRuntimeWiki(wiki);
-    test.equal(rta.index.ids[id].title, "Title", "insertion check");
+    test.equal(rta.index.pages[id].title, "Title", "insertion check");
     id = engine.addPage(wiki, id, "New Title", "Body");
     var rta2 = engine.assembleRuntimeWiki(wiki);
-    test.deepEqual(rta2.index.ids[id], { id: id,
+    test.deepEqual(rta2.index.pages[id], { id: id,
         title: "New Title", body: "Body", children: [] }, "insertion check");
     test.notDeepEqual(rta, rta2);
     engine.editPage(wiki, id, "New Title", "Hello world");
     rta = engine.assembleRuntimeWiki(wiki);
-    test.deepEqual(rta.index.ids[id], { id: id,
+    test.deepEqual(rta.index.pages[id], { id: id,
         title: "New Title", body: "Hello world", children: [] }, "insertion check");
     engine.editPage(wiki, id, "Test Title", "Hello world");
     rta = engine.assembleRuntimeWiki(wiki);
-    test.deepEqual(rta.index.ids[id], { id: id,
+    test.deepEqual(rta.index.pages[id], { id: id,
         title: "Test Title", body: "Hello world", children: [] }, "insertion check");
     test.done();
 };

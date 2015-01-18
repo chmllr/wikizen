@@ -5,7 +5,6 @@ var jsdiff = require('diff');
 /* DIFFING */
 
 var getPatch = (A, B) => jsdiff.createPatch("WikiZen", A, B);
-
 var applyPatch = (text, patch) => jsdiff.applyPatch(text, patch);
 
 /* DELTA MANAGEMENT */
@@ -40,7 +39,7 @@ var applySimpleDelta = (page, delta) => {
 
 var clone = object => JSON.parse(JSON.stringify(object));
 
-var initializeIndex = () => ({ ids: {}, parents: {} });
+var initializeIndex = () => ({ pages: {}, parents: {} });
 
 var assembleRuntimeWiki = wiki => {
     var runtimeObject = {
@@ -50,24 +49,25 @@ var assembleRuntimeWiki = wiki => {
     };
     var root = runtimeObject.root;
     var index = runtimeObject.index;
-    index.ids[root.id] = root;
+    var pages = index.pages;
+    pages[root.id] = root;
     wiki.deltas.forEach(delta => {
         var pageID = delta.pageID, parent;
         if (delta.property == DELTA.PAGE) {
             var value = delta.value;
             if (value) { // add page
                 value = clone(value);
-                parent = index.ids[pageID];
+                parent = pages[pageID];
                 parent.children.push(value);
-                index.ids[value.id] = value;
+                pages[value.id] = value;
                 index.parents[value.id] = parent;
             }
             else { // delete page
                 parent = index.parents[pageID];
                 parent.children = parent.children.filter(child => child.id != pageID);
-                delete index.ids[pageID];
+                delete pages[pageID];
             }
-        } else applySimpleDelta(index.ids[pageID], delta);
+        } else applySimpleDelta(pages[pageID], delta);
     });
     return runtimeObject;
 };
@@ -103,7 +103,7 @@ module.exports.deletePage = (wiki, pageID) => {
 };
 
 module.exports.editPage = (wiki, pageID, title, body) => {
-    var page = assembleRuntimeWiki(wiki).index.ids[pageID];
+    var page = assembleRuntimeWiki(wiki).index.pages[pageID];
     if(page.title != title)
         wiki.deltas.push(createDelta(pageID, DELTA.TITLE, title));
     if(page.body != body)

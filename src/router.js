@@ -1,5 +1,7 @@
 function Router () {
+
     var handlers = {};
+
     this.addHandler = (pattern, handler) => {
         var list = handlers[pattern] || [];
         list.push(handler);
