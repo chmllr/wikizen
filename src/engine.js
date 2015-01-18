@@ -17,6 +17,7 @@ var DELTA = {
 };
 
 var createDelta = (pageID, property, value) => ({
+    timestamp: new Date() - 0,
     pageID: pageID,
     property: property,
     value: value
