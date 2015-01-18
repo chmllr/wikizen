@@ -38,16 +38,21 @@ var createDelta = (pageID, property, value) => ({
     property: property,
     value: value
 });
+
 module.exports.createDelta = createDelta;
 
 module.exports.addPage = (wiki, parentID, title, body) => {
     wiki.deltas.push(createDelta(parentID,
-        "page",
+        DELTA.PAGE,
         createPage(++wiki.id, title, body)));
 };
 
 module.exports.deletePage = (wiki, pageID) => {
-    wiki.deltas.push(createDelta(pageID, "page", null));
+    wiki.deltas.push(createDelta(pageID, DELTA.PAGE, null));
+};
+
+module.exports.changePage = (wiki, pageID, property, body) => {
+    wiki.deltas.push(createDelta(pageID, DELTA.PAGE, null));
 };
 
 module.exports.computeIndex = wiki => {
