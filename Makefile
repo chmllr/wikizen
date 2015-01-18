@@ -4,3 +4,8 @@ all:
 tests:
 	jsx --harmony src/ test/builds/
 	nodeunit
+
+deps:
+	npm install diff
+	npm install reactify
+	npm install react

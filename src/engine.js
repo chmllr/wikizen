@@ -1,18 +1,12 @@
 "use strict";
 
-var DiffMatchPatch = require('diff-match-patch');
-var dmp = new DiffMatchPatch();
+var jsdiff = require('diff');
 
-var getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
+var getPatch = (A, B) => jsdiff.createPatch("WikiZen", A, B);
 
 module.exports.getPatch = getPatch;
 
-var applyPatch = (patch, text) => {
-    var result = dmp.patch_apply(dmp.patch_fromText(patch), text);
-    var status = result[1];
-    if(_.every(status)) return result[0];
-    console.error("Patch couldn't be applied");
-};
+var applyPatch = (text, patch) => jsdiff.applyPatch(text, patch);
 
 module.exports.applyPatch = applyPatch;
 
