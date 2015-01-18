@@ -2,28 +2,13 @@
 
 var jsdiff = require('diff');
 
-var getPatch = (A, B) => jsdiff.createPatch("WikiZen", A, B);
+/* DIFFING */
 
-module.exports.getPatch = getPatch;
+var getPatch = (A, B) => jsdiff.createPatch("WikiZen", A, B);
 
 var applyPatch = (text, patch) => jsdiff.applyPatch(text, patch);
 
-module.exports.applyPatch = applyPatch;
-
-var createPage = (id, title, body) => ({
-    id: id,
-    title: title,
-    body: body
-});
-
-module.exports.createPage = createPage;
-
-module.exports.createWiki = (name, rootPage, deltas) => ({
-    name: name,
-    root: rootPage,
-    deltas: deltas,
-    freeId: 0
-});
+/* DELTA MANAGEMENT */
 
 var DELTA = {
     PAGE: "page",
@@ -37,66 +22,87 @@ var createDelta = (pageID, property, value) => ({
     value: value
 });
 
-module.exports.createDelta = createDelta;
+var applySimpleDelta = (page, delta) => {
+    if (delta.property == DELTA.TITLE)
+        page.title = delta.value;
+    else {
+        var result = applyPatch(page.body, delta.value);
+        if (result === false) {
+            console.log("Patch", delta.value, "could not be applied to value", page.body);
+            throw "Patch " + delta.value + " could not be applied to value " + page.body;
+        }
+        page.body = result;
+    }
+};
+
+/** RUNTIME ARTIFACT COMPUTATION */
+
+var clone = object => JSON.parse(JSON.stringify(object));
 
 var initializeIndex = () => ({ ids: {}, parents: {} });
 
-module.exports.computeIndex = rootPage => {
-    var index = initializeIndex();
-    var walker = page => {
-        index.ids[page.id] = page;
-        if (page.children)
-            page.children.forEach(child => {
-                index.parents[child.id] = page;
-                walker(child);
-            });
+var assembleRuntimeWiki = wiki => {
+    var runtimeObject = {
+        name: wiki.name,
+        root: clone(wiki.root),
+        index: initializeIndex()
     };
-    walker(rootPage);
-    return index;
-};
-
-var applySimpleDelta = (page, delta) => {
-    if (delta.property == PAGE.TITLE)
-        page.title = delta.value;
-    else page.body = applyPatch(page.body, delta.value);
-};
-
-var assembleWiki = wiki => {
-    var root = JSON.parse(JSON.stringify(wiki.root));
-    var index = initializeIndex();
+    var root = runtimeObject.root;
+    var index = runtimeObject.index;
     index.ids[root.id] = root;
     wiki.deltas.forEach(delta => {
         var pageID = delta.pageID, parent;
         if (delta.property == DELTA.PAGE) {
             var value = delta.value;
             if (value) { // add page
+                value = clone(value);
                 parent = index.ids[pageID];
                 parent.children.push(value);
+                index.ids[value.id] = value;
                 index.parents[value.id] = parent;
             }
             else { // delete page
                 parent = index.parents[pageID];
                 parent.children = parent.children.filter(child => child.id != pageID);
+                delete index.ids[pageID];
             }
-        } else applySimpleDelta(index[pageID], delta);
+        } else applySimpleDelta(index.ids[pageID], delta);
     });
-    return root;
+    return runtimeObject;
 };
 
+/** PUBLIC METHODS */
+
+module.exports.assembleRuntimeWiki = assembleRuntimeWiki;
+
+module.exports.createWiki = (name, rootPage, deltas) => ({
+    name: name,
+    root: rootPage,
+    deltas: deltas || [],
+    freeID: rootPage.id + 1
+});
+
+module.exports.createPage = (id, title, body) => ({
+    id: id,
+    title: title,
+    body: body,
+    children: []
+});
+
 module.exports.addPage = (wiki, parentID, title, body) => {
-    wiki.deltas.push(createDelta(parentID,
-        DELTA.PAGE,
-        createPage(++wiki.id, title, body)));
+    var id = wiki.freeID++;
+    wiki.deltas.push(createDelta(parentID, DELTA.PAGE, module.exports.createPage(id, title, body)));
+    return id;
 };
 
 module.exports.deletePage = (wiki, pageID) => {
     wiki.deltas.push(createDelta(pageID, DELTA.PAGE, null));
 };
 
-module.exports.changePage = (wiki, pageID, property, value) => {
-    var runtimeWiki = assembleWiki(wiki);
-    var page = computeIndex(runtimeWiki.root)[pageID];
-    wiki.deltas.push(property == DELTA.BODY
-        ? createDelta(pageID, DELTA.BODY, getPatch(page.body, value))
-        : createDelta(pageID, DELTA.TITLE, value));
+module.exports.editPage = (wiki, pageID, title, body) => {
+    var page = assembleRuntimeWiki(wiki).index.ids[pageID];
+    if(page.title != title)
+        wiki.deltas.push(createDelta(pageID, DELTA.TITLE, title));
+    if(page.body != body)
+        wiki.deltas.push(createDelta(pageID, DELTA.BODY, getPatch(page.body, body)));
 };

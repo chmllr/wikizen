@@ -30,6 +30,7 @@ In terms of abstract types, we can describe a Wiki and Wiki Pages as follows.
 
     Wiki = {
       name: String,
+      freeID: Int,
       root: WikiPage,
       deltas: [Delta]
     }
@@ -47,12 +48,12 @@ Obviously, a Wiki is wrapper for Wiki Pages represented as a simple _ordered_ tr
 #### IDs
 
 Every page has a unique ID used to identify this page in the Wiki tree.
-The Wiki object holds the next free id used for adding of new pages.
+The Wiki object holds the next free ID used for adding of new pages.
 After a new page is added, the id will be incremented.
 
 #### Update Deltas
 
-WikiZen handles Wikis as immutable data structures. All updates are stored separately as deltas.
+WikiZen handles Wikis as immutable data structures. Every update is stored separately as a delta.
 When a Wiki is loaded, it's assembled from the stored deltas.
 
 A delta is defined as a triple:
@@ -70,13 +71,3 @@ A delta is defined as a triple:
   - for `body` it is a diff (produced by Diff-Match-Path library), containing the deltas only;
   - for `page` it can be an arbitrary JSON object (interpreted as a child) or
   `null` (if the page was deleted).
-  
-### Serialization
-
-A Wiki is stored in one single JSON object, whose structure can be described in the same type abstraction used above as follows:
-
-    {
-      root: Wiki,
-      deltas: [Delta]
-    }
-
