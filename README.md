@@ -7,9 +7,7 @@
 WikiZen is a minimal Markdown-based wiki engine for simple Wikis.
 WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhere**.
 
-## Usability
-
-### Shortcuts
+## How to Use
 
 Following shortcuts are supported:
 
