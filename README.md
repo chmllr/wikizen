@@ -19,11 +19,9 @@ Following shortcuts are supported:
 - `1` till `9` opens the `n`th child of the current page;
 - `Left Arrow` navigates to previous page.
 
-## Development
+## Specification
 
-### Specification
-
-#### Wiki and Wiki Pages
+### Wiki and Wiki Pages
 
 A __Wiki__ is one single JSON object, containing settings and __Wiki Pages__.
 In terms of abstract types, we can describe a Wiki and Wiki Pages as follows.
@@ -45,13 +43,13 @@ In terms of abstract types, we can describe a Wiki and Wiki Pages as follows.
 This simple Wiki has a root Wiki Page, which has one child.
 Obviously, a Wiki is wrapper for Wiki Pages represented as a simple _ordered_ tree data structure.
 
-#### IDs
+### IDs
 
 Every page has a unique ID used to identify this page in the Wiki tree.
 The Wiki object holds the next free ID used for adding of new pages.
 After a new page is added, the id will be incremented.
 
-#### Update Deltas
+### Update Deltas
 
 WikiZen handles Wikis as immutable data structures. Every update is stored separately as a delta.
 When a Wiki is loaded, it's assembled from the stored deltas.
