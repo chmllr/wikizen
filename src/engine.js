@@ -2,16 +2,16 @@
 
 var DiffMatchPatch = require('diff-match-patch');
 var dmp = new DiffMatchPatch();
-var _ = require('lodash');
 
-module.exports.getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
-
-module.exports.applyPatch = (patch, text) => {
+var getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
+module.exports.getPatch = getPatch;
+var applyPatch = (patch, text) => {
     var result = dmp.patch_apply(dmp.patch_fromText(patch), text);
     var status = result[1];
     if(_.every(status)) return result[0];
     console.error("Patch couldn't be applied");
 };
+module.exports.applyPatch = applyPatch;
 
 var createPage = (id, title, body) => ({
     id: id,
@@ -51,11 +51,15 @@ module.exports.deletePage = (wiki, pageID) => {
     wiki.deltas.push(createDelta(pageID, DELTA.PAGE, null));
 };
 
-module.exports.changePage = (wiki, pageID, property, body) => {
-    wiki.deltas.push(createDelta(pageID, DELTA.PAGE, null));
+module.exports.changePage = (wiki, pageID, property, value) => {
+    var runtimeWiki = assembleWiki(wiki);
+    var page = computeIndex(runtimeWiki.root)[pageID];
+    wiki.deltas.push(property == DELTA.BODY
+        ? createDelta(pageID, DELTA.BODY, getPatch(page.body, value))
+        : createDelta(pageID, DELTA.TITLE, value));
 };
 
-module.exports.computeIndex = wiki => {
+module.exports.computeIndex = rootPage => {
     var index = {
         ids: {},
         parents: {}
@@ -68,6 +72,6 @@ module.exports.computeIndex = wiki => {
                 walker(child);
             });
     };
-    walker(wiki.root);
+    walker(rootPage);
     return index;
 };
