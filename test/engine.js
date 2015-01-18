@@ -13,7 +13,7 @@ var engine = box.exports;
 exports.instantiations = function (test) {
     var title = "Hello World";
     var body = "This is the body";
-    var page = engine.createPage(1, title, body);
+    var page = engine.createPage(title, body, 1);
     test.ok(page, "page object instantiated successfully");
     test.equal(page.title, title, "title check");
     test.equal(page.body, body, "body check");
@@ -38,7 +38,7 @@ exports.patching = function (test) {
 };
 
 var getTestWiki = function () {
-    var wiki = engine.createWiki("Test Wiki", engine.createPage(0, "Root Page", "This is the *page body*."));
+    var wiki = engine.createWiki("Test Wiki", engine.createPage("Root Page", "This is the *page body*."));
     var id = engine.addPage(wiki, 0, "Nested Page 1", "The __content__ of _nested_ page 1");
     engine.addPage(wiki, id, "Nested Page 1_1", "This _is_ a leaf text");
     engine.addPage(wiki, id, "Nested Page 1_2", "This _is_ another leaf text");

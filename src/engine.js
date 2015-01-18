@@ -75,14 +75,16 @@ var assembleRuntimeWiki = wiki => {
 
 module.exports.assembleRuntimeWiki = assembleRuntimeWiki;
 
-module.exports.createWiki = (name, rootPage, deltas) => ({
-    name: name,
-    root: rootPage,
-    deltas: deltas || [],
-    freeID: rootPage.id + 1
-});
+module.exports.createWiki = (name, rootPage, deltas) => {
+    rootPage.id = 0;
+    return {
+        name: name,
+        root: rootPage,
+        deltas: deltas || [],
+        freeID: 1
+    }};
 
-module.exports.createPage = (id, title, body) => ({
+module.exports.createPage = (title, body, id) => ({
     id: id,
     title: title,
     body: body,
@@ -91,7 +93,7 @@ module.exports.createPage = (id, title, body) => ({
 
 module.exports.addPage = (wiki, parentID, title, body) => {
     var id = wiki.freeID++;
-    wiki.deltas.push(createDelta(parentID, DELTA.PAGE, module.exports.createPage(id, title, body)));
+    wiki.deltas.push(createDelta(parentID, DELTA.PAGE, module.exports.createPage(title, body, id)));
     return id;
 };
 
