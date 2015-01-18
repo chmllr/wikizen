@@ -4,13 +4,16 @@ var DiffMatchPatch = require('diff-match-patch');
 var dmp = new DiffMatchPatch();
 
 var getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
+
 module.exports.getPatch = getPatch;
+
 var applyPatch = (patch, text) => {
     var result = dmp.patch_apply(dmp.patch_fromText(patch), text);
     var status = result[1];
     if(_.every(status)) return result[0];
     console.error("Patch couldn't be applied");
 };
+
 module.exports.applyPatch = applyPatch;
 
 var createPage = (id, title, body) => ({
@@ -18,6 +21,7 @@ var createPage = (id, title, body) => ({
     title: title,
     body: body
 });
+
 module.exports.createPage = createPage;
 
 module.exports.createWiki = (name, rootPage, deltas) => ({
@@ -41,6 +45,50 @@ var createDelta = (pageID, property, value) => ({
 
 module.exports.createDelta = createDelta;
 
+var initializeIndex = () => ({ ids: {}, parents: {} });
+
+module.exports.computeIndex = rootPage => {
+    var index = initializeIndex();
+    var walker = page => {
+        index.ids[page.id] = page;
+        if (page.children)
+            page.children.forEach(child => {
+                index.parents[child.id] = page;
+                walker(child);
+            });
+    };
+    walker(rootPage);
+    return index;
+};
+
+var applySimpleDelta = (page, delta) => {
+    if (delta.property == PAGE.TITLE)
+        page.title = delta.value;
+    else page.body = applyPatch(page.body, delta.value);
+};
+
+var assembleWiki = wiki => {
+    var root = JSON.parse(JSON.stringify(wiki.root));
+    var index = initializeIndex();
+    index.ids[root.id] = root;
+    wiki.deltas.forEach(delta => {
+        var pageID = delta.pageID, parent;
+        if (delta.property == DELTA.PAGE) {
+            var value = delta.value;
+            if (value) { // add page
+                parent = index.ids[pageID];
+                parent.children.push(value);
+                index.parents[value.id] = parent;
+            }
+            else { // delete page
+                parent = index.parents[pageID];
+                parent.children = parent.children.filter(child => child.id != pageID);
+            }
+        } else applySimpleDelta(index[pageID], delta);
+    });
+    return root;
+};
+
 module.exports.addPage = (wiki, parentID, title, body) => {
     wiki.deltas.push(createDelta(parentID,
         DELTA.PAGE,
@@ -57,21 +105,4 @@ module.exports.changePage = (wiki, pageID, property, value) => {
     wiki.deltas.push(property == DELTA.BODY
         ? createDelta(pageID, DELTA.BODY, getPatch(page.body, value))
         : createDelta(pageID, DELTA.TITLE, value));
-};
-
-module.exports.computeIndex = rootPage => {
-    var index = {
-        ids: {},
-        parents: {}
-    };
-    var walker = page => {
-        index.ids[page.id] = page.id;
-        if (page.children)
-            page.children.forEach(child => {
-                index.parents[child.id] = page;
-                walker(child);
-            });
-    };
-    walker(rootPage);
-    return index;
 };
