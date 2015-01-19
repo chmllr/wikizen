@@ -70,7 +70,6 @@ var testWikiResult = {
 };
 
 exports.wikiAssemblingAndRetrieving = function (test) {
-    test.deepEqual(getTestWiki(), getTestWiki());
     var testWiki = getTestWiki();
     var wiki = engine.assembleRuntimeWiki(testWiki);
     test.equals(JSON.stringify(testWiki), JSON.stringify(testWiki), "assebmling is not modifying");
