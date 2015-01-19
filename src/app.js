@@ -20,7 +20,7 @@ var Link = React.createClass({
 var Page = React.createClass({
     render: function () {
         var page = this.props.page;
-        return <div>
+        return <div className="Page">
             <h1>{page.title}</h1>
             <div>{page.body}</div>
             <hr/>
@@ -38,4 +38,6 @@ router.addHandler("edit=:id", params => console.log("page editor", params));
 router.addHandler("delete=:id", params => console.log("page deleter", params));
 
 self.onhashchange = router.dispatcher;
-location.href = "#page=0";
+
+if (location.hash) self.onhashchange();
+else location.href = "#page=0";
