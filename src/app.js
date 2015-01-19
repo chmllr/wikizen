@@ -71,8 +71,9 @@ var Page = React.createClass({
             <ul>{page.children.map(child => <li><Link to={"page=" + child.id}
                 label={child.title} /></li>)}</ul>
             <hr/>
-            <Link to="add" param={page.id} label="New Page" />
-            <Link to="edit" param={page.id} label="Edit Page" />
+            <Link to="add" param={page.id} label="New Page" /> &nbsp;
+            <Link to="edit" param={page.id} label="Edit Page" /> &nbsp;
+            <Link to="delete" param={page.id} label="Delete Page" />
         </div>
     }
 });
@@ -89,8 +90,15 @@ router.addHandler("add=:id", params =>
 router.addHandler("edit=:id", params =>
     renderComponent(<EditingForm mode="EDIT" pageID={params.id} />));
 
-router.addHandler("edit=:id", params => console.log("page editor", params));
-router.addHandler("delete=:id", params => console.log("page deleter", params));
+router.addHandler("delete=:id", params => {
+    var response = confirm("Are you sure?");
+    if (response) {
+        var parentID = runtimeArtifact.index.parents[params.id].id;
+        engine.deletePage(wiki, params.id);
+        updateRuntime();
+        openPage(parentID);
+    }
+});
 
 self.onhashchange = router.dispatcher;
 
