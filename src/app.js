@@ -7,9 +7,11 @@ var router = require('./router');
 var defaultRootPage = engine.createPage("Main Page", "Hello world!");
 var wiki = engine.createWiki("Test Wiki", defaultRootPage);
 var runtimeArtifact;
+var renderComponent = component => React.render(component, document.body);
+var openPage = id => location.hash = "#page=" + id;
 var updateRuntime = () => runtimeArtifact = engine.assembleRuntimeWiki(wiki);
 updateRuntime();
-
+self.onhashchange = router.dispatcher;
 
 var Link = React.createClass({
     render: function () {
@@ -78,9 +80,6 @@ var Page = React.createClass({
     }
 });
 
-var renderComponent = component => React.render(component, document.body);
-var openPage = id => location.hash = "#page=" + id;
-
 router.addHandler("page=:id", params =>
     renderComponent(<Page page={runtimeArtifact.index.pages[params.id]} />));
 
@@ -99,8 +98,6 @@ router.addHandler("delete=:id", params => {
         openPage(parentID);
     }
 });
-
-self.onhashchange = router.dispatcher;
 
 if (location.hash) self.onhashchange();
 else openPage(0);
