@@ -7,7 +7,10 @@ var router = require('./router');
 
 var defaultRootPage = engine.createPage("Main Page", "Hello world!");
 var wiki = engine.createWiki("Test Wiki", defaultRootPage);
-var runtimeArtifact = engine.assembleRuntimeWiki(wiki);
+var runtimeArtifact;
+var updateRuntime = () => runtimeArtifact = engine.assembleRuntimeWiki(wiki);
+updateRuntime();
+
 
 var Link = React.createClass({
     render: function () {
@@ -20,7 +23,14 @@ var Link = React.createClass({
 
 var EditingForm = React.createClass({
     applyChanges: function () {
-        console.log(this.props.mode, this.props.pageID);
+        var pageID;
+        if (this.props.mode == "NEW_PAGE")
+            pageID = engine.addPage(wiki,
+                this.props.pageID,
+                this.refs.title.getDOMNode().value,
+                this.refs.body.getDOMNode().value);
+        updateRuntime();
+        openPage(pageID);
     },
     render: function () {
         var props = this.props;
@@ -52,6 +62,7 @@ var Page = React.createClass({
 });
 
 var renderComponent = component => React.render(component, document.body);
+var openPage = id => location.hash = "#page=" + id;
 
 router.addHandler("page=:id", params =>
     renderComponent(<Page page={runtimeArtifact.index.pages[params.id]} />));
@@ -64,4 +75,4 @@ router.addHandler("delete=:id", params => console.log("page deleter", params));
 self.onhashchange = router.dispatcher;
 
 if (location.hash) self.onhashchange();
-else location.href = "#page=0";
+else openPage(0);
