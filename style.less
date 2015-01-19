@@ -1,3 +1,11 @@
+html{
+  height: 100%;
+}
+
+body {
+  height: 98%;
+  .FlexContainer;
+}
 
 .FlexContainer {
   display: flex;
@@ -6,4 +14,21 @@
 
 .StretchedItem {
   flex-grow: 1;
+}
+
+.SolidItem {
+  flex-shrink: 0;
+}
+
+button {
+  .SolidItem;
+}
+
+textarea {
+  .StretchedItem
+}
+
+.EditingForm {
+  .FlexContainer;
+  .StretchedItem;
 }
