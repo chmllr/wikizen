@@ -1,7 +1,6 @@
 "use strict";
 
 var React = require('react');
-//var EventBus = require('eventbus');
 var engine = require('./engine');
 var router = require('./router');
 
@@ -22,24 +21,40 @@ var Link = React.createClass({
 });
 
 var EditingForm = React.createClass({
+    getInitialState: function () {
+        var props = this.props;
+        return props.mode == "EDIT" ? runtimeArtifact.index.pages[props.pageID] : {};
+    },
     applyChanges: function () {
         var pageID;
-        if (this.props.mode == "NEW_PAGE")
+        var props = this.props;
+        if (props.mode == "ADD")
             pageID = engine.addPage(wiki,
-                this.props.pageID,
+                props.pageID,
                 this.refs.title.getDOMNode().value,
                 this.refs.body.getDOMNode().value);
+        else {
+            pageID = props.pageID;
+            var state = this.state;
+            engine.editPage(wiki, pageID, state.title, state.body);
+        }
         updateRuntime();
         openPage(pageID);
     },
+    handleChange: function (property, value) {
+        var state = {};
+        state[property] = value;
+        this.setState(state);
+    },
     render: function () {
-        var props = this.props;
-        var mode = props.mode;
+        var state = this.state;
         return <div className="EditingForm">
-            <input ref="title" type="text" placeholder="Title"/>
-            <textarea ref="body"></textarea>
+            <input ref="title" type="text" placeholder="Title" value={state.title}
+                onChange={event => this.handleChange("title", event.target.value)}/>
+            <textarea ref="body" value={state.body}
+                onChange={event => this.handleChange("body", event.target.value)}></textarea>
             <button onClick={this.applyChanges}>
-                {mode == "NEW_PAGE" ? "Create New Page" : "Save Page"}
+                {this.props.mode == "EDIT" ? "Save Page" : "Create New Page"}
             </button>
         </div>
     }
@@ -57,6 +72,7 @@ var Page = React.createClass({
                 label={child.title} /></li>)}</ul>
             <hr/>
             <Link to="add" param={page.id} label="New Page" />
+            <Link to="edit" param={page.id} label="Edit Page" />
         </div>
     }
 });
@@ -68,7 +84,11 @@ router.addHandler("page=:id", params =>
     renderComponent(<Page page={runtimeArtifact.index.pages[params.id]} />));
 
 router.addHandler("add=:id", params =>
-    renderComponent(<EditingForm mode="NEW_PAGE" pageID={params.id} />));
+    renderComponent(<EditingForm mode="ADD" pageID={params.id} />));
+
+router.addHandler("edit=:id", params =>
+    renderComponent(<EditingForm mode="EDIT" pageID={params.id} />));
+
 router.addHandler("edit=:id", params => console.log("page editor", params));
 router.addHandler("delete=:id", params => console.log("page deleter", params));
 
