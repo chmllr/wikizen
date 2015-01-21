@@ -1,21 +1,13 @@
 "use strict";
 
 var React = require('react');
-var engine = require('./engine');
-var router = require('./router');
+var Wiki = require('./wiki');
+var Router = require('./router');
 
-var defaultRootPage = engine.createPage("Main Page", "Hello world!");
-var wiki = localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")) ||
-    engine.createWiki("Test Wiki", defaultRootPage);
-var runtimeArtifact;
+var wiki = new Wiki(localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")));
 var renderComponent = component => React.render(component, document.body);
 var openPage = id => location.hash = "#page=" + id;
-var updateRuntime = () => {
-    runtimeArtifact = engine.assembleRuntimeWiki(wiki);
-    localStorage.setItem("wiki", JSON.stringify(wiki));
-};
-updateRuntime();
-self.onhashchange = router.dispatcher;
+self.onhashchange = Router.dispatcher;
 
 var Link = React.createClass({
     render: function () {
@@ -29,22 +21,20 @@ var Link = React.createClass({
 var EditingForm = React.createClass({
     getInitialState: function () {
         var props = this.props;
-        return props.mode == "EDIT" ? runtimeArtifact.index.pages[props.pageID] : {};
+        return props.mode == "EDIT" ? wiki.getPage(props.pageID) : {};
     },
     applyChanges: function () {
         var pageID;
         var props = this.props;
         if (props.mode == "ADD")
-            pageID = engine.addPage(wiki,
-                props.pageID,
+            pageID = wiki.addPage(props.pageID,
                 this.refs.title.getDOMNode().value,
                 this.refs.body.getDOMNode().value);
         else {
             pageID = props.pageID;
             var state = this.state;
-            engine.editPage(wiki, pageID, state.title, state.body);
+            wiki.editPage(pageID, state.title, state.body);
         }
-        updateRuntime();
         openPage(pageID);
     },
     handleChange: function (property, value) {
@@ -84,21 +74,20 @@ var Page = React.createClass({
     }
 });
 
-router.addHandler("page=:id", params =>
-    renderComponent(<Page page={runtimeArtifact.index.pages[params.id]} />));
+Router.addHandler("page=:id", params =>
+    renderComponent(<Page page={wiki.getPage(params.id)} />));
 
-router.addHandler("add=:id", params =>
+Router.addHandler("add=:id", params =>
     renderComponent(<EditingForm mode="ADD" pageID={params.id} />));
 
-router.addHandler("edit=:id", params =>
+Router.addHandler("edit=:id", params =>
     renderComponent(<EditingForm mode="EDIT" pageID={params.id} />));
 
-router.addHandler("delete=:id", params => {
+Router.addHandler("delete=:id", params => {
     var response = confirm("Are you sure?");
     if (response) {
-        var parentID = runtimeArtifact.index.parents[params.id].id;
-        engine.deletePage(wiki, params.id);
-        updateRuntime();
+        var parentID = wiki.getParent(params.id).id;
+        wiki.deletePage(params.id);
         openPage(parentID);
     }
 });
