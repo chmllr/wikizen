@@ -5,11 +5,15 @@ var engine = require('./engine');
 var router = require('./router');
 
 var defaultRootPage = engine.createPage("Main Page", "Hello world!");
-var wiki = engine.createWiki("Test Wiki", defaultRootPage);
+var wiki = localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")) ||
+    engine.createWiki("Test Wiki", defaultRootPage);
 var runtimeArtifact;
 var renderComponent = component => React.render(component, document.body);
 var openPage = id => location.hash = "#page=" + id;
-var updateRuntime = () => runtimeArtifact = engine.assembleRuntimeWiki(wiki);
+var updateRuntime = () => {
+    runtimeArtifact = engine.assembleRuntimeWiki(wiki);
+    localStorage.setItem("wiki", JSON.stringify(wiki));
+};
 updateRuntime();
 self.onhashchange = router.dispatcher;
 
