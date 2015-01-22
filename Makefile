@@ -13,3 +13,7 @@ deps:
 	npm install diff
 	npm install reactify
 	npm install react
+	npm install marked
+
+pub:
+	cp index.html wikizen.js style.css ~/Dropbox/Public/wiki/

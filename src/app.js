@@ -3,6 +3,7 @@
 var React = require('react');
 var Wiki = require('./wiki');
 var Router = require('./router');
+var marked = require('marked');
 
 var wiki = new Wiki(localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")));
 var renderComponent = component => React.render(component, document.body);
@@ -60,8 +61,8 @@ var Page = React.createClass({
     render: function () {
         var page = this.props.page;
         return <div className="Page">
-            <h1>{page.title}</h1>
-            <div>{page.body}</div>
+            <code>{page.title}</code>
+            <div dangerouslySetInnerHTML={{__html: marked(page.body)}}></div>
             <hr/>
             <h2>{page.children.length == 0 ? null : "Nested Pages"}</h2>
             <ul>{page.children.map(child => <li><Link to={"page=" + child.id}
