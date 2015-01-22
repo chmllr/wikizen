@@ -59,14 +59,14 @@ var EditingForm = React.createClass({
 
 var Page = React.createClass({
     render: function () {
-        var page = this.props.page;
+        var page = this.props.page,
+            children = page.children;
         return <div className="Page">
             <code>{page.title}</code>
             <div dangerouslySetInnerHTML={{__html: marked(page.body)}}></div>
             <hr/>
-            <h2>{page.children.length == 0 ? null : "Nested Pages"}</h2>
-            <ul>{page.children.map(child => <li><Link to={"page=" + child.id}
-                label={child.title} /></li>)}</ul>
+            <h2>{children.length == 0 ? null : "Nested Pages"}</h2>
+            <ul>{children.map(child => <li><Link to={"page=" + child.id} label={child.title} /></li>)}</ul>
             <hr/>
             <Link to="add" param={page.id} label="New Page" /> &nbsp;
             <Link to="edit" param={page.id} label="Edit Page" /> &nbsp;
