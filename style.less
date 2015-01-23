@@ -12,6 +12,11 @@ body {
   flex-direction: column;
 }
 
+.FlexContainerHorizontal {
+  display: flex;
+  flex-direction: row;
+}
+
 .StretchedItem {
   flex-grow: 1;
 }
@@ -30,5 +35,13 @@ textarea {
 
 .EditingForm {
   .FlexContainer;
+  .StretchedItem;
+}
+
+.Header {
+  .FlexContainerHorizontal;
+}
+
+.Breadcrumb {
   .StretchedItem;
 }

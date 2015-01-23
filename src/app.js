@@ -10,6 +10,20 @@ var renderComponent = component => React.render(component, document.body);
 var openPage = id => location.hash = "#page=" + id;
 self.onhashchange = Router.dispatcher;
 
+var Header = React.createClass({
+    render: function () {
+        var props = this.props;
+        return <div className="Header">
+            <div className="Breadcrumb">{props.title}</div>
+            <div>
+                <Link to="add" param={props.pageID} label="New Page" /> &middot;
+                <Link to="edit" param={props.pageID} label="Edit Page" /> &middot;
+                <Link to="delete" param={props.pageID} label="Delete Page" />
+            </div>
+        </div>
+    }
+});
+
 var Link = React.createClass({
     render: function () {
         var props = this.props;
@@ -62,15 +76,11 @@ var Page = React.createClass({
         var page = this.props.page,
             children = page.children;
         return <div className="Page">
-            <code>{page.title}</code>
+            <Header title={page.title} pageID={page.id} />
             <div dangerouslySetInnerHTML={{__html: marked(page.body)}}></div>
             <hr/>
             <h2>{children.length == 0 ? null : "Nested Pages"}</h2>
             <ul>{children.map(child => <li><Link to={"page=" + child.id} label={child.title} /></li>)}</ul>
-            <hr/>
-            <Link to="add" param={page.id} label="New Page" /> &nbsp;
-            <Link to="edit" param={page.id} label="Edit Page" /> &nbsp;
-            <Link to="delete" param={page.id} label="Delete Page" />
         </div>
     }
 });
