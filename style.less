@@ -64,6 +64,13 @@ textarea {
   }
 }
 
+.ButtonBar {
+  .FlexContainerHorizontal;
+  button {
+    .StretchedItem;
+  }
+}
+
 header {
   .FlexContainerHorizontal;
   .BackGroundElement;
@@ -91,7 +98,16 @@ article {
   background: #f6f6f6;
 }
 
-.Main {
+button {
+  .BackGroundElement;
+  border-right: 3px;
+}
+
+input, textarea {
+  outline: none;
+}
+
+.BodyInput, .Main {
   font-family: Alegreya, Georgia, serif;
   font-size: 1.2em;
   a {
@@ -107,6 +123,11 @@ article {
   .StretchedItem;
   .FlexContainer;
   padding: @side-padding;
+}
+
+input.TitleInput {
+  .BackGroundElement;
+  text-transform: none;
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -71,13 +71,16 @@ var EditingForm = React.createClass({
     render: function () {
         var state = this.state;
         return <div className="EditingForm">
-            <input ref="title" type="text" placeholder="Title" value={state.title}
+            <input className="TitleInput" ref="title" type="text" placeholder="Title" value={state.title}
                 onChange={event => this.handleChange("title", event.target.value)}/>
-            <textarea ref="body" value={state.body}
+            <textarea className="BodyInput" ref="body" value={state.body}
                 onChange={event => this.handleChange("body", event.target.value)}></textarea>
-            <button onClick={this.applyChanges}>
+            <div className="ButtonBar">
+                <button onClick={() => window.history.back()}>Cancel</button>
+                <button onClick={this.applyChanges}>
                 {this.props.mode == "EDIT" ? "Save Page" : "Create New Page"}
-            </button>
+                </button>
+            </div>
         </div>
     }
 });
