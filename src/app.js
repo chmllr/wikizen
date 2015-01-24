@@ -11,14 +11,25 @@ var openPage = id => location.hash = "#page=" + id;
 self.onhashchange = Router.dispatcher;
 
 var Header = React.createClass({
+    getPath: function (pageID) {
+        var parent = wiki.getParent(pageID);
+        if(!parent) return [];
+        var node = <Link to="page" param={parent.id} label={parent.title} />;
+        var rest = this.getPath(parent.id);
+        rest.push(node);
+        rest.push(<span>&nbsp;&gt;&nbsp;</span>);
+        return rest;
+    },
     render: function () {
         var props = this.props;
+        var path = this.getPath(props.id);
+        path.push(props.title);
         return <div className="Header">
-            <div className="Breadcrumb">{props.title}</div>
+            <div className="Breadcrumb">{path}</div>
             <div>
-                <Link to="add" param={props.pageID} label="New Page" /> &middot;
-                <Link to="edit" param={props.pageID} label="Edit Page" /> &middot;
-                <Link to="delete" param={props.pageID} label="Delete Page" />
+                <Link to="add" param={props.id} label="New Page" /> &middot;&nbsp;
+                <Link to="edit" param={props.id} label="Edit Page" /> &middot;&nbsp;
+                <Link to="delete" param={props.id} label="Delete Page" />
             </div>
         </div>
     }
@@ -76,7 +87,7 @@ var Page = React.createClass({
         var page = this.props.page,
             children = page.children;
         return <div className="Page">
-            <Header title={page.title} pageID={page.id} />
+            <Header {...page} />
             <div dangerouslySetInnerHTML={{__html: marked(page.body)}}></div>
             <hr/>
             <h2>{children.length == 0 ? null : "Nested Pages"}</h2>
