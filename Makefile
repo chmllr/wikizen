@@ -16,4 +16,5 @@ deps:
 	npm install marked
 
 pub:
-	cp index.html wikizen.js style.css ~/Dropbox/Public/wiki/
+	make
+	cp README.md index.html wikizen.js style.css ~/Dropbox/Public/wiki/
