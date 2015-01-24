@@ -94,11 +94,14 @@ var Page = React.createClass({
     render: function () {
         var page = this.props.page,
             children = page.children;
+        var nestedPages = <div className="NestedPages Main">
+            <h3>Nested Pages</h3>
+            <ol>{children.map(child => <li><Link to={"page=" + child.id} label={child.title} /></li>)}</ol>
+        </div>;
         return <div className="Page">
             <Header {...page} />
-            <article dangerouslySetInnerHTML={{__html: marked(page.body)}}></article>
-            <h2>{children.length == 0 ? null : "Nested Pages"}</h2>
-            <ul>{children.map(child => <li><Link to={"page=" + child.id} label={child.title} /></li>)}</ul>
+            <article className="Main" dangerouslySetInnerHTML={{__html: marked(page.body)}}></article>
+            {children.length == 0 ? null : nestedPages}
             <Footer />
         </div>
     }

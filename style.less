@@ -1,10 +1,18 @@
+@side-padding: 1em;
+@background: #223344;
+
 html{
   height: 100%;
 }
 
 body {
-  height: 98%;
+  height: 100%;
   .FlexContainer;
+}
+
+body, html {
+  padding: 0;
+  margin: 0;
 }
 
 .FlexContainer {
@@ -38,8 +46,32 @@ textarea {
   .StretchedItem;
 }
 
+.BackGroundElement {
+  padding: @side-padding;
+  background: @background;
+  color: #eeeeee;
+  font-family: Menlo, Courier, monospace;
+  text-transform: uppercase;
+  font-size: 0.7em;
+  opacity: 0.7;
+  a, a:visited {
+    color: white;
+    border-bottom: 1px dotted;
+    text-decoration: none;
+  }
+  a:hover {
+    border-bottom: none;
+  }
+}
+
 header {
   .FlexContainerHorizontal;
+  .BackGroundElement;
+}
+
+footer {
+  text-align: center;
+  .BackGroundElement;
 }
 
 nav {
@@ -49,11 +81,64 @@ nav {
 .Page {
   .FlexContainer;
   .StretchedItem;
-  article {
-    .StretchedItem;
-  }
 }
 
-footer {
-  text-align: center;
+article {
+  .StretchedItem;
+}
+
+.NestedPages {
+  background: #f6f6f6;
+}
+
+.Main {
+  font-family: Alegreya, Georgia, serif;
+  font-size: 1.2em;
+  a {
+    text-decoration: none;
+    border-bottom: 1px dotted;
+    color: #10a020;
+  }
+  a:visited {
+    text-decoration: none;
+    border-bottom: 1px dotted;
+    color: darken(#10a020, 10%);
+  }
+  .StretchedItem;
+  .FlexContainer;
+  padding: @side-padding;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Noticia Text', 'PT Serif', Georgia, serif;
+  font-weight: bold;
+  color: @background;
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.6em;
+}
+
+h3 {
+  font-size: 1.4em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+h5 {
+  font-size: 1.1em;
+}
+
+h6 {
+  font-size: 1.0em;
+}
+
+#hero h1 {
+  font-size: 2.5em;
 }
