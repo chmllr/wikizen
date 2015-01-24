@@ -2,8 +2,18 @@
 
 var engine = require('./engine');
 
+function getFile(url) {
+    var request = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    if (request) {
+        request.open("GET", url, false);
+        request.send(null);
+        return request.responseText;
+    }
+}
+
 function Wiki (wikiJSON) {
-    var wiki = wikiJSON || engine.createWiki("Test Wiki", engine.createPage("Main Page", "Hello world!"));
+    var wiki = wikiJSON || engine.createWiki("Wiki",
+            engine.createPage("Default Home Page", getFile("README.md")));
     var runtimeWiki;
     this.update = () => {
         runtimeWiki = engine.assembleRuntimeWiki(wiki);
