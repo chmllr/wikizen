@@ -24,14 +24,14 @@ var Header = React.createClass({
         var props = this.props;
         var path = this.getPath(props.id);
         path.push(props.title);
-        return <div className="Header">
-            <div className="Breadcrumb">{path}</div>
-            <div>
+        return <header>
+            <nav className="Breadcrumb">{path}</nav>
+            <div className="links">
                 <Link to="add" param={props.id} label="New Page" /> &middot;&nbsp;
                 <Link to="edit" param={props.id} label="Edit Page" /> &middot;&nbsp;
                 <Link to="delete" param={props.id} label="Delete Page" />
             </div>
-        </div>
+        </header>
     }
 });
 
@@ -82,16 +82,24 @@ var EditingForm = React.createClass({
     }
 });
 
+var Footer = React.createClass({
+    render: function () {
+        return <footer>
+            Powered by WikiZen.
+        </footer>
+    }
+});
+
 var Page = React.createClass({
     render: function () {
         var page = this.props.page,
             children = page.children;
         return <div className="Page">
             <Header {...page} />
-            <div dangerouslySetInnerHTML={{__html: marked(page.body)}}></div>
-            <hr/>
+            <article dangerouslySetInnerHTML={{__html: marked(page.body)}}></article>
             <h2>{children.length == 0 ? null : "Nested Pages"}</h2>
             <ul>{children.map(child => <li><Link to={"page=" + child.id} label={child.title} /></li>)}</ul>
+            <Footer />
         </div>
     }
 });
