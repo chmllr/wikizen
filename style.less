@@ -45,20 +45,20 @@ button {
   .SolidItem;
 }
 
-textarea {
-  .StretchedItem
-}
-
 .EditingForm {
   .FlexContainer;
   .StretchedItem;
 }
 
+.monospace {
+  font-family: Menlo, Courier, monospace;
+}
+
 .BackGroundElement {
+  .monospace;
   padding: @std-padding;
   background: @prime;
   color: #eeeeee;
-  font-family: Menlo, Courier, monospace;
   text-transform: uppercase;
   font-size: 0.7em;
   opacity: 0.7;
@@ -115,6 +115,20 @@ input, textarea {
   outline: none;
 }
 
+.BodyInput {
+  .monospace;
+  flex: 3 0;
+  -webkit-flex: 3 0;
+  font-size: 1em;
+  padding: @std-padding;
+}
+
+.Scrollable {
+  flex: 5 0;
+  -webkit-flex: 5 0;
+  overflow: auto;
+}
+
 a.prime {
   text-decoration: none;
   border: none;
@@ -131,7 +145,7 @@ a.prime:hover {
   background: darken(@prime-link, 5%);
 }
 
-.BodyInput, .Main {
+.Main {
   font-family: Alegreya, Georgia, serif;
   font-size: 1.2em;
   a {
@@ -158,6 +172,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Noticia Text', 'PT Serif', Georgia, serif;
   font-weight: bold;
   color: @prime;
+  margin: 0;
 }
 
 h1 {

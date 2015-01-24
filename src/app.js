@@ -78,6 +78,9 @@ var EditingForm = React.createClass({
                 onChange={event => this.handleChange("title", event.target.value)}/>
             <textarea className="BodyInput" ref="body" value={state.body}
                 onChange={event => this.handleChange("body", event.target.value)}></textarea>
+            <div className="Scrollable">
+                <article className="Main" dangerouslySetInnerHTML={{__html: marked(state.body || "")}}></article>
+            </div>
             <div className="ButtonBar">
                 <button onClick={() => window.history.back()}>Cancel</button>
                 <button onClick={this.applyChanges}>
@@ -106,7 +109,7 @@ var Page = React.createClass({
         </div>;
         return <div className="Page">
             <Header {...page} />
-            <article className="Main" dangerouslySetInnerHTML={{__html: marked(page.body)}}></article>
+            <article className="Main" dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
             {children.length == 0 ? null : nestedPages}
             <Footer />
         </div>
