@@ -10,6 +10,15 @@ var renderComponent = component => React.render(component, document.body);
 var openPage = id => location.hash = "#page=" + id;
 self.onhashchange = Router.dispatcher;
 
+var Link = React.createClass({
+    render: function () {
+        var props = this.props;
+        var param = props.param;
+        return <a className={props.className}
+            href={"#" + props.to + (param != undefined ? "=" + param : "")}>{props.label}</a>
+    }
+});
+
 var Header = React.createClass({
     getPath: function (pageID) {
         var parent = wiki.getParent(pageID);
@@ -27,20 +36,11 @@ var Header = React.createClass({
         return <header>
             <nav className="Breadcrumb">{path}</nav>
             <div className="links">
-                <Link to="add" param={props.id} label="New Page" /> &middot;&nbsp;
+                <Link to="add" param={props.id} label="New Page" className="prime" /> &middot;&nbsp;
                 <Link to="edit" param={props.id} label="Edit Page" /> &middot;&nbsp;
                 <Link to="delete" param={props.id} label="Delete Page" />
             </div>
         </header>
-    }
-});
-
-var Link = React.createClass({
-    render: function () {
-        var props = this.props;
-        var param = props.param;
-        return <a
-            href={"#" + props.to + (param != undefined ? "=" + param : "")}>{props.label}</a>
     }
 });
 
@@ -67,6 +67,9 @@ var EditingForm = React.createClass({
         var state = {};
         state[property] = value;
         this.setState(state);
+    },
+    componentDidMount: function () {
+        this.refs.title.getDOMNode().focus();
     },
     render: function () {
         var state = this.state;

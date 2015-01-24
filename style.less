@@ -1,5 +1,7 @@
-@side-padding: 1em;
-@background: #223344;
+@std-padding: 1em;
+@prime: #334455;
+@prime-link: #009808;
+@link: #10a020;
 
 html{
   height: 100%;
@@ -17,20 +19,26 @@ body, html {
 
 .FlexContainer {
   display: flex;
+  display: -webkit-flex;
   flex-direction: column;
+  -webkit-flex-direction: column;
 }
 
 .FlexContainerHorizontal {
   display: flex;
+  display: -webkit-flex;
   flex-direction: row;
+  -webkit-flex-direction: row;
 }
 
 .StretchedItem {
   flex-grow: 1;
+  -webkit-flex-grow: 1;
 }
 
 .SolidItem {
   flex-shrink: 0;
+  -webkit-flex-shrink: 0;
 }
 
 button {
@@ -47,8 +55,8 @@ textarea {
 }
 
 .BackGroundElement {
-  padding: @side-padding;
-  background: @background;
+  padding: @std-padding;
+  background: @prime;
   color: #eeeeee;
   font-family: Menlo, Courier, monospace;
   text-transform: uppercase;
@@ -107,22 +115,38 @@ input, textarea {
   outline: none;
 }
 
+a.prime {
+  text-decoration: none;
+  border: none;
+  background: @prime-link;
+  padding-top: 0.3em;
+  padding-bottom: 0.1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  color: white;
+  border-radius: 3px;
+}
+
+a.prime:hover {
+  background: darken(@prime-link, 5%);
+}
+
 .BodyInput, .Main {
   font-family: Alegreya, Georgia, serif;
   font-size: 1.2em;
   a {
     text-decoration: none;
     border-bottom: 1px dotted;
-    color: #10a020;
+    color: @link;
   }
   a:visited {
     text-decoration: none;
     border-bottom: 1px dotted;
-    color: darken(#10a020, 10%);
+    color: darken(@link, 10%);
   }
   .StretchedItem;
   .FlexContainer;
-  padding: @side-padding;
+  padding: @std-padding;
 }
 
 input.TitleInput {
@@ -133,7 +157,7 @@ input.TitleInput {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Noticia Text', 'PT Serif', Georgia, serif;
   font-weight: bold;
-  color: @background;
+  color: @prime;
 }
 
 h1 {
