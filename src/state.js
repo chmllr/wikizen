@@ -2,6 +2,10 @@
 
 var engine = require('./engine');
 
+var stores = {
+    local: require('./persistence/local')
+};
+
 function getFile(url) {
     var request = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     if (request) {
@@ -11,13 +15,13 @@ function getFile(url) {
     }
 }
 
-function State () {
-    var wiki = localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")) ||
-        engine.createWiki("Wiki", engine.createPage("HOME", getFile("README.md")));
+function State (persistence) {
+    var store = stores[persistence] || stores.local;
+    var wiki = store.load() || engine.createWiki("Wiki", engine.createPage("HOME", getFile("README.md")));
     var snapshot;
     var update = () => {
         snapshot = engine.assembleRuntimeWiki(wiki);
-        localStorage.setItem("wiki", JSON.stringify(wiki));
+        store.save(wiki);
     };
     this.getPage = id => snapshot.index.pages[id];
     this.getParent = id => snapshot.index.parents[id];
