@@ -16,13 +16,22 @@ function getFile(url) {
 }
 
 function State (persistence) {
-    var store = stores[persistence] || stores.local;
-    var wiki = store.load() || engine.createWiki("Wiki", engine.createPage("HOME", getFile("README.md")));
-    var snapshot;
+    var store = stores[persistence] || stores.local, wiki, snapshot;
     var update = () => {
         snapshot = engine.assembleRuntimeWiki(wiki);
         store.save(wiki);
     };
+
+    this.init = () => {
+        return new Promise((resolver, rejecter) => {
+            store.init().then(() => {
+                wiki = store.load() || engine.createWiki("Wiki", engine.createPage("HOME", getFile("README.md")));
+                snapshot = engine.assembleRuntimeWiki(wiki);
+                resolver();
+            }, rejecter);
+        });
+    };
+
     this.getPage = id => snapshot.index.pages[id];
     this.getParent = id => snapshot.index.parents[id];
     this.addPage = (id, title, body) => {
@@ -42,7 +51,6 @@ function State (persistence) {
         wiki.deltas.splice(wiki.deltas.length - 1, 1);
         update();
     };
-    update();
 }
 
 module.exports = State;

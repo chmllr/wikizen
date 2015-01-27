@@ -197,5 +197,8 @@ Router.addHandler("delete=:id", params => {
     }
 });
 
-if (location.hash) self.onhashchange();
-else openPage(localStorage.openedPage || 0);
+runtime.init().then(() => {
+        if (location.hash) self.onhashchange();
+        else openPage(localStorage.openedPage || 0);
+    }
+);
