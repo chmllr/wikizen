@@ -11,34 +11,34 @@ function getFile(url) {
     }
 }
 
-function Wiki (wikiJSON) {
-    var wiki = wikiJSON || engine.createWiki("Wiki",
-            engine.createPage("Default Home Page", getFile("README.md")));
-    var runtimeWiki;
-    this.update = () => {
-        runtimeWiki = engine.assembleRuntimeWiki(wiki);
+function State () {
+    var wiki = localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")) ||
+        engine.createWiki("Wiki", engine.createPage("Default Home Page", getFile("README.md")));
+    var snapshot;
+    var update = () => {
+        snapshot = engine.assembleRuntimeWiki(wiki);
         localStorage.setItem("wiki", JSON.stringify(wiki));
     };
-    this.getPage = id => runtimeWiki.index.pages[id];
-    this.getParent = id => runtimeWiki.index.parents[id];
+    this.getPage = id => snapshot.index.pages[id];
+    this.getParent = id => snapshot.index.parents[id];
     this.addPage = (id, title, body) => {
         var childID = engine.addPage(wiki, id, title, body);
-        this.update();
+        update();
         return childID;
     };
     this.editPage = (id, title, body) => {
         engine.editPage(wiki, id, title, body);
-        this.update()
+        update()
     };
     this.deletePage = id => {
         engine.deletePage(wiki, id);
-        this.update();
+        update();
     };
     this.undoDelta = () => {
         wiki.deltas.splice(wiki.deltas.length - 1, 1);
-        this.update();
+        update();
     };
-    this.update();
+    update();
 }
 
-module.exports = Wiki;
+module.exports = State;

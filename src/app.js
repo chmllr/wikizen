@@ -1,11 +1,11 @@
 "use strict";
 
 var React = require('react');
-var Wiki = require('./wiki');
+var State = require('./state');
 var Router = require('./router');
 var marked = require('marked');
 
-var wiki = new Wiki(localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")));
+var runtime = new State("same_id");
 var renderComponent = component => React.render(component, document.body);
 var openPage = id => {
     location.hash = "#page=" + id;
@@ -41,7 +41,7 @@ var Link = React.createClass({
 
 var Header = React.createClass({
     getPath: function (pageID) {
-        var parent = wiki.getParent(pageID);
+        var parent = runtime.getParent(pageID);
         if(!parent) return [];
         var node = <Link to="page" param={parent.id} label={parent.title} />;
         var rest = this.getPath(parent.id);
@@ -68,19 +68,19 @@ var Header = React.createClass({
 var EditingForm = React.createClass({
     getInitialState: function () {
         var props = this.props;
-        return props.mode == "EDIT" ? wiki.getPage(props.pageID) : {};
+        return props.mode == "EDIT" ? runtime.getPage(props.pageID) : {};
     },
     applyChanges: function () {
         var pageID;
         var props = this.props;
         if (props.mode == "ADD")
-            pageID = wiki.addPage(props.pageID,
+            pageID = runtime.addPage(props.pageID,
                 this.refs.title.getDOMNode().value,
                 this.refs.body.getDOMNode().value);
         else {
             pageID = props.pageID;
             var state = this.state;
-            wiki.editPage(pageID, state.title, state.body);
+            runtime.editPage(pageID, state.title, state.body);
         }
         openPage(pageID);
     },
@@ -97,7 +97,7 @@ var EditingForm = React.createClass({
             var code = keyMapping[event.keyCode];
             switch (code) {
                 case "escape":
-                    var page = props.mode == "EDIT" ? wiki.getPage(id) : wiki.getParent(id);
+                    var page = props.mode == "EDIT" ? runtime.getPage(id) : runtime.getParent(id);
                     openPage(page && page.id || 0);
                     break;
                 default:
@@ -152,7 +152,7 @@ var Page = React.createClass({
                     location.hash = "#delete=" + page.id;
                     break;
                 case "back":
-                    var parent = wiki.getParent(page.id);
+                    var parent = runtime.getParent(page.id);
                     if(parent) openPage(parent.id);
                     break;
                 default:
@@ -178,7 +178,7 @@ var Page = React.createClass({
 });
 
 Router.addHandler("page=:id", params =>
-    renderComponent(<Page {...wiki.getPage(params.id)} />));
+    renderComponent(<Page {...runtime.getPage(params.id)} />));
 
 Router.addHandler("add=:id", params =>
     renderComponent(<EditingForm mode="ADD" pageID={params.id} />));
@@ -189,9 +189,9 @@ Router.addHandler("edit=:id", params =>
 Router.addHandler("delete=:id", params => {
     var response = confirm("Are you sure?");
     if (response) {
-        var parent = wiki.getParent(params.id);
+        var parent = runtime.getParent(params.id);
         if(parent) {
-            wiki.deletePage(params.id);
+            runtime.deletePage(params.id);
             openPage(parent.id);
         }
     }
