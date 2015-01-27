@@ -171,7 +171,7 @@ var Page = React.createClass({
         return <div ref="page" className="Page">
             <Header {...page} />
             <article className="Main" dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
-            {children.length == 0 ? null : nestedPages}
+            {children.length == 0 ? <div className="StretchedItem">&nbsp;</div> : nestedPages}
             <Footer />
         </div>
     }

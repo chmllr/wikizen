@@ -119,12 +119,12 @@ nav {
 }
 
 article {
-  .StretchedItem;
   .SolidItem;
 }
 
 .NestedPages {
   .SolidItem;
+  .StretchedItem;
   background: @background-light;
 }
 
@@ -196,11 +196,11 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'PT Serif', Georgia, serif;
   font-weight: bold;
   color: @prime;
-  margin: 0;
 }
 
 h1 {
   font-size: 1.8em;
+  border-bottom: 1px solid lighten(@prime, 50%);
 }
 
 h2 {
