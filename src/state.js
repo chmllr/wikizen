@@ -13,7 +13,7 @@ function getFile(url) {
 
 function State () {
     var wiki = localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")) ||
-        engine.createWiki("Wiki", engine.createPage("Default Home Page", getFile("README.md")));
+        engine.createWiki("Wiki", engine.createPage("HOME", getFile("README.md")));
     var snapshot;
     var update = () => {
         snapshot = engine.assembleRuntimeWiki(wiki);
