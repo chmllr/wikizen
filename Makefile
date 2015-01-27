@@ -10,10 +10,11 @@ tests:
 	nodeunit
 
 deps:
-	npm install diff
+	npm install diff-match-patch
 	npm install reactify
 	npm install react
 	npm install marked
+	npm install nodeunit
 
 pub:
 	make

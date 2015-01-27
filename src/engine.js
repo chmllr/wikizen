@@ -1,11 +1,12 @@
 "use strict";
 
-var jsdiff = require('diff');
+var DiffMatchPatch = require('diff-match-patch');
+var dmp = new DiffMatchPatch();
 
 /* DIFFING */
 
-var getPatch = (A, B) => jsdiff.createPatch("WikiZen", A, B);
-var applyPatch = (text, patch) => jsdiff.applyPatch(text, patch);
+var getPatch = (A, B) => dmp.patch_toText(dmp.patch_make(A, B));
+var applyPatch = (text, patch) => dmp.patch_apply(dmp.patch_fromText(patch), text);
 
 /* DELTA MANAGEMENT */
 
@@ -27,11 +28,11 @@ var applySimpleDelta = (page, delta) => {
         page.title = delta.value;
     else {
         var result = applyPatch(page.body, delta.value);
-        if (result === false) {
+        if (result[1].indexOf(false) >= 0) {
             console.log("Patch", delta.value, "could not be applied to value", page.body);
             throw "Patch " + delta.value + " could not be applied to value " + page.body;
         }
-        page.body = result;
+        page.body = result[0];
     }
 };
 

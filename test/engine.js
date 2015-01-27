@@ -31,9 +31,9 @@ exports.patching = function (test) {
     var line2 = "These are the pale deaths which men miscall their lives";
     var diff = box.getPatch(line1, line2);
     test.ok(diff, "diff is ok");
-    test.equal(box.applyPatch(line1, diff), line2, "applied patch produces the expected result");
-    var wrongOutput = box.applyPatch(line2, diff);
-    test.ok(!wrongOutput, "wrong patch application returns nil");
+    test.equal(box.applyPatch(line1, diff)[0], line2, "applied patch produces the expected result");
+    var wrongOutput = box.applyPatch(line2, diff)[1];
+    test.ok(wrongOutput.indexOf(false) >= 0, "wrong patch application returns nil");
     test.done();
 };
 
