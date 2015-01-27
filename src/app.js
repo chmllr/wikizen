@@ -17,7 +17,7 @@ var keyMapping = {
     78: "new",
     68: "delete",
     37: "back",
-    29: "escape",
+    27: "escape",
     48: "home",
     49: 1,
     50: 2,
@@ -51,14 +51,15 @@ var Header = React.createClass({
     },
     render: function () {
         var props = this.props;
+        var id = props.id;
         var path = this.getPath(props.id);
         path.push(props.title);
         return <header>
             <nav className="Breadcrumb">{path}</nav>
-            <div className="links">
-                <Link to="add" param={props.id} label="New Page" className="prime" /> &middot;&nbsp;
-                <Link to="edit" param={props.id} label="Edit Page" /> &middot;&nbsp;
-                <Link to="delete" param={props.id} label="Delete Page" />
+            <div className="Links">
+                <Link to="add" param={id} label="New Page" className="prime" /> &middot;&nbsp;
+                <Link to="edit" param={id} label="Edit Page" />
+                {id > 0 ? <span>&nbsp;&middot;&nbsp;<Link to="delete" param={id} label="Delete Page" /></span> : null}
             </div>
         </header>
     }
@@ -91,12 +92,13 @@ var EditingForm = React.createClass({
     componentDidMount: function () {
         this.refs.title.getDOMNode().focus();
         document.onkeyup = event => {
-            var page = this.props;
+            var props = this.props;
+            var id = props.pageID;
             var code = keyMapping[event.keyCode];
             switch (code) {
                 case "escape":
-                    var parent = wiki.getParent(page.id);
-                    if(parent) openPage(parent.id);
+                    var page = props.mode == "EDIT" ? wiki.getPage(id) : wiki.getParent(id);
+                    openPage(page && page.id || 0);
                     break;
                 default:
                     break;
@@ -187,9 +189,11 @@ Router.addHandler("edit=:id", params =>
 Router.addHandler("delete=:id", params => {
     var response = confirm("Are you sure?");
     if (response) {
-        var parentID = wiki.getParent(params.id).id;
-        wiki.deletePage(params.id);
-        openPage(parentID);
+        var parent = wiki.getParent(params.id);
+        if(parent) {
+            wiki.deletePage(params.id);
+            openPage(parent.id);
+        }
     }
 });
 
