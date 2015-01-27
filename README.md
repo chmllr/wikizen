@@ -5,8 +5,9 @@
 
 > — _Dijkstra_
 
-WikiZen is a minimal Markdown-based wiki engine for simple Wikis.
-WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhere**.
+WikiZen is a minimalistic Markdown-based wiki.
+WikiZen serializes to a single JSON object, which makes it storable **anywhere**.
+See the [technical specification](https://github.com/chmllr/WikiZen/blob/master/SPEC.md) of the persistence format.
 
 ## How to Use
 

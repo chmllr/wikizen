@@ -7,7 +7,10 @@ var marked = require('marked');
 
 var wiki = new Wiki(localStorage.getItem("wiki") && JSON.parse(localStorage.getItem("wiki")));
 var renderComponent = component => React.render(component, document.body);
-var openPage = id => location.hash = "#page=" + id;
+var openPage = id => {
+    location.hash = "#page=" + id;
+    localStorage.openedPage = id;
+};
 self.onhashchange = Router.dispatcher;
 var keyMapping = {
     69: "edit",
@@ -191,4 +194,4 @@ Router.addHandler("delete=:id", params => {
 });
 
 if (location.hash) self.onhashchange();
-else openPage(0);
+else openPage(localStorage.openedPage || 0);
