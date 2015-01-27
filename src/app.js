@@ -5,7 +5,7 @@ var State = require('./state');
 var Router = require('./router');
 var marked = require('marked');
 
-var runtime = new State("same_id");
+var runtime = new State(location.search.replace("?", ""));
 var renderComponent = component => React.render(component, document.body);
 var openPage = id => {
     location.hash = "#page=" + id;
@@ -200,5 +200,6 @@ Router.addHandler("delete=:id", params => {
 runtime.init().then(() => {
         if (location.hash) self.onhashchange();
         else openPage(localStorage.openedPage || 0);
-    }
+    },
+    console.error
 );

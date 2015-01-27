@@ -3,7 +3,8 @@
 var engine = require('./engine');
 
 var stores = {
-    local: require('./persistence/local')
+    local: require('./persistence/local'),
+    dropbox: require('./persistence/dropbox')
 };
 
 function getFile(url) {
@@ -16,19 +17,19 @@ function getFile(url) {
 }
 
 function State (persistence) {
-    var store = stores[persistence] || stores.local, wiki, snapshot;
+    var store = stores[persistence] || stores.dropbox, wiki, snapshot;
     var update = () => {
         snapshot = engine.assembleRuntimeWiki(wiki);
         store.save(wiki);
     };
 
     this.init = () => {
-        return new Promise((resolver, rejecter) => {
+        return new Promise((resolve, reject) => {
             store.init().then(() => {
                 wiki = store.load() || engine.createWiki("Wiki", engine.createPage("HOME", getFile("README.md")));
                 snapshot = engine.assembleRuntimeWiki(wiki);
-                resolver();
-            }, rejecter);
+                resolve();
+            }, reject);
         });
     };
 
