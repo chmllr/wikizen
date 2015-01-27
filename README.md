@@ -1,4 +1,4 @@
-&#9775; README
+&#9775; WikiZen
 ==============
 
 > "Simplicity is prerequisite for reliability."
@@ -11,12 +11,13 @@ WikiZen serializes a Wiki into one JSON object, which makes it storable **anywhe
 ## How to Use
 
 Following shortcuts are supported:
-
 - `e` opens the current page in editing mode;
 - `n` opens the new-page mask;
 - `d` deletes the current page;
 - `1` till `9` opens the `n`th child of the current page;
-- `Left Arrow` navigates to previous page.
+- `Left Arrow` navigates to previous page;
+- `Escape` to go to the parent page;
+- `0` to return to the root page.
 
 ## More
 

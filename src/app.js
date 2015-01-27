@@ -9,6 +9,23 @@ var wiki = new Wiki(localStorage.getItem("wiki") && JSON.parse(localStorage.getI
 var renderComponent = component => React.render(component, document.body);
 var openPage = id => location.hash = "#page=" + id;
 self.onhashchange = Router.dispatcher;
+var keyMapping = {
+    69: "edit",
+    78: "new",
+    68: "delete",
+    37: "back",
+    29: "escape",
+    48: "home",
+    49: 1,
+    50: 2,
+    51: 3,
+    52: 4,
+    53: 5,
+    54: 6,
+    55: 7,
+    56: 8,
+    57: 9
+};
 
 var Link = React.createClass({
     render: function () {
@@ -70,6 +87,18 @@ var EditingForm = React.createClass({
     },
     componentDidMount: function () {
         this.refs.title.getDOMNode().focus();
+        document.onkeyup = event => {
+            var page = this.props;
+            var code = keyMapping[event.keyCode];
+            switch (code) {
+                case "escape":
+                    var parent = wiki.getParent(page.id);
+                    if(parent) openPage(parent.id);
+                    break;
+                default:
+                    break;
+            }
+        };
     },
     render: function () {
         var state = this.state;
@@ -100,14 +129,41 @@ var Footer = React.createClass({
 });
 
 var Page = React.createClass({
+    componentDidMount: function () {
+        document.onkeyup = event => {
+            var page = this.props;
+            var code = keyMapping[event.keyCode];
+            switch (code) {
+                case "home":
+                    openPage(0);
+                    break;
+                case "edit":
+                    location.hash = "#edit=" + page.id;
+                    break;
+                case "new":
+                    location.hash = "#add=" + page.id;
+                    break;
+                case "delete":
+                    location.hash = "#delete=" + page.id;
+                    break;
+                case "back":
+                    var parent = wiki.getParent(page.id);
+                    if(parent) openPage(parent.id);
+                    break;
+                default:
+                    var child = page.children[code-1];
+                    if(child) openPage(child.id);
+            }
+        };
+    },
     render: function () {
-        var page = this.props.page,
+        var page = this.props,
             children = page.children;
         var nestedPages = <div className="NestedPages Main">
             <h3>Nested Pages</h3>
             <ol>{children.map(child => <li><Link to={"page=" + child.id} label={child.title} /></li>)}</ol>
         </div>;
-        return <div className="Page">
+        return <div ref="page" className="Page">
             <Header {...page} />
             <article className="Main" dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
             {children.length == 0 ? null : nestedPages}
@@ -117,7 +173,7 @@ var Page = React.createClass({
 });
 
 Router.addHandler("page=:id", params =>
-    renderComponent(<Page page={wiki.getPage(params.id)} />));
+    renderComponent(<Page {...wiki.getPage(params.id)} />));
 
 Router.addHandler("add=:id", params =>
     renderComponent(<EditingForm mode="ADD" pageID={params.id} />));
