@@ -1,21 +1,57 @@
 "use strict";
 
-var client = new Dropbox.Client({key: "rix5irz7khzazoi"});
+var client = new Dropbox.Client({key: "d141dh0xbwt9bxh"});
 
-var datastoreManager;
+var store, wikiRecord;
 
 module.exports.load = () => {
-    debugger
+    var wikiTable = store.getTable('wikis');
+    var rows = wikiTable.query();
+    if(rows.length == 0) return;
+    wikiRecord = rows[0];
+    var data = wikiRecord.getFields();
+    return {
+        freeID: data.freeID,
+        root: JSON.parse(data.root),
+        deltas: store.getTable("deltas").query().map(item => {
+            var delta = item.getFields();
+            if(delta.property == "page") delta.value = JSON.parse(delta.value);
+            delta.persisted = true;
+            return delta;
+        })
+    };
 };
 
-module.exports.save = wiki => {};
+module.exports.save = wiki => {
+    if(!wikiRecord) {
+        var wikiTable = store.getTable('wikis');
+        wikiTable.insert({
+            freeID: wiki.freeID,
+            root: JSON.stringify(wiki.root)
+        });
+        module.exports.load();
+    }
+    var deltaTable = store.getTable("deltas");
+    wiki.deltas.filter(delta => !delta.persisted).forEach(delta => {
+            deltaTable.insert({
+                timestamp: delta.timestamp,
+                pageID: delta.pageID,
+                property: delta.property,
+                value: delta.property == "page" ? JSON.stringify(delta.value) : delta.value
+            });
+            delta.persisted = true;
+        }
+    );
+    wikiRecord.set("freeID", wiki.freeID);
+};
 
 module.exports.init = () => new Promise((resolve, reject) => {
     client.authenticate({interactive: false}, error => {
         if (error) reject('Authentication error: ' + error);
         else if(client.isAuthenticated()) {
-            datastoreManager = client.getDatastoreManager();
+            var datastoreManager = client.getDatastoreManager();
             datastoreManager.openDefaultDatastore((error, datastore) => {
+                store = datastore;
                 if (error) reject('Error opening default datastore: ' + error);
                 else resolve();
             });

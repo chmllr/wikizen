@@ -6,13 +6,12 @@ A __Wiki__ is one single JSON object, containing settings and __Wiki Pages__.
 In terms of abstract types, we can describe a Wiki and Wiki Pages as follows.
 
     Wiki = {
-      name: String,
       freeID: Int,
       root: WikiPage,
       deltas: [Delta]
     }
 
-A wiki object has a name, next free page ID, root page and a list of deltas, representing a list of changes.
+A wiki object has the free page ID, root page and a list of deltas, representing a list of changes.
 At run time, this object is rendered to a tree of wiki pages of the following type:
 
     WikiPage = {
