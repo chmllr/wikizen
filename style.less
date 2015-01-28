@@ -1,10 +1,10 @@
 @std-padding: 0.8em;
-@prime: #334455;
-@prime-link: #009808;
-@link: #10a020;
-@background-light: #f6f6f6;
+@prime: #445566;
+@link: lighten(@prime, 5%);
+@link-on-prime: lighten(@prime, 35%);
+@halftone: lighten(@prime, 60%);
 
-html{
+html {
   height: 100%;
 }
 
@@ -42,10 +42,6 @@ body, html {
   -webkit-flex-shrink: 0;
 }
 
-button {
-  .SolidItem;
-}
-
 .EditingForm {
   .FlexContainer;
   .StretchedItem;
@@ -56,7 +52,7 @@ button {
 }
 
 .code {
-  background: @background-light;
+  background: @halftone;
   font-size: 87%;
   .monospace;
 }
@@ -72,69 +68,82 @@ pre {
   display: block;
 }
 
-.BackGroundElement {
-  .SolidItem;
-  .monospace;
-  padding: @std-padding;
-  line-height: 160%;
-  background: @prime;
-  color: #eeeeee;
-  text-transform: uppercase;
-  font-size: 0.7em;
-  opacity: 0.7;
-  a, a:visited {
-    color: white;
-    border-bottom: 1px dotted;
-    text-decoration: none;
-  }
-  a:hover {
-    border-bottom: none;
-  }
-}
-
 .ButtonBar {
   .FlexContainerHorizontal;
+  .SolidItem;
   button {
     .StretchedItem;
   }
 }
 
-header {
-  .FlexContainerHorizontal;
-  .BackGroundElement;
-}
-
-footer {
-  text-align: center;
-  .BackGroundElement;
-}
-
 nav {
-  .StretchedItem;
+  .SolidItem;
+  background: @halftone;
+  padding: @std-padding;
+  .monospace;
+  box-shadow: 0 1px 7px 0 rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.helvetica {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 200;
+  font-size: 110%
 }
 
 .Page {
-  .FlexContainer;
   .StretchedItem;
+  .FlexContainerHorizontal;
+  main {
+    .FlexContainer;
+    flex: 5 0;
+    -webkit-flex: 5 0;
+  }
+  aside {
+    flex: 1 0;
+    -webkit-flex: 1 0;
+    .FlexContainer;
+    background: @prime;
+    color: @halftone;
+    padding: @std-padding;
+    .helvetica;
+    ol {
+      padding-left: 0;
+      list-style-position: inside;
+      li {
+        padding-bottom: 1em;
+      }
+    }
+    button {
+      background: rgba(0,0,0,0);
+      margin-bottom: 1em;
+      border: 1px solid white;
+    }
+    button.prime {
+      border: none;
+      color: @prime;
+      font-weight: 300;
+      background: @halftone;
+    }
+    a, a:visited {
+      color: @link-on-prime;
+    }
+  }
 }
 
 article {
-  .SolidItem;
+  font-family: 'PT Serif', Georgia, serif;
+  font-size: 1.2em;
+  padding: @std-padding;
 }
 
-.NestedPages {
-  .SolidItem;
-  .StretchedItem;
-  background: @background-light;
-}
-
-button {
-  .BackGroundElement;
-  border-right: 3px;
-}
-
-input, textarea {
+input, textarea, button {
   outline: none;
+  padding: @std-padding;
+}
+
+input.TitleInput {
+  .helvetica;
 }
 
 .BodyInput {
@@ -142,54 +151,24 @@ input, textarea {
   flex: 3 0;
   -webkit-flex: 3 0;
   font-size: 1em;
-  padding: @std-padding;
 }
 
 .Scrollable {
-  flex: 5 0;
-  -webkit-flex: 5 0;
   overflow: auto;
 }
 
-a.prime {
+a {
   text-decoration: none;
+  border-bottom: 1px dotted;
+  color: @link;
+}
+
+a:visited {
+  color: darken(@link, 25%);
+}
+
+a:hover {
   border: none;
-  background: @prime-link;
-  padding-top: 0.3em;
-  padding-bottom: 0.1em;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  color: white;
-  border-radius: 3px;
-}
-
-a.prime:hover {
-  background: darken(@prime-link, 5%);
-}
-
-.Main {
-  font-family: 'PT Serif', Georgia, serif;
-  font-size: 1.2em;
-  a {
-    text-decoration: none;
-    border-bottom: 1px dotted;
-    color: @link;
-  }
-  a:visited {
-    text-decoration: none;
-    border-bottom: 1px dotted;
-    color: darken(@link, 10%);
-  }
-  padding: @std-padding;
-}
-
-.Links {
-  .SolidItem;
-}
-
-input.TitleInput {
-  .BackGroundElement;
-  text-transform: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -204,25 +183,28 @@ h1 {
 }
 
 h2 {
-  font-size: 1.6em;
+  font-size: 1.5em;
 }
 
 h3 {
-  font-size: 1.4em;
+  font-size: 1.3em;
 }
 
 h4 {
-  font-size: 1.2em;
-}
-
-h5 {
   font-size: 1.1em;
 }
 
-h6 {
+h5 {
   font-size: 1.0em;
 }
 
-#hero h1 {
-  font-size: 2.5em;
+h6 {
+  font-size: 0.9em;
+}
+
+button {
+  .helvetica;
+  color: @halftone;
+  font-size: 100%;
+  background: @prime;
 }

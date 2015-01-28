@@ -11,6 +11,9 @@ var openPage = id => {
     location.hash = "#page=" + id;
     localStorage.openedPage = id;
 };
+var editPage = id => location.hash = "#edit=" + id;
+var addPage = id => location.hash = "#add=" + id;
+var deletePage = id => location.hash = "#delete=" + id;
 self.onhashchange = Router.dispatcher;
 var keyMapping = {
     69: "edit",
@@ -39,7 +42,7 @@ var Link = React.createClass({
     }
 });
 
-var Header = React.createClass({
+var Breadcrumb = React.createClass({
     getPath: function (pageID) {
         var parent = runtime.getParent(pageID);
         if(!parent) return [];
@@ -51,17 +54,70 @@ var Header = React.createClass({
     },
     render: function () {
         var props = this.props;
-        var id = props.id;
         var path = this.getPath(props.id);
         path.push(props.title);
-        return <header>
-            <nav className="Breadcrumb">{path}</nav>
-            <div className="Links">
-                <Link to="add" param={id} label="New Page" className="prime" /> &middot;&nbsp;
-                <Link to="edit" param={id} label="Edit Page" />
-                {id > 0 ? <span>&nbsp;&middot;&nbsp;<Link to="delete" param={id} label="Delete Page" /></span> : null}
-            </div>
-        </header>
+        return <nav className="Breadcrumb">{path}</nav>;
+    }
+});
+
+var Sidebar = React.createClass({
+    render: function () {
+        var page = this.props;
+        var id = page.id;
+        var children = page.children;
+        return <aside>
+            <button className="prime" onClick={() => addPage(id)}>Add Page</button>
+            <button onClick={() => editPage(id)}>Edit Page</button>
+            {id > 0 ? <button onClick={() => deletePage(id)}>Delete Page</button> : null}
+            {children.length == 0
+                ? null
+                : <div>Nested Pages<ol>{page.children.map(child =>
+                    <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
+            <div className="StretchedItem"></div>
+            <footer>Powered by WikiZen.</footer>
+        </aside>
+    }
+});
+
+var Page = React.createClass({
+    componentDidMount: function () {
+        document.onkeyup = event => {
+            var page = this.props;
+            var code = keyMapping[event.keyCode];
+            switch (code) {
+                case "home":
+                    openPage(0);
+                    break;
+                case "edit":
+                    editPage(page.id);
+                    break;
+                case "new":
+                    addPage(page.id);
+                    break;
+                case "delete":
+                    deletePage(page.id);
+                    break;
+                case "back":
+                    var parent = runtime.getParent(page.id);
+                    if(parent) openPage(parent.id);
+                    break;
+                default:
+                    var child = page.children[code-1];
+                    if(child) openPage(child.id);
+            }
+        };
+    },
+    render: function () {
+        var page = this.props;
+        return <div className="Page">
+            <main>
+                <Breadcrumb {...page} />
+                <div className="Scrollable">
+                    <article dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
+                </div>
+            </main>
+            <Sidebar {...page}/>
+        </div>
     }
 });
 
@@ -121,58 +177,6 @@ var EditingForm = React.createClass({
                 {this.props.mode == "EDIT" ? "Save Page" : "Create New Page"}
                 </button>
             </div>
-        </div>
-    }
-});
-
-var Footer = React.createClass({
-    render: function () {
-        return <footer>
-            Powered by WikiZen.
-        </footer>
-    }
-});
-
-var Page = React.createClass({
-    componentDidMount: function () {
-        document.onkeyup = event => {
-            var page = this.props;
-            var code = keyMapping[event.keyCode];
-            switch (code) {
-                case "home":
-                    openPage(0);
-                    break;
-                case "edit":
-                    location.hash = "#edit=" + page.id;
-                    break;
-                case "new":
-                    location.hash = "#add=" + page.id;
-                    break;
-                case "delete":
-                    location.hash = "#delete=" + page.id;
-                    break;
-                case "back":
-                    var parent = runtime.getParent(page.id);
-                    if(parent) openPage(parent.id);
-                    break;
-                default:
-                    var child = page.children[code-1];
-                    if(child) openPage(child.id);
-            }
-        };
-    },
-    render: function () {
-        var page = this.props,
-            children = page.children;
-        var nestedPages = <div className="NestedPages Main">
-            <h3>Nested Pages</h3>
-            <ol>{children.map(child => <li><Link to={"page=" + child.id} label={child.title} /></li>)}</ol>
-        </div>;
-        return <div ref="page" className="Page">
-            <Header {...page} />
-            <article className="Main" dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
-            {children.length == 0 ? <div className="StretchedItem">&nbsp;</div> : nestedPages}
-            <Footer />
         </div>
     }
 });
