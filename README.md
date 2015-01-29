@@ -14,10 +14,10 @@ Following shortcuts are supported:
 - `e`: edit current page;
 - `a`: add a nested page;
 - `d`: delete current page;
-- `1` till `9` opens the `n`th nested page;
-- `Left Arrow` navigates to the parent page;
-- `Escape` closes the editing mask;
-- `0` returns to the root page.
+- `1` till `9`: open the `n`th nested page;
+- `Left Arrow`: go to the parent page;
+- `Escape`; close the editing mask;
+- `0`: go to the root page.
 
 ## More
 
