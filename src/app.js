@@ -17,7 +17,7 @@ var deletePage = id => location.hash = "#delete=" + id;
 self.onhashchange = Router.dispatcher;
 var keyMapping = {
     69: "edit",
-    78: "new",
+    65: "add",
     68: "delete",
     37: "back",
     27: "escape",
@@ -95,7 +95,7 @@ var Page = React.createClass({
                 case "edit":
                     editPage(page.id);
                     break;
-                case "new":
+                case "add":
                     addPage(page.id);
                     break;
                 case "delete":
