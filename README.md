@@ -11,13 +11,13 @@ See the [technical specification](https://github.com/chmllr/WikiZen/blob/master/
 ## How to Use
 
 Following shortcuts are supported:
-- `e` opens the current page in editing mode;
-- `n` opens the new-page mask;
-- `d` deletes the current page;
-- `1` till `9` opens the `n`th child of the current page;
-- `Left Arrow` navigates to previous page;
-- `Escape` to go to the parent page;
-- `0` to return to the root page.
+- `e`: edit current page;
+- `a`: add a nested page;
+- `d`: delete current page;
+- `1` till `9` opens the `n`th nested page;
+- `Left Arrow` navigates to the parent page;
+- `Escape` closes the editing mask;
+- `0` returns to the root page.
 
 ## More
 
