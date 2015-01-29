@@ -65,15 +65,19 @@ var Sidebar = React.createClass({
         var page = this.props;
         var id = page.id;
         var children = page.children;
+        var isRoot = id == 0;
         return <aside>
+            {isRoot ? null : <button className="BackButton" onClick={() => openPage(runtime.getParent(id).id)}>&#8701; Back</button>}
+            {isRoot ? null : <div className="separator"></div>}
             <button className="prime" onClick={() => addPage(id)}>Add Page</button>
             <button onClick={() => editPage(id)}>Edit Page</button>
-            {id > 0 ? <button onClick={() => deletePage(id)}>Delete Page</button> : null}
+            {isRoot ? null : <button onClick={() => deletePage(id)}>Delete Page</button>}
+            <div className="separator"></div>
             {children.length == 0
                 ? null
-                : <div>Nested Pages<ol>{page.children.map(child =>
+                : <div>Nested Pages:<ol>{page.children.map(child =>
                     <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
-            <div className="StretchedItem"></div>
+            <div className="filler"></div>
             <footer>Powered by WikiZen.</footer>
         </aside>
     }
@@ -110,13 +114,11 @@ var Page = React.createClass({
     render: function () {
         var page = this.props;
         return <div className="Page">
+            <Sidebar {...page}/>
             <main>
                 <Breadcrumb {...page} />
-                <div className="Scrollable">
-                    <article dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
-                </div>
+                <article dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
             </main>
-            <Sidebar {...page}/>
         </div>
     }
 });
@@ -168,9 +170,9 @@ var EditingForm = React.createClass({
                 onChange={event => this.handleChange("title", event.target.value)}/>
             <textarea className="BodyInput" ref="body" value={state.body}
                 onChange={event => this.handleChange("body", event.target.value)}></textarea>
-            <div className="Scrollable">
+            <main className="Scrollable">
                 <article className="Main" dangerouslySetInnerHTML={{__html: marked(state.body || "")}}></article>
-            </div>
+            </main>
             <div className="ButtonBar">
                 <button onClick={() => window.history.back()}>Cancel</button>
                 <button onClick={this.applyChanges}>

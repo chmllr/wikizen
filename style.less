@@ -1,19 +1,13 @@
 @std-padding: 0.8em;
+@big-padding: 3em;
 @prime: #445566;
-@link: lighten(@prime, 5%);
+@link: lighten(@prime, 10%);
 @link-on-prime: lighten(@prime, 35%);
 @halftone: lighten(@prime, 60%);
-
-html {
-  height: 100%;
-}
-
-body {
-  height: 100%;
-  .FlexContainer;
-}
+@article-font-size: 1.2em;
 
 body, html {
+  height: 100%;
   padding: 0;
   margin: 0;
 }
@@ -42,9 +36,15 @@ body, html {
   -webkit-flex-shrink: 0;
 }
 
+.FirstLevelContainer {
+  box-sizing: border-box;
+  min-height: 100%;
+}
+
 .EditingForm {
+  .FirstLevelContainer;
+  height: 100% !important;
   .FlexContainer;
-  .StretchedItem;
 }
 
 .monospace {
@@ -76,28 +76,31 @@ pre {
   }
 }
 
+main {
+  padding-left: @big-padding;
+  padding-right: @big-padding;
+}
+
 nav {
   .SolidItem;
-  background: @halftone;
-  padding: @std-padding;
   .monospace;
-  box-shadow: 0 1px 7px 0 rgba(0,0,0,0.2);
-  z-index: 1;
+  font-size: 80%;
+  padding: 2em;
+  padding-left: 0;
 }
 
 .helvetica {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-weight: 200;
-  font-size: 110%
+  font-size: 100%
 }
 
 .Page {
-  .StretchedItem;
+  .FirstLevelContainer;
   .FlexContainerHorizontal;
   main {
     .FlexContainer;
-    flex: 5 0;
-    -webkit-flex: 5 0;
+    flex: 4 0;
+    -webkit-flex: 4 0;
   }
   aside {
     flex: 1 0;
@@ -107,6 +110,7 @@ nav {
     color: @halftone;
     padding: @std-padding;
     .helvetica;
+    font-size: 90%;
     ol {
       padding-left: 0;
       list-style-position: inside;
@@ -125,6 +129,19 @@ nav {
       font-weight: 300;
       background: @halftone;
     }
+
+    button.BackButton {
+      border: 1px dotted @halftone;
+    }
+
+    .separator {
+      height: 2em;
+    }
+
+    .filler {
+      .StretchedItem;
+    }
+
     a, a:visited {
       color: @link-on-prime;
     }
@@ -133,8 +150,7 @@ nav {
 
 article {
   font-family: 'PT Serif', Georgia, serif;
-  font-size: 1.2em;
-  padding: @std-padding;
+  font-size: @article-font-size;
 }
 
 input, textarea, button {
@@ -144,6 +160,8 @@ input, textarea, button {
 
 input.TitleInput {
   .helvetica;
+  padding-top: .4em;
+  padding-bottom: .4em;
 }
 
 .BodyInput {
@@ -155,6 +173,8 @@ input.TitleInput {
 
 .Scrollable {
   overflow: auto;
+  flex: 5 0;
+  -webkit-flex: 5 0;
 }
 
 a {
@@ -179,7 +199,11 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 1.8em;
-  border-bottom: 1px solid lighten(@prime, 50%);
+  border-bottom: 1px solid @halftone;
+  border-top: 1px solid @halftone;
+  padding-top: @std-padding;
+  padding-bottom: @std-padding;
+  margin-top: 0;
 }
 
 h2 {
