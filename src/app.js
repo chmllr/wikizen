@@ -67,7 +67,8 @@ var Sidebar = React.createClass({
         var children = page.children;
         var isRoot = id == 0;
         return <aside>
-            {isRoot ? null : <button className="BackButton" onClick={() => openPage(runtime.getParent(id).id)}>&#8701; Back</button>}
+            {isRoot ? null : <button className="BackButton"
+                onClick={() => openPage(runtime.getParent(id).id)}>&#8701; Back</button>}
             {isRoot ? null : <div className="separator"></div>}
             <button className="prime" onClick={() => addPage(id)}>Add Page</button>
             <button onClick={() => editPage(id)}>Edit Page</button>
@@ -76,9 +77,13 @@ var Sidebar = React.createClass({
             {children.length == 0
                 ? null
                 : <div>Nested Pages:<ol>{page.children.map(child =>
-                    <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
+                <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
+            <div className="separator"></div>
+            <ul>
+                <li><Link to="export" label="Export WIKI" /></li>
+            </ul>
             <div className="filler"></div>
-            <footer>Powered by WikiZen.</footer>
+            <footer>Powered by <a href="http://github.com/chmllr/wikizen">WikiZen</a></footer>
         </aside>
     }
 });
@@ -191,6 +196,11 @@ Router.addHandler("add=:id", params =>
 
 Router.addHandler("edit=:id", params =>
     renderComponent(<EditingForm mode="EDIT" pageID={params.id} />));
+
+var exportWiki = () =>
+    renderComponent(<textarea className="Export">{JSON.stringify(runtime.getPage(0), null, 2)}</textarea>);
+
+Router.addHandler("export", () => exportWiki());
 
 Router.addHandler("delete=:id", params => {
     var response = confirm("Are you sure?");

@@ -8,7 +8,7 @@ function Router () {
     this.dispatcher = () =>
         Object.keys(handlers)
             .map(pattern => ({
-                identifiers: pattern.match(/:\w+/g).map(x => x.replace(":", "")),
+                identifiers: (pattern.match(/:\w+/g) || []).map(x => x.replace(":", "")),
                 matches: location.hash
                     .replace("#", "")
                     .match(new RegExp(pattern.replace(/:\w+/g, "(.+)"))),

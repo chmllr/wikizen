@@ -5,8 +5,12 @@
 @link-on-prime: lighten(@prime, 35%);
 @halftone: lighten(@prime, 60%);
 @article-font-size: 1.2em;
+@view-font-color: @prime;
+@view-background: white;
 
 body, html {
+  background: @prime;
+  color: @halftone;
   height: 100%;
   padding: 0;
   margin: 0;
@@ -77,6 +81,8 @@ pre {
 }
 
 main {
+  background: @view-background;
+  color: @view-font-color;
   padding-left: @big-padding;
   padding-right: @big-padding;
 }
@@ -106,12 +112,10 @@ nav {
     flex: 1 0;
     -webkit-flex: 1 0;
     .FlexContainer;
-    background: @prime;
-    color: @halftone;
     padding: @std-padding;
     .helvetica;
     font-size: 90%;
-    ol {
+    ul, ol {
       padding-left: 0;
       list-style-position: inside;
       li {
@@ -241,4 +245,10 @@ hr {
   height: 1px;
   border: none;
   background: @halftone;
+}
+
+.Export {
+  .FirstLevelContainer;
+  width: 100%;
+  .monospace;
 }
