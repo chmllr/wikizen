@@ -19,6 +19,7 @@ deps:
 	npm install nodeunit
 
 pub:
+	git push
 	make
 	cp README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
