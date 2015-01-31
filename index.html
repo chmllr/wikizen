@@ -41,9 +41,10 @@
     </div>
     <p class="Lead">Simple Markdown Wiki in your Dropbox.</p>
     <div class="FlexContainerHorizontal">
-        <button class="LandingButton">Connect With Dropbox</button>
+        <button onclick="signIn()"
+                class="LandingButton">Connect With Dropbox</button>
         &nbsp;
-        <button onclick="location.href = '?local'"
+        <button onclick="signIn('local')"
                 class="LandingButton Prime">Give it 5 Minutes</button>
     </div>
 </div>
