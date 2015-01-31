@@ -117,17 +117,24 @@ nav {
     padding: @std-padding;
     .helvetica;
     font-size: 90%;
-    ul, ol {
+    .Menu {
+      margin-top: 0;
+      padding-top: 0.5em;
+    }
+    ol {
       padding-left: 0;
       list-style-position: inside;
-      li {
-        padding-bottom: 1em;
-      }
+    }
+    li {
+      padding-bottom: 0.5em;
     }
     button {
       background: rgba(0,0,0,0);
-      margin-bottom: 1em;
+      margin-top: 1em;
       border: 1px solid white;
+    }
+    button:first-child {
+      margin: 0;
     }
     button.prime {
       border: none;

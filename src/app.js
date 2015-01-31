@@ -61,6 +61,9 @@ var Breadcrumb = React.createClass({
 });
 
 var Sidebar = React.createClass({
+    getInitialState: function () {
+        return { menuHidden: true }
+    },
     render: function () {
         var page = this.props;
         var id = page.id;
@@ -68,21 +71,24 @@ var Sidebar = React.createClass({
         var isRoot = id == 0;
         return <aside>
             {isRoot ? null : <button className="BackButton"
-                onClick={() => openPage(runtime.getParent(id).id)}>&#8701; Back</button>}
+                onClick={() => openPage(runtime.getParent(id).id)}>
+                <span className="monospace">&lt;- </span>Back</button>}
             {isRoot ? null : <div className="separator"></div>}
             <button className="prime" onClick={() => addPage(id)}>Add Page</button>
             <button onClick={() => editPage(id)}>Edit Page</button>
-            <div className="separator"></div>
+            <button onClick={() => this.setState({ menuHidden: !this.state.menuHidden })}>
+                <span className="monospace">{this.state.menuHidden ? "+" : "-"} </span>
+                Menu</button>
+            { this.state.menuHidden
+                ?             <div className="separator"></div>
+                : <ul className="Menu">
+                {isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
+                <li><Link to="export" label="Export Wiki" /></li>
+            </ul>}
             {children.length == 0
                 ? null
                 : <div>Nested Pages:<ol>{page.children.map(child =>
                 <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
-            <div className="separator"></div>
-            More Options:
-            <ul>
-                {isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
-                <li><Link to="export" label="Export Wiki" /></li>
-            </ul>
             <div className="filler"></div>
             <footer>Powered by <a href="http://github.com/chmllr/wikizen">WikiZen</a></footer>
         </aside>
