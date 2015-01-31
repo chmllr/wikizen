@@ -72,7 +72,6 @@ var Sidebar = React.createClass({
             {isRoot ? null : <div className="separator"></div>}
             <button className="prime" onClick={() => addPage(id)}>Add Page</button>
             <button onClick={() => editPage(id)}>Edit Page</button>
-            {isRoot ? null : <button onClick={() => deletePage(id)}>Delete Page</button>}
             <div className="separator"></div>
             {children.length == 0
                 ? null
@@ -81,6 +80,7 @@ var Sidebar = React.createClass({
             <div className="separator"></div>
             More Options:
             <ul>
+                {isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
                 <li><Link to="export" label="Export Wiki" /></li>
             </ul>
             <div className="filler"></div>
@@ -189,8 +189,12 @@ var EditingForm = React.createClass({
     }
 });
 
-Router.addHandler("page=:id", params =>
-    renderComponent(<Page {...runtime.getPage(params.id)} />));
+Router.addHandler("page=:id", params => {
+    var page = runtime.getPage(params.id);
+    renderComponent( page
+        ? <Page {...page} />
+        : <div className="CenteredBox">Unknown page ID.</div> )
+});
 
 Router.addHandler("add=:id", params =>
     renderComponent(<EditingForm mode="ADD" pageID={params.id} />));
