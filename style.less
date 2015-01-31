@@ -9,8 +9,8 @@
 @code-font-size: 87%;
 @breadcrumb-font-size: 80%;
 @helvetica-font-size: 100%;
-@article-font: 'PT Serif', Georgia, serif;
-@header-font: 'Noticia Text', 'PT Serif', Georgia, serif;
+@article-font: Georgia, serif;
+@header-font: 'Noticia Text', Georgia, serif;
 
 body, html {
   background: @prime;
@@ -309,4 +309,30 @@ table {
     text-align: left;
     border-bottom: 1px solid @halftone;
   }
+}
+
+.Logo {
+  font-family: @header-font;
+  font-size: 4em;
+  color: @halftone;
+  svg {
+    fill: @halftone;
+  }
+}
+
+.Lead {
+  padding: 1em;
+  padding-bottom: 2em;
+  font-family: "Helvetica Neue", serif;
+  font-weight: 100;
+  font-size: 2em;
+}
+
+.LandingButton {
+  border: 2px solid @halftone;
+}
+
+.LandingButton.prime {
+  background: #219161;
+  color: @halftone;
 }

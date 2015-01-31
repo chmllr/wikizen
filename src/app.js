@@ -233,8 +233,8 @@ Router.addHandler("delete=:id", params => {
 });
 
 self.signIn = mode => {
-    runtime = new State(mode || location.search.replace("?", ""));
-    localStorage.active = true;
+    runtime = new State(mode);
+    if(!mode) localStorage.active = true;
     renderComponent(<div className="CenteredBox">Loading...</div>);
     runtime.init().then(() => {
             if (location.hash) self.onhashchange();
