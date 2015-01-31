@@ -53,6 +53,7 @@ function State (persistence) {
         wiki.deltas.splice(wiki.deltas.length - 1, 1);
         update();
     };
+    this.signOut = () => store.signOut();
 }
 
 module.exports = State;

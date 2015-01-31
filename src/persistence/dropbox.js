@@ -60,4 +60,4 @@ module.exports.init = () => new Promise((resolve, reject) => {
 
 });
 
-
+module.exports.signOut = () => client.signOut();

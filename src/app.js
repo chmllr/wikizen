@@ -5,6 +5,8 @@ var State = require('./state');
 var Router = require('./router');
 var marked = require('marked');
 
+var wikiZenURL = location.protocol + "//" + location.host + location.pathname;
+
 var runtime = new State(location.search.replace("?", ""));
 var renderComponent = component => React.render(component, document.body);
 var openPage = id => {
@@ -85,13 +87,14 @@ var Sidebar = React.createClass({
                 : <ul className="Menu">
                 {isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
                 <li><Link to="export" label="Export Wiki" /></li>
+                <li><Link to="signout" label="Sign Out" /></li>
             </ul>}
             {children.length == 0
                 ? null
                 : <div>Nested Pages:<ol>{page.children.map(child =>
                 <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
             <div className="filler"></div>
-            <footer>Powered by <a href="http://github.com/chmllr/wikizen">WikiZen</a></footer>
+            <footer>Powered by <a href={wikiZenURL}>WikiZen</a></footer>
         </aside>
     }
 });
@@ -209,10 +212,14 @@ Router.addHandler("add=:id", params =>
 Router.addHandler("edit=:id", params =>
     renderComponent(<EditingForm mode="EDIT" pageID={params.id} />));
 
-var exportWiki = () =>
-    renderComponent(<textarea className="Export">{JSON.stringify(runtime.getPage(0), null, 2)}</textarea>);
+Router.addHandler("export", () =>
+    renderComponent(<textarea className="Export">{JSON.stringify(runtime.getPage(0), null, 2)}</textarea>));
 
-Router.addHandler("export", () => exportWiki());
+Router.addHandler("signout", () => {
+    runtime.signOut();
+    localStorage.active = false;
+    location.href = wikiZenURL;
+});
 
 Router.addHandler("delete=:id", params => {
     var response = confirm("Are you sure?");
@@ -225,9 +232,15 @@ Router.addHandler("delete=:id", params => {
     }
 });
 
-runtime.init().then(() => {
-        if (location.hash) self.onhashchange();
-        else openPage(localStorage.openedPage || 0);
-    },
-    console.error
-);
+self.signIn = () => {
+    localStorage.active = true;
+    renderComponent(<div className="CenteredBox">Loading...</div>);
+    runtime.init().then(() => {
+            if (location.hash) self.onhashchange();
+            else openPage(localStorage.openedPage || 0);
+        },
+        console.error
+    );
+};
+
+if (localStorage.active) self.signIn();

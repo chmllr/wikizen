@@ -5,3 +5,5 @@ module.exports.load = () => localStorage.getItem("wiki") && JSON.parse(localStor
 module.exports.save = wiki => localStorage.setItem("wiki", JSON.stringify(wiki));
 
 module.exports.init = () => new Promise(resolver => resolver());
+
+module.exports.signOut = () => localStorage.clear();
