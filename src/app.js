@@ -72,7 +72,7 @@ var Sidebar = React.createClass({
         return <aside>
             {isRoot ? null : <button className="BackButton"
                 onClick={() => openPage(runtime.getParent(id).id)}>
-                <span className="monospace">&lt;- </span>Back</button>}
+                <span className="monospace">&lt; </span>Back</button>}
             {isRoot ? null : <div className="separator"></div>}
             <button className="prime" onClick={() => addPage(id)}>Add Page</button>
             <button onClick={() => editPage(id)}>Edit Page</button>

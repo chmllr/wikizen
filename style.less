@@ -1,5 +1,4 @@
-@std-padding: 0.8em;
-@big-padding: 3em;
+@padding: 1em;
 @prime: #445566;
 @link: lighten(@prime, 10%);
 @link-on-prime: lighten(@prime, 35%);
@@ -7,6 +6,11 @@
 @article-font-size: 1.2em;
 @view-font-color: @prime;
 @view-background: white;
+@code-font-size: 87%;
+@breadcrumb-font-size: 80%;
+@helvetica-font-size: 100%;
+@article-font: 'PT Serif', Georgia, serif;
+@header-font: 'Noticia Text', 'PT Serif', Georgia, serif;
 
 body, html {
   background: @prime;
@@ -57,7 +61,7 @@ body, html {
 
 .code {
   background: @halftone;
-  font-size: 87%;
+  font-size: @code-font-size;
   .monospace;
 }
 
@@ -67,7 +71,7 @@ code {
 
 pre {
   .code;
-  padding: @std-padding;
+  padding: @padding;
   border-radius: 3px;
   display: block;
 }
@@ -85,21 +89,21 @@ pre {
 main {
   background: @view-background;
   color: @view-font-color;
-  padding-left: @big-padding;
-  padding-right: @big-padding;
+  padding-left: @padding * 3;
+  padding-right: @padding * 3;
 }
 
 nav {
   .SolidItem;
   .monospace;
-  font-size: 80%;
-  padding: 2em;
+  font-size: @breadcrumb-font-size;
+  padding: @padding * 2;
   padding-left: 0;
 }
 
 .helvetica {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 100%
+  font-size: @helvetica-font-size;
 }
 
 .Page {
@@ -114,24 +118,25 @@ nav {
     flex: 1 0;
     -webkit-flex: 1 0;
     .FlexContainer;
-    padding: @std-padding;
+    padding: @padding;
     .helvetica;
     font-size: 90%;
     .Menu {
       margin-top: 0;
-      padding-top: 0.5em;
+      padding-top: @padding / 2;
     }
     ol {
       padding-left: 0;
       list-style-position: inside;
     }
     li {
-      padding-bottom: 0.5em;
+      padding-bottom: @padding / 2;
     }
     button {
       background: rgba(0,0,0,0);
-      margin-top: 1em;
+      margin-top: @padding;
       border: 1px solid white;
+      padding: @padding / 2.5;
     }
     button:first-child {
       margin: 0;
@@ -139,7 +144,6 @@ nav {
     button.prime {
       border: none;
       color: @prime;
-      font-weight: 300;
       background: @halftone;
     }
 
@@ -149,7 +153,7 @@ nav {
     }
 
     .separator {
-      height: 2em;
+      height: @padding * 1.25;
     }
 
     .filler {
@@ -163,19 +167,19 @@ nav {
 }
 
 article {
-  font-family: 'PT Serif', Georgia, serif;
+  font-family: @article-font;
   font-size: @article-font-size;
 }
 
 input, textarea, button {
   outline: none;
-  padding: @std-padding;
+  padding: @padding;
 }
 
 input.TitleInput {
   .helvetica;
-  padding-top: .4em;
-  padding-bottom: .4em;
+  padding-top: @padding / 2;
+  padding-bottom: @padding / 2;
 }
 
 .BodyInput {
@@ -206,7 +210,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Noticia Text', 'PT Serif', Georgia, serif;
+  font-family: @header-font;
   font-weight: bold;
   color: @prime;
 }
@@ -215,8 +219,8 @@ h1 {
   font-size: 1.8em;
   border-bottom: 1px solid @halftone;
   border-top: 1px solid @halftone;
-  padding-top: @std-padding;
-  padding-bottom: @std-padding;
+  padding-top: @padding;
+  padding-bottom: @padding;
   margin-top: 0;
 }
 
