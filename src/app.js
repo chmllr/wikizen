@@ -80,7 +80,7 @@ var Sidebar = React.createClass({
                 <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
             <div className="separator"></div>
             <ul>
-                <li><Link to="export" label="Export WIKI" /></li>
+                <li><Link to="export" label="Export Wiki" /></li>
             </ul>
             <div className="filler"></div>
             <footer>Powered by <a href="http://github.com/chmllr/wikizen">WikiZen</a></footer>
