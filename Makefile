@@ -20,4 +20,9 @@ deps:
 
 pub:
 	make
-	cp README.md Demo.md index.html wikizen.js style.css ~/Dropbox/Public/wiki/
+	cp README.md Demo.md index.html wikizen.js style.css app/
+	git co gh-pages
+	mv app/* .
+	git ca -m "new version"
+	git push
+	git co master
