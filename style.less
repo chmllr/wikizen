@@ -133,8 +133,9 @@ nav {
       padding-bottom: @padding / 2;
     }
     button {
+      opacity: 0.9;
       margin-top: @padding;
-      border: 1px solid white;
+      border: 1px solid @halftone;
       padding: @padding / 2.5;
     }
     button:first-child {
@@ -260,7 +261,7 @@ button {
 }
 
 button:disabled {
-  opacity: 0.4;
+  opacity: 0.4 !important;
 }
 
 button:disabled:hover {
