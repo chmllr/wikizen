@@ -79,6 +79,7 @@ var Sidebar = React.createClass({
                 : <div>Nested Pages:<ol>{page.children.map(child =>
                 <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
             <div className="separator"></div>
+            More Options:
             <ul>
                 <li><Link to="export" label="Export Wiki" /></li>
             </ul>
