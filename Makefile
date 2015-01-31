@@ -20,4 +20,4 @@ deps:
 
 pub:
 	make
-	cp README.md index.html wikizen.js style.css ~/Dropbox/Public/wiki/
+	cp README.md Demo.md index.html wikizen.js style.css ~/Dropbox/Public/wiki/

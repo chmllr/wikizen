@@ -44,7 +44,6 @@ var initializeIndex = () => ({ pages: {}, parents: {} });
 
 var assembleRuntimeWiki = wiki => {
     var runtimeObject = {
-        name: wiki.name,
         root: clone(wiki.root),
         index: initializeIndex()
     };
@@ -77,20 +76,19 @@ var assembleRuntimeWiki = wiki => {
 
 module.exports.assembleRuntimeWiki = assembleRuntimeWiki;
 
-module.exports.createWiki = (name, rootPage, deltas) => {
-    rootPage.id = 0;
+module.exports.createWiki = (rootPage, deltas, freeID) => {
+    rootPage.id = rootPage.id || 0;
     return {
-        name: name,
         root: rootPage,
         deltas: deltas || [],
-        freeID: 1
+        freeID: freeID || rootPage.id + 1
     }};
 
-module.exports.createPage = (title, body, id) => ({
+module.exports.createPage = (title, body, id, children) => ({
     id: id,
     title: title,
     body: body,
-    children: []
+    children: children || []
 });
 
 module.exports.addPage = (wiki, parentID, title, body) => {

@@ -18,9 +18,8 @@ exports.instantiations = function (test) {
     test.equal(page.title, title, "title check");
     test.equal(page.body, body, "body check");
     test.equal(page.id, 1, "id check");
-    var wiki = engine.createWiki("Test Wiki", page, []);
+    var wiki = engine.createWiki(page, []);
     test.ok(wiki, "wiki object instantiated successfully");
-    test.equal(wiki.name, "Test Wiki", "Wiki name check");
     test.equal(wiki.root, page, "root page check");
     test.equal(wiki.freeID, page.id + 1, "free id check");
     test.done();
@@ -38,7 +37,7 @@ exports.patching = function (test) {
 };
 
 var getTestWiki = function () {
-    var wiki = engine.createWiki("Test Wiki", engine.createPage("Root Page", "This is the *page body*."));
+    var wiki = engine.createWiki(engine.createPage("Root Page", "This is the *page body*."));
     var id = engine.addPage(wiki, 0, "Nested Page 1", "The __content__ of _nested_ page 1");
     engine.addPage(wiki, id, "Nested Page 1_1", "This _is_ a leaf text");
     engine.addPage(wiki, id, "Nested Page 1_2", "This _is_ another leaf text");
@@ -73,7 +72,6 @@ exports.wikiAssemblingAndRetrieving = function (test) {
     var testWiki = getTestWiki();
     var wiki = engine.assembleRuntimeWiki(testWiki);
     test.equals(JSON.stringify(testWiki), JSON.stringify(testWiki), "assebmling is not modifying");
-    test.equals(wiki.name, "Test Wiki");
     test.deepEqual(wiki.root, testWikiResult, "assembling works");
     var page, pages = wiki.index.pages;
     page = pages[0];

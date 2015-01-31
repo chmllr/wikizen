@@ -17,24 +17,25 @@ function getFile(url) {
 }
 
 function State (persistence) {
-    var store = stores[persistence] || stores.dropbox, wiki, snapshot;
+    var store = stores[persistence] || stores.dropbox, wiki, state;
     var update = () => {
-        snapshot = engine.assembleRuntimeWiki(wiki);
+        state = engine.assembleRuntimeWiki(wiki);
         store.save(wiki);
     };
 
     this.init = () => {
         return new Promise((resolve, reject) => {
             store.init().then(() => {
-                wiki = store.load() || engine.createWiki("Wiki", engine.createPage("HOME", getFile("README.md")));
-                snapshot = engine.assembleRuntimeWiki(wiki);
+                wiki = store.load() || engine.createWiki(engine.createPage("HOME", getFile("README.md")));
+                state = engine.assembleRuntimeWiki(wiki);
+                if(wiki.freeID == 1) this.addPage(0, "Markdown Features", getFile("Demo.md"));
                 resolve();
             }, reject);
         });
     };
 
-    this.getPage = id => snapshot.index.pages[id];
-    this.getParent = id => snapshot.index.parents[id];
+    this.getPage = id => state.index.pages[id];
+    this.getParent = id => state.index.parents[id];
     this.addPage = (id, title, body) => {
         var childID = engine.addPage(wiki, id, title, body);
         update();

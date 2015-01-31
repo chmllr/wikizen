@@ -8,7 +8,15 @@ WikiZen is a minimalistic Markdown-based wiki.
 WikiZen serializes to a single JSON object, which makes it storable **anywhere**.
 See the [technical specification](https://github.com/chmllr/WikiZen/blob/master/SPEC.md) of the persistence format.
 
-## How to Use
+## How to use
+
+### Writing
+
+Use [Markdown markup language](http://en.wikipedia.org/wiki/Markdown).
+On every page nested pages can be added.
+Pages can be [easily linked](#page=1) using Markdown syntax.
+
+### Navigation
 
 Following shortcuts are supported:
 - `e`: edit current page;
