@@ -7,7 +7,7 @@ var marked = require('marked');
 
 var wikiZenURL = location.protocol + "//" + location.host + location.pathname;
 
-var runtime = new State(location.search.replace("?", ""));
+var runtime;
 var renderComponent = component => React.render(component, document.body);
 var openPage = id => {
     location.hash = "#page=" + id;
@@ -232,7 +232,8 @@ Router.addHandler("delete=:id", params => {
     }
 });
 
-self.signIn = () => {
+self.signIn = mode => {
+    runtime = new State(mode || location.search.replace("?", ""));
     localStorage.active = true;
     renderComponent(<div className="CenteredBox">Loading...</div>);
     runtime.init().then(() => {
