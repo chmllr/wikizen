@@ -1,0 +1,22 @@
+.Logo {
+  font-family: 'Noticia Text', serif;
+  font-size: 4em;
+  color: white;
+}
+.Logo svg {
+  fill: white;
+}
+.Lead {
+  padding: 1em;
+  padding-bottom: 2em;
+  font-family: "Helvetica Neue", serif;
+  font-weight: 100;
+  font-size: 2em;
+}
+.LandingButton {
+  border: 2px solid white;
+}
+.Prime {
+  background: #219161;
+  color: white;
+}
