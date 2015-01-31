@@ -133,7 +133,6 @@ nav {
       padding-bottom: @padding / 2;
     }
     button {
-      background: rgba(0,0,0,0);
       margin-top: @padding;
       border: 1px solid white;
       padding: @padding / 2.5;
@@ -145,6 +144,14 @@ nav {
       border: none;
       color: @prime;
       background: @halftone;
+    }
+
+    button.prime:hover {
+      background: darken(@halftone, 5%);
+    }
+
+    button.prime:active {
+      background: darken(@halftone, 20%);
     }
 
     button.BackButton {
@@ -219,8 +226,8 @@ h1 {
   font-size: 1.8em;
   border-bottom: 1px solid @halftone;
   border-top: 1px solid @halftone;
-  padding-top: @padding;
-  padding-bottom: @padding;
+  padding-top: @padding / 2;
+  padding-bottom: @padding / 2;
   margin-top: 0;
 }
 
@@ -250,6 +257,22 @@ button {
   color: @halftone;
   font-size: 100%;
   background: @prime;
+}
+
+button:disabled {
+  opacity: 0.4;
+}
+
+button:disabled:hover {
+  background: @prime;
+}
+
+button:hover {
+  background: darken(@prime, 3%);
+}
+
+button:active {
+  background: darken(@prime, 20%);
 }
 
 ul {

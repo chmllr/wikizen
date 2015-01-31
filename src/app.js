@@ -70,10 +70,11 @@ var Sidebar = React.createClass({
         var children = page.children;
         var isRoot = id == 0;
         return <aside>
-            {isRoot ? null : <button className="BackButton"
+            <button className="BackButton"
+                disabled={isRoot}
                 onClick={() => openPage(runtime.getParent(id).id)}>
-                <span className="monospace">&lt; </span>Back</button>}
-            {isRoot ? null : <div className="separator"></div>}
+                <span className="monospace">&lt; </span>Back</button>
+            <div className="separator"></div>
             <button className="prime" onClick={() => addPage(id)}>Add Page</button>
             <button onClick={() => editPage(id)}>Edit Page</button>
             <button onClick={() => this.setState({ menuHidden: !this.state.menuHidden })}>
