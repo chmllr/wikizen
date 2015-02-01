@@ -27,6 +27,13 @@ body, html {
   -webkit-flex-direction: column;
 }
 
+.FlexContainerReverse {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column-reverse;
+  -webkit-flex-direction: column-reverse;
+}
+
 .FlexContainerHorizontal {
   display: flex;
   display: -webkit-flex;
@@ -76,12 +83,19 @@ pre {
   display: block;
 }
 
+.FlippingFlexBox {
+  @media (max-width: 799px) {
+    .FlexContainerReverse;
+  }
+  @media (min-width: 800px) {
+    .FlexContainerHorizontal;
+  }
+}
+
 .ButtonBar {
-  .FlexContainerHorizontal;
+  .FlippingFlexBox;
   .SolidItem;
-  background: @view-background;
   button {
-    margin: 0.1em;
     .StretchedItem;
   }
 }
@@ -89,7 +103,12 @@ pre {
 main {
   background: @view-background;
   color: @view-font-color;
-  padding: @padding * 3;
+  @media (max-width: 799px) {
+    padding: @padding;
+  }
+  @media (min-width: 800px) {
+    padding: @padding * 3;
+  }
   padding-top: 0;
 }
 
@@ -108,7 +127,7 @@ nav {
 
 .Page {
   .FirstLevelContainer;
-  .FlexContainerHorizontal;
+  .FlippingFlexBox;
   main {
     .FlexContainer;
     flex: 4 0;
@@ -198,6 +217,10 @@ input.TitleInput {
 }
 
 .Scrollable {
+  @media (max-width: 799px) {
+    display: none;
+  }
+  margin-top: @padding / 3;
   overflow: auto;
   flex: 5 0;
   -webkit-flex: 5 0;
@@ -288,14 +311,18 @@ hr {
   .monospace;
 }
 
-.CenteredBox {
-  .FlexContainer;
-  .FirstLevelContainer;
-  .monospace;
+.CenteredFlexBox {
   align-items: center;
   -webkit-align-items: center;
   justify-content: center;
   -webkit-justify-content: center;
+}
+
+.CenteredBox {
+  .FlexContainer;
+  .FirstLevelContainer;
+  .monospace;
+  .CenteredFlexBox
 }
 
 table {
@@ -309,10 +336,18 @@ table {
 
 .Logo {
   font-family: @header-font;
-  font-size: 4em;
   color: @halftone;
   svg {
     fill: @halftone;
+  }
+  @media (max-width: 799px) {
+    font-size: 3em;
+    text-align: center;
+    .FlexContainer;
+    .CenteredFlexBox;
+  }
+  @media (min-width: 800px) {
+    font-size: 4em;
   }
 }
 
@@ -321,7 +356,13 @@ table {
   padding-bottom: 2em;
   font-family: "Helvetica Neue", serif;
   font-weight: 100;
-  font-size: 2em;
+  @media (max-width: 799px) {
+    font-size: 1.5em;
+    text-align: center;
+  }
+  @media (min-width: 800px) {
+    font-size: 2em;
+  }
 }
 
 .LandingButton {
