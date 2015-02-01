@@ -21,7 +21,7 @@ deps:
 pub:
 	git push
 	make
-	cp README.md Demo.md index.html wikizen.js style.css app/
+	cp -rf images README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
 	mv app/* .
 	git ca -m "new version"
