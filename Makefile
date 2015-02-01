@@ -12,6 +12,7 @@ tests:
 	nodeunit
 
 deps:
+	mkdir app
 	npm install diff-match-patch
 	npm install reactify
 	npm install react
