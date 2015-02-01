@@ -24,6 +24,7 @@ pub:
 	make
 	cp -rf images README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
+	rm -rf images/
 	mv app/* .
 	git ca -m "new version"
 	git push
