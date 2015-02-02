@@ -9,10 +9,7 @@ var wikiZenURL = location.protocol + "//" + location.host + location.pathname;
 
 var runtime;
 var renderComponent = component => React.render(component, document.body);
-var openPage = id => {
-    location.hash = "#page=" + id;
-    localStorage.openedPage = id;
-};
+var openPage = id => location.hash = "#page=" + id;
 var editPage = id => location.hash = "#edit=" + id;
 var addPage = id => location.hash = "#add=" + id;
 var deletePage = id => location.hash = "#delete=" + id;
@@ -248,7 +245,9 @@ var LandingPage = React.createClass({
 });
 
 Router.addHandler("page=:id", params => {
-    var page = runtime.getPage(params.id);
+    var id = params.id;
+    var page = runtime.getPage(id);
+    localStorage.openedPage = id;
     renderComponent( page
         ? <Page {...page} />
         : <div className="CenteredBox">Unknown page ID.</div> )
