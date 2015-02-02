@@ -21,6 +21,7 @@ var keyMapping = {
     37: "back",
     27: "escape",
     48: "home",
+    83: "save",
     49: 1,
     50: 2,
     51: 3,
@@ -98,7 +99,7 @@ var Sidebar = React.createClass({
 
 var Page = React.createClass({
     componentDidMount: function () {
-        document.onkeyup = event => {
+        document.onkeydown = event => {
             var page = this.props;
             var code = keyMapping[event.keyCode];
             switch (code) {
@@ -162,7 +163,7 @@ var EditingForm = React.createClass({
     },
     componentDidMount: function () {
         this.refs.title.getDOMNode().focus();
-        document.onkeyup = event => {
+        document.onkeydown = event => {
             var props = this.props;
             var id = props.pageID;
             var code = keyMapping[event.keyCode];
@@ -170,6 +171,12 @@ var EditingForm = React.createClass({
                 case "escape":
                     var page = props.mode == "EDIT" ? runtime.getPage(id) : runtime.getParent(id);
                     openPage(page && page.id || 0);
+                    break;
+                case "save":
+                    if (event.metaKey) {
+                        event.preventDefault();
+                        this.applyChanges();
+                    }
                     break;
                 default:
                     break;
