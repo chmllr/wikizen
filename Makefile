@@ -12,7 +12,6 @@ tests:
 	nodeunit
 
 deps:
-	mkdir app
 	npm install diff-match-patch
 	npm install reactify
 	npm install react
@@ -22,6 +21,7 @@ deps:
 pub:
 	git push
 	make
+	mkdir app
 	cp -rf images README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
 	rm -rf images/
@@ -29,3 +29,4 @@ pub:
 	git ca -m "new version"
 	git push
 	git co master
+	rm -rf app
