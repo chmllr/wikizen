@@ -60,6 +60,16 @@ var Breadcrumb = React.createClass({
     }
 });
 
+var NestedPages = React.createClass({
+    render: function () {
+        return <div><b>Nested Pages</b>
+            <ol>{this.props.pages.map(page =>
+                <li><Link to="page" param={page.id} label={page.title} /></li>)}
+            </ol>
+        </div>
+    }
+});
+
 var Sidebar = React.createClass({
     getInitialState: function () {
         return { menuHidden: true }
@@ -87,10 +97,7 @@ var Sidebar = React.createClass({
                 <li><Link to="export" label="Export Wiki" /></li>
                 <li><Link to="signout" label="Sign Out" /></li>
             </ul>}
-            {children.length == 0
-                ? null
-                : <div>Nested Pages:<ol>{page.children.map(child =>
-                <li><Link to="page" param={child.id} label={child.title} /></li>)}</ol></div>}
+            {children.length == 0 || !page.body ? null : <NestedPages pages={page.children} />}
             <div className="filler"></div>
             <footer>Powered by <Link to="signout" label="WikiZen" /></footer>
         </aside>
@@ -127,11 +134,14 @@ var Page = React.createClass({
     },
     render: function () {
         var page = this.props;
+        var body = page.body;
         return <div className="Page">
             <Sidebar {...page}/>
             <main>
                 <Breadcrumb {...page} />
-                <article dangerouslySetInnerHTML={{__html: marked(page.body || "")}}></article>
+                {body
+                    ? <article dangerouslySetInnerHTML={{__html: marked(body || "")}}></article>
+                    : <article><h1>{page.title}</h1><NestedPages pages={page.children} /></article>}
             </main>
         </div>
     }
