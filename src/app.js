@@ -184,7 +184,7 @@ var EditingForm = React.createClass({
                     openPage(page && page.id || 0);
                     break;
                 case "save":
-                    if (event.metaKey) {
+                    if (event.metaKey || event.ctrlKey && !event.altKey) {
                         event.preventDefault();
                         this.applyChanges();
                     }
