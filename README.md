@@ -25,7 +25,8 @@ Following shortcuts are supported:
 - `1` till `9`: open the `n`th nested page;
 - `Left Arrow`: go to the parent page;
 - `Escape`: close the editing mask;
-- `0`: go to the root page.
+- `0`: go to the root page;
+- `Meta + s`: saves the changes.
 
 ## More
 
