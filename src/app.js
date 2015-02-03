@@ -62,11 +62,12 @@ var Breadcrumb = React.createClass({
 
 var NestedPages = React.createClass({
     render: function () {
-        return <div><b>Nested Pages</b>
-            <ol>{this.props.pages.map(page =>
+        var pages = this.props.pages;
+        return pages.length == 0 ? null : <div><b>Nested Pages</b>
+            <ol>{pages.map(page =>
                 <li><Link to="page" param={page.id} label={page.title} /></li>)}
             </ol>
-        </div>
+        </div>;
     }
 });
 
@@ -215,18 +216,17 @@ var EditingForm = React.createClass({
 
 var LandingPage = React.createClass({
     render: function () {
-        return <div className="CenteredBox Banner">
+        return <div id="LandingPage" className="CenteredBox">
             <div className="Logo">
                 <img src="images/wikizen.svg" />
                 WikiZen
             </div>
             <p className="Lead">Simple Markdown Wiki in your Dropbox.</p>
             <div className="ButtonBar">
-                <button onClick={() => signIn()}
-                    className="LandingButton">Connect With Dropbox</button>
+                <button onClick={() => signIn()}>Connect With Dropbox</button>
             &nbsp;
                 <button onClick={() => signIn('local')}
-                    className="LandingButton prime">Give It 5 Minutes</button>
+                    className="prime">Give It 5 Minutes</button>
             </div>
             <a href="https://github.com/chmllr/WikiZen">
                 <img style={{position: "absolute", top: 0, right: 0, border: 0}}

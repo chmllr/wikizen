@@ -334,44 +334,44 @@ table {
   }
 }
 
-.Logo {
-  font-family: @header-font;
+
+#LandingPage {
   color: white;
-  img {
-    width: 1em;
-    padding-right: 0.3em;
+  .Logo {
+    font-family: @header-font;
+    img {
+      width: 1em;
+      padding-right: 0.3em;
+    }
+    @media (max-width: 799px) {
+      font-size: 3em;
+      text-align: center;
+      .FlexContainer;
+      .CenteredFlexBox;
+    }
+    @media (min-width: 800px) {
+      font-size: 4em;
+    }
   }
-  @media (max-width: 799px) {
-    font-size: 3em;
-    text-align: center;
-    .FlexContainer;
-    .CenteredFlexBox;
+  .Lead {
+    padding: 1em;
+    padding-bottom: 2em;
+    font-family: "Helvetica Neue", serif;
+    font-weight: 100;
+    @media (max-width: 799px) {
+      font-size: 1.5em;
+      text-align: center;
+    }
+    @media (min-width: 800px) {
+      font-size: 2em;
+    }
   }
-  @media (min-width: 800px) {
-    font-size: 4em;
+  button {
+    border: 2px solid @halftone;
+    width: 15em;
   }
-}
-
-.Lead {
-  padding: 1em;
-  padding-bottom: 2em;
-  font-family: "Helvetica Neue", serif;
-  font-weight: 100;
-  @media (max-width: 799px) {
-    font-size: 1.5em;
-    text-align: center;
+  button.prime {
+    background: #219161;
+    color: @halftone;
   }
-  @media (min-width: 800px) {
-    font-size: 2em;
-  }
-}
-
-.LandingButton {
-  border: 2px solid @halftone;
-  width: 15em;
-}
-
-.LandingButton.prime {
-  background: #219161;
-  color: @halftone;
 }
