@@ -46,10 +46,10 @@ var Breadcrumb = React.createClass({
     getPath: function (pageID) {
         var parent = runtime.getParent(pageID);
         if(!parent) return [];
-        var node = <Link to="page" param={parent.id} label={parent.title} />;
+        var node = <Link key={parent.id} to="page" param={parent.id} label={parent.title} />;
         var rest = this.getPath(parent.id);
         rest.push(node);
-        rest.push(<span>&nbsp;&gt;&nbsp;</span>);
+        rest.push(<span key={"span" + rest.length}>&nbsp;&gt;&nbsp;</span>);
         return rest;
     },
     render: function () {
@@ -64,8 +64,8 @@ var NestedPages = React.createClass({
     render: function () {
         var pages = this.props.pages;
         return pages.length == 0 ? null : <div><b>Nested Pages</b>
-            <ol>{pages.map(page =>
-                <li><Link to="page" param={page.id} label={page.title} /></li>)}
+            <ol>{pages.map((page, i) =>
+                <li key={i}><Link to="page" param={page.id} label={page.title} /></li>)}
             </ol>
         </div>;
     }
@@ -92,7 +92,7 @@ var Sidebar = React.createClass({
                 <span className="monospace">{this.state.menuHidden ? "+" : "-"} </span>
                 Menu</button>
             { this.state.menuHidden
-                ?             <div className="separator"></div>
+                ? <div className="separator"></div>
                 : <ul className="Menu">
                 {isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
                 <li><Link to="export" label="Export Wiki" /></li>
@@ -141,8 +141,8 @@ var Page = React.createClass({
             <main>
                 <Breadcrumb {...page} />
                 {body
-                    ? <article dangerouslySetInnerHTML={{__html: marked(body || "")}}></article>
-                    : <article><h1>{page.title}</h1><NestedPages pages={page.children} /></article>}
+                    ? <article key={0} dangerouslySetInnerHTML={{__html: marked(body || "") }}></article>
+                    : <article key={1}><h1>{page.title}</h1><NestedPages pages={page.children} /></article>}
             </main>
         </div>
     }
