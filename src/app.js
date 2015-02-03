@@ -99,7 +99,7 @@ var Sidebar = React.createClass({
             </ul>}
             {children.length == 0 || !page.body ? null : <NestedPages pages={page.children} />}
             <div className="filler"></div>
-            <footer>Powered by <Link to="signout" label="WikiZen" /></footer>
+            <footer>Powered by <a href="?landing">WikiZen</a></footer>
         </aside>
     }
 });
@@ -308,5 +308,5 @@ self.signIn = mode => {
     );
 };
 
-if (localStorage.active) self.signIn();
+if (localStorage.active && location.query != "?landing") self.signIn();
 else renderComponent(<LandingPage />);
