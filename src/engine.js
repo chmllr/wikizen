@@ -43,6 +43,7 @@ var clone = object => JSON.parse(JSON.stringify(object));
 var initializeIndex = () => ({ pages: {}, parents: {} });
 
 var assembleRuntimeWiki = wiki => {
+    console.time("runtime assemblage");
     var runtimeObject = {
         root: clone(wiki.root),
         index: initializeIndex()
@@ -69,6 +70,7 @@ var assembleRuntimeWiki = wiki => {
             }
         } else applySimpleDelta(pages[pageID], delta);
     });
+    console.timeEnd("runtime assemblage");
     return runtimeObject;
 };
 
