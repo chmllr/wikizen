@@ -24,6 +24,7 @@ pub:
 	mkdir app
 	cp -rf images README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
+	git pull
 	rm -rf images/
 	mv app/* .
 	git ca -m "new version"
