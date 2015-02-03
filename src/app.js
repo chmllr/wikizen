@@ -308,5 +308,5 @@ self.signIn = mode => {
     );
 };
 
-if (localStorage.active && location.query != "?landing") self.signIn();
+if (localStorage.active && location.search != "?landing") self.signIn();
 else renderComponent(<LandingPage />);
