@@ -2,8 +2,8 @@
 
 ## Text Formatting
 
-[Markdown](http://en.wikipedia.org/wiki/Markdown) is a _markup language_ with plain text
-formatting syntax designed so that it can be converted to **HTML and many other formats** using a tool by the same name.
+[Markdown](http://en.wikipedia.org/wiki/Markdown) is a _markup language_ with **plain text** formatting syntax.
+But you also can use <mark>standard HTML</mark> tags.
 
 ## Backquotes, Lists & Code
 

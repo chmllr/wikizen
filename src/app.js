@@ -257,7 +257,7 @@ Router.addHandler("export", () =>
 
 Router.addHandler("signout", () => {
     runtime.signOut();
-    localStorage.removeItem("active");
+    localStorage.clear();
     location.href = wikiZenURL;
 });
 
