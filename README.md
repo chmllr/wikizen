@@ -12,7 +12,7 @@ See the [technical specification](https://github.com/chmllr/WikiZen/blob/master/
 
 ### Writing
 
-Use [Markdown markup language](http://en.wikipedia.org/wiki/Markdown).
+Use [Markdown language](http://en.wikipedia.org/wiki/Markdown).
 Every page can contain nested pages.
 Pages can be [easily linked](#page=1) using Markdown syntax.
 
