@@ -47,9 +47,10 @@ module.exports.save = wiki => {
 
 module.exports.init = () => new Promise((resolve, reject) => {
     console.time("datastore API initialization");
+    if (client.isAuthenticated()) resolve();
     client.authenticate({interactive: false}, error => {
         if (error) reject('Authentication error: ' + error);
-        else if(client.isAuthenticated()) {
+        else if (client.isAuthenticated()) {
             var datastoreManager = client.getDatastoreManager();
             datastoreManager.openDefaultDatastore((error, datastore) => {
                 store = datastore;

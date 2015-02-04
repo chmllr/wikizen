@@ -16,8 +16,8 @@ function getFile(url) {
     }
 }
 
-function State (persistence) {
-    var store = stores[persistence] || stores.dropbox, wiki, state;
+function State (provider) {
+    var store = stores[provider] || stores.dropbox, wiki, state;
     var update = () => {
         state = engine.assembleRuntimeWiki(wiki);
         store.save(wiki);
@@ -54,6 +54,7 @@ function State (persistence) {
         update();
     };
     this.signOut = () => store.signOut();
+    this.getProvider = () => provider;
 }
 
 module.exports = State;

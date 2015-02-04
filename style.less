@@ -11,6 +11,7 @@
 @helvetica-font-size: 100%;
 @article-font: 'PT Serif', Georgia, serif;
 @header-font: 'Noticia Text', 'PT Serif', Georgia, serif;
+@landing-prime: #219161;
 
 body, html {
   background: @prime;
@@ -371,7 +372,10 @@ table {
     width: 15em;
   }
   button.prime {
-    background: #219161;
+    background: @landing-prime;
     color: @halftone;
+  }
+  button.prime:hover {
+    background: lighten(@landing-prime, 3%);
   }
 }

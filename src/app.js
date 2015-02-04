@@ -100,7 +100,7 @@ var Sidebar = React.createClass({
             </ul>}
             {children.length == 0 || !page.body ? null : <NestedPages pages={page.children} />}
             <div className="filler"></div>
-            <footer>Powered by <a href="?landing">WikiZen</a></footer>
+            <footer>Powered by <Link to="landing" label="WikiZen"/></footer>
         </aside>
     }
 });
@@ -240,7 +240,7 @@ var LandingPage = React.createClass({
 Router.addHandler("page=:id", params => {
     var id = params.id;
     var page = runtime.getPage(id);
-    localStorage.openedPage = id;
+    localStorage.setItem(runtime.getProvider() + ".openedPage", id);
     renderComponent( page
         ? <Page {...page} />
         : <div className="CenteredBox">Unknown page ID.</div> )
@@ -254,6 +254,9 @@ Router.addHandler("edit=:id", params =>
 
 Router.addHandler("export", () =>
     renderComponent(<textarea className="Export">{JSON.stringify(runtime.getPage(0), null, 2)}</textarea>));
+
+Router.addHandler("landing", () =>
+    renderComponent(<LandingPage />));
 
 Router.addHandler("signout", () => {
     runtime.signOut();
@@ -272,17 +275,13 @@ Router.addHandler("delete=:id", params => {
     }
 });
 
-self.signIn = mode => {
-    runtime = new State(mode);
-    if(!mode) localStorage.active = true;
+self.signIn = provider => {
+    if(!provider != "local") localStorage.loggedIn = true;
+    runtime = new State(provider);
     renderComponent(<div className="CenteredBox">Loading...</div>);
-    runtime.init().then(() => {
-            if (location.hash) self.onhashchange();
-            else openPage(localStorage.openedPage || 0);
-        },
-        console.error
-    );
+    runtime.init().then(() => openPage(localStorage.getItem(runtime.getProvider() + ".openedPage") || 0),
+        console.error);
 };
 
-if (localStorage.active && location.search != "?landing") self.signIn();
-else renderComponent(<LandingPage />);
+if (location.hash == "#landing" || !localStorage.loggedIn) renderComponent(<LandingPage />);
+else self.signIn();
