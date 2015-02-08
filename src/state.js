@@ -22,6 +22,7 @@ function State (provider) {
         state = engine.assembleRuntimeWiki(wiki);
         store.save(wiki);
     };
+    var version = getFile("VERSION");
 
     this.init = () => {
         return new Promise((resolve, reject) => {
@@ -55,6 +56,7 @@ function State (provider) {
     };
     this.signOut = () => store.signOut();
     this.getProvider = () => provider;
+    this.getVersion = () => version;
 }
 
 module.exports = State;

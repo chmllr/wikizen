@@ -124,7 +124,10 @@ var Sidebar = React.createClass({
                 title="DEMO MODE!"
                 text="This wiki persists in your browser only."
                 display={appState.getProvider() == "local"} />
-            <footer>Powered by <Link to="landing" label="WikiZen"/></footer>
+            <footer>
+                Powered by <Link to="landing" label="WikiZen"/>&nbsp;
+                <span className="VersionLabel">v{appState.getVersion()}</span>
+            </footer>
         </aside>
     }
 });
