@@ -85,7 +85,7 @@ var WarningBox = React.createClass({
                 <h3>{this.props.title}</h3>
                 {this.props.text}
                 <br/>
-                <button onClick={() => this.setState({ display: false })}>CLOSE</button>
+                <button onClick={() => this.setState({ display: false })}>Hide</button>
             </div>;
         else return null;
     }
