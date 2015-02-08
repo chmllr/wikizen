@@ -53,8 +53,7 @@ self.signIn = provider => {
         console.error);
 };
 
-if (location.hash == "#landing" || !localStorage.loggedIn) {
-    location.hash = "#";
-    UI.render.LANDING_PAGE();
-}
+location.hash = "#";
+
+if (location.hash == "#landing" || !localStorage.loggedIn) UI.render.LANDING_PAGE();
 else self.signIn();
