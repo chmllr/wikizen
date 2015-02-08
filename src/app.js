@@ -44,13 +44,17 @@ Router.addHandler("delete=:id", params => {
 });
 
 self.signIn = provider => {
-    if(!provider != "local") localStorage.loggedIn = true;
+    if(provider != "local") localStorage.loggedIn = true;
     appState = new State(provider);
     UI.setAppState(appState);
     UI.render.MESSAGE("Connecting...");
+    console.log("initializing app state with provider:", provider);
     appState.init().then(() => openPage(localStorage.getItem(appState.getProvider() + ".openedPage") || 0),
         console.error);
 };
 
-if (location.hash == "#landing" || !localStorage.loggedIn) UI.render.LANDING_PAGE();
+if (location.hash == "#landing" || !localStorage.loggedIn) {
+    location.hash = "#";
+    UI.render.LANDING_PAGE();
+}
 else self.signIn();

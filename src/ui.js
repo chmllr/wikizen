@@ -75,6 +75,22 @@ var NestedPages = React.createClass({
     }
 });
 
+var WarningBox = React.createClass({
+    getInitialState: function () {
+        return { display: this.props.display }
+    },
+    render: function () {
+        if (this.state.display)
+            return <div className="Warning">
+                <h3>{this.props.title}</h3>
+                {this.props.text}
+                <br/>
+                <button onClick={() => this.setState({ display: false })}>CLOSE</button>
+            </div>;
+        else return null;
+    }
+});
+
 var Sidebar = React.createClass({
     getInitialState: function () {
         return { menuHidden: true }
@@ -104,6 +120,10 @@ var Sidebar = React.createClass({
             </ul>}
             {children.length == 0 || !page.body ? null : <NestedPages pages={page.children} />}
             <div className="filler"></div>
+            <WarningBox
+                title="DEMO MODE!"
+                text="This wiki persists in your browser only."
+                display={appState.getProvider() == "local"} />
             <footer>Powered by <Link to="landing" label="WikiZen"/></footer>
         </aside>
     }

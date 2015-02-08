@@ -49,7 +49,7 @@ module.exports.init = () => new Promise((resolve, reject) => {
     console.time("datastore API initialization");
     if (client.isAuthenticated()) resolve();
     client.authenticate({interactive: false}, error => {
-        if (error) reject('Authentication error: ' + error);
+        if (error) reject('Authentication error: ' + error.description);
         else if (client.isAuthenticated()) {
             var datastoreManager = client.getDatastoreManager();
             datastoreManager.openDefaultDatastore((error, datastore) => {

@@ -5,7 +5,8 @@ function Router () {
         list.push(handler);
         handlers[pattern] = list;
     };
-    this.dispatcher = () =>
+    this.dispatcher = () => {
+        console.log("hash dispatcher invoked for hash", location.hash);
         Object.keys(handlers)
             .map(pattern => ({
                 identifiers: (pattern.match(/:\w+/g) || []).map(x => x.replace(":", "")),
@@ -18,9 +19,10 @@ function Router () {
             .forEach(object =>
                 object.handlers.forEach(handler =>
                     handler(object.identifiers.reduce((acc, param, i) => {
-                            acc[param] = object.matches[i + 1];
-                            return acc
-                        }, {}))));
+                        acc[param] = object.matches[i + 1];
+                        return acc
+                    }, {}))));
+    }
 }
 
 module.exports = new Router();
