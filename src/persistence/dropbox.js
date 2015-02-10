@@ -60,7 +60,6 @@ module.exports.init = () => new Promise((resolve, reject) => {
             });
         } else client.authenticate();
     });
-
 });
 
 module.exports.signOut = () => client.signOut();

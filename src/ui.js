@@ -252,7 +252,7 @@ var LandingPage = React.createClass({
                 </div>
                 <p className="Lead">Simple Markdown Wiki in your Dropbox.</p>
                 <div className="ButtonBar">
-                    <button onClick={() => signIn()}>Connect With Dropbox</button>
+                    <button onClick={() => signIn()}>Connect To Dropbox</button>
                 &nbsp;
                 &nbsp;
                 &nbsp;
