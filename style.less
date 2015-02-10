@@ -336,6 +336,8 @@ table {
 
 #LandingPage {
   color: white;
+  .FirstLevelContainer;
+  .FlexContainer;
   .Logo {
     font-family: @header-font;
     img {
@@ -345,16 +347,16 @@ table {
     @media (max-width: 799px) {
       font-size: 3em;
       text-align: center;
-      .FlexContainer;
       .CenteredFlexBox;
+      .FlexContainer;
     }
     @media (min-width: 800px) {
       font-size: 4em;
     }
   }
   .Lead {
-    padding: 1em;
-    padding-bottom: 2em;
+    padding: @padding;
+    padding-bottom: @padding * 1.5;
     font-family: "Helvetica Neue", serif;
     font-weight: 100;
     @media (max-width: 799px) {
@@ -375,6 +377,43 @@ table {
   }
   button.prime:hover {
     background: lighten(@landing-prime, 3%);
+  }
+  header {
+    .CenteredBox;
+    margin-top: @padding * 5;
+    margin-bottom: @padding * 4;
+  }
+  main {
+    background: @halftone;
+    .StretchedItem;
+    article {
+      @media (max-width: 799px) {
+        padding: 3%;
+      }
+      @media (min-width: 800px) {
+        padding: 16%;
+        padding-top: 5%;
+      }
+      font-weight: 200;
+      font-size: 120% !important;
+      .helvetica;
+    }
+    #SubscriptionForm {
+      text-align: center;
+      input {
+        padding: 0.5em;
+        font-size: 80%;
+      }
+      input[type="text"] {
+        width: 20em;
+      }
+      input[type="submit"] {
+        background: @prime;
+        color: @halftone;
+        .monospace;
+        border: none;
+      }
+    }
   }
 }
 

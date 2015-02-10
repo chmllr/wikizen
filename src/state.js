@@ -1,20 +1,12 @@
 "use strict";
 
 var engine = require('./engine');
+var utils = require('./utils');
 
 var stores = {
     local: require('./persistence/local'),
     dropbox: require('./persistence/dropbox')
 };
-
-function getFile(url) {
-    var request = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-    if (request) {
-        request.open("GET", url, false);
-        request.send(null);
-        return request.responseText;
-    }
-}
 
 function State (provider) {
     var store = stores[provider] || stores.dropbox, wiki, state;
@@ -22,14 +14,14 @@ function State (provider) {
         state = engine.assembleRuntimeWiki(wiki);
         store.save(wiki);
     };
-    var version = getFile("VERSION");
+    var version = utils.getFile("VERSION");
 
     this.init = () => {
         return new Promise((resolve, reject) => {
             store.init().then(() => {
-                wiki = store.load() || engine.createWiki(engine.createPage("HOME", getFile("README.md")));
+                wiki = store.load() || engine.createWiki(engine.createPage("HOME", utils.getFile("README.md")));
                 state = engine.assembleRuntimeWiki(wiki);
-                if(wiki.freeID == 1) this.addPage(0, "Markdown Features", getFile("Demo.md"));
+                if(wiki.freeID == 1) this.addPage(0, "Markdown Features", utils.getFile("Demo.md"));
                 resolve();
             }, reject);
         });

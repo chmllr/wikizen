@@ -1,5 +1,6 @@
 var React = require('react');
 var marked = require('marked');
+var utils = require('./utils');
 var appState;
 
 var render = component => React.render(component, document.body);
@@ -243,23 +244,30 @@ var EditingForm = React.createClass({
 
 var LandingPage = React.createClass({
     render: function () {
-        return <div id="LandingPage" className="CenteredBox">
-            <div className="Logo">
-                <img src="images/wikizen.svg" />
-                WikiZen
-            </div>
-            <p className="Lead">Simple Markdown Wiki in your Dropbox.</p>
-            <div className="ButtonBar">
-                <button onClick={() => signIn()}>Connect With Dropbox</button>
-            &nbsp;
-                <button onClick={() => signIn('local')}
-                    className="prime">Give It 5 Minutes</button>
-            </div>
-            <a href="https://github.com/chmllr/WikiZen">
-                <img style={{position: "absolute", top: 0, right: 0, border: 0}}
-                    src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
-                    alt="Fork me on GitHub" />
-            </a>
+        return <div id="LandingPage">
+            <header>
+                <div className="Logo">
+                    <img src="images/wikizen.svg" />
+                    WikiZen
+                </div>
+                <p className="Lead">Simple Markdown Wiki in your Dropbox.</p>
+                <div className="ButtonBar">
+                    <button onClick={() => signIn()}>Connect With Dropbox</button>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                    <button onClick={() => signIn('local')}
+                        className="prime">Give It 5 Minutes</button>
+                </div>
+                <a href="https://github.com/chmllr/WikiZen">
+                    <img style={{position: "absolute", top: 0, right: 0, border: 0}}
+                        src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"
+                        alt="Fork me on GitHub" />
+                </a>
+            </header>
+            <main>
+            <article dangerouslySetInnerHTML={{__html: marked(utils.getFile("Roadmap.md"))}} />
+            </main>
         </div>;
     }
 });
