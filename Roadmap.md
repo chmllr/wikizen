@@ -14,7 +14,7 @@ The following features will be implemented in the nearest future:
 
 ## Commercial Features
 
-Only if **enough users** show interest, the following features could be provided for very small monthly fee:
+Only if **enough users** show interest, the following features could be provided for a very small monthly fee:
 
 - Mobile apps
 - Embedded pictures
