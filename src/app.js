@@ -49,7 +49,10 @@ self.signIn = provider => {
     UI.setAppState(appState);
     UI.render.MESSAGE("Connecting...");
     console.log("initializing app state with provider:", provider);
-    appState.init().then(() => openPage(localStorage.getItem(appState.getProvider() + ".openedPage") || 0),
+    appState.init().then(() => {
+            location.hash = "#";
+            openPage(localStorage.getItem(appState.getProvider() + ".openedPage") || 0)
+        },
         console.error);
 };
 
