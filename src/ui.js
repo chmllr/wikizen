@@ -3,7 +3,10 @@ var marked = require('marked');
 var utils = require('./utils');
 var appState;
 
-var render = component => React.render(component, document.body);
+var render = component => {
+    document.onkeydown = null;
+    React.render(component, document.body);
+};
 var openPage = id => location.hash = "#page=" + id;
 var editPage = id => location.hash = "#edit=" + id;
 var addPage = id => location.hash = "#add=" + id;
@@ -15,7 +18,10 @@ module.exports.render = {
     PAGE: payload => render(<Page {...payload} />),
     LANDING_PAGE: () => render(<LandingPage />),
     EDIT_FORM: payload => render(<EditingForm {...payload} />),
-    EXPORT_PAGE: payload => render(<textarea className="Export">{payload}</textarea>),
+    EXPORT_PAGE: payload => render(<div className="ExportPage">
+        <textarea className="Export">{payload}</textarea>
+        <button onClick={() => window.history.back()}>Close</button>
+    </div>),
     MESSAGE: payload => render(<div className="CenteredBox">{payload}</div>)
 };
 
