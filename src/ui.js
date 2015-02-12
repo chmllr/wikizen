@@ -122,12 +122,7 @@ var Sidebar = React.createClass({
                 Menu</button>
             { this.state.menuHidden
                 ? <div className="separator"></div>
-                : <ul className="Menu">
-                {isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
-                <li><Link to="export" label="Export Wiki" /></li>
-                {containerPage ? null : <li><Link to="print" param={id} label="Print Page" /></li>}
-                <li><Link to="signout" label="Sign Out" /></li>
-            </ul>}
+                : <SidebarMenu padeID={id} hidden={this.state.menuHidden} isRoot={isRoot} containerPage={containerPage} /> }
             {children.length == 0 || containerPage ? null : <NestedPages pages={page.children} />}
             <div className="filler"></div>
             <WarningBox
@@ -139,6 +134,27 @@ var Sidebar = React.createClass({
                 <span className="VersionLabel">v{appState.getVersion()}</span>
             </footer>
         </aside>
+    }
+});
+
+var SidebarMenu = React.createClass({
+    render: function () {
+        var props = this.props;
+        var id = props.padeID;
+        return props.hidden ? null : <ul className="Menu">
+            <li>Page Options
+                <ul>
+                    {props.isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
+                    {props.containerPage ? null : <li><Link to="print" param={id} label="Print Page" /></li>}
+                </ul>
+            </li>
+            <li>Global Options
+                <ul>
+                    <li><Link to="export" label="Export Wiki" /></li>
+                    <li><Link to="signout" label="Sign Out" /></li>
+                </ul>
+            </li>
+        </ul>
     }
 });
 
