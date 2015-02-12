@@ -19,9 +19,10 @@ module.exports.render = {
     LANDING_PAGE: () => render(<LandingPage />),
     EDIT_FORM: payload => render(<EditingForm {...payload} />),
     EXPORT_PAGE: payload => render(<div className="ExportPage">
-        <textarea className="Export">{payload}</textarea>
+        <textarea className="Export">{JSON.stringify(payload, null, 2)}</textarea>
         <button onClick={() => window.history.back()}>Close</button>
     </div>),
+    PRINT_PAGE: payload => render(<PrintPage {...payload} />),
     MESSAGE: payload => render(<div className="CenteredBox">{payload}</div>)
 };
 
@@ -107,6 +108,7 @@ var Sidebar = React.createClass({
         var id = page.id;
         var children = page.children;
         var isRoot = id == 0;
+        var containerPage = !page.body;
         return <aside>
             <button className="BackButton"
                 disabled={isRoot}
@@ -123,9 +125,10 @@ var Sidebar = React.createClass({
                 : <ul className="Menu">
                 {isRoot ? null : <li><Link to="delete" param={id} label="Delete Page" /></li>}
                 <li><Link to="export" label="Export Wiki" /></li>
+                {containerPage ? null : <li><Link to="print" param={id} label="Print Page" /></li>}
                 <li><Link to="signout" label="Sign Out" /></li>
             </ul>}
-            {children.length == 0 || !page.body ? null : <NestedPages pages={page.children} />}
+            {children.length == 0 || containerPage ? null : <NestedPages pages={page.children} />}
             <div className="filler"></div>
             <WarningBox
                 title="DEMO MODE!"
@@ -181,6 +184,30 @@ var Page = React.createClass({
         </div>
     }
 });
+
+var PrintPage = React.createClass({
+    componentDidMount: function () {
+        document.onkeydown = event => {
+            var code = keyMapping[event.keyCode];
+            switch (code) {
+                case "escape":
+                    window.history.back();
+                    break;
+                default:
+            }
+        };
+        window.print();
+    },
+    render: function () {
+        var body = this.props.body;
+        return <div className="Page">
+            <main>
+                <article key={0} dangerouslySetInnerHTML={{__html: marked(body || "") }}></article>
+            </main>
+        </div>
+    }
+});
+
 
 var EditingForm = React.createClass({
     getInitialState: function () {

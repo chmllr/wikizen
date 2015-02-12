@@ -22,7 +22,9 @@ Router.addHandler("add=:id", params => UI.render.EDIT_FORM({ mode: "ADD", pageID
 
 Router.addHandler("edit=:id", params => UI.render.EDIT_FORM({ mode: "EDIT", pageID: params.id }));
 
-Router.addHandler("export", () => UI.render.EXPORT_PAGE(JSON.stringify(appState.getPage(0), null, 2)));
+Router.addHandler("export", () => UI.render.EXPORT_PAGE(appState.getPage(0)));
+
+Router.addHandler("print=:id", params => UI.render.PRINT_PAGE(appState.getPage(params.id)));
 
 Router.addHandler("landing", () => UI.render.LANDING_PAGE());
 
