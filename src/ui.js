@@ -3,10 +3,7 @@ var marked = require('marked');
 var utils = require('./utils');
 var appState;
 
-var render = component => {
-    document.onkeydown = null;
-    React.render(component, document.body);
-};
+var render = component => React.render(component, document.body);
 var openPage = id => location.hash = "#page=" + id;
 var editPage = id => location.hash = "#edit=" + id;
 var addPage = id => location.hash = "#add=" + id;
@@ -18,10 +15,13 @@ module.exports.render = {
     PAGE: payload => render(<Page {...payload} />),
     LANDING_PAGE: () => render(<LandingPage />),
     EDIT_FORM: payload => render(<EditingForm {...payload} />),
-    EXPORT_PAGE: payload => render(<div className="ExportPage">
-        <textarea className="Export">{JSON.stringify(payload, null, 2)}</textarea>
-        <button onClick={() => window.history.back()}>Close</button>
-    </div>),
+    EXPORT_PAGE: payload => {
+        document.onkeydown = null;
+        render(<div className="ExportPage">
+            <textarea className="Export">{JSON.stringify(payload, null, 2)}</textarea>
+            <button onClick={() => window.history.back()}>Close</button>
+        </div>)
+    },
     PRINT_PAGE: payload => render(<PrintPage {...payload} />),
     MESSAGE: payload => render(<div className="CenteredBox">{payload}</div>)
 };
@@ -315,7 +315,7 @@ var LandingPage = React.createClass({
                 </a>
             </header>
             <main>
-            <article dangerouslySetInnerHTML={{__html: marked(utils.getFile("Roadmap.md"))}} />
+                <article dangerouslySetInnerHTML={{__html: marked(utils.getFile("Roadmap.md"))}} />
             </main>
         </div>;
     }
