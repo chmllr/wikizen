@@ -126,12 +126,11 @@ nav {
   font-size: @helvetica-font-size;
 }
 
-#SidebarLogo {
+#Logo {
   color: @halftone;
   font-family: @header-font;
   font-size: 250%;
   text-align: center;
-  cursor: pointer;
 }
 
 .Page {
@@ -145,6 +144,9 @@ nav {
   aside {
     flex: 1 0;
     -webkit-flex: 1 0;
+    #Logo {
+      cursor: pointer;
+    }
     .FlexContainer;
     padding: @padding;
     .helvetica;
@@ -344,16 +346,15 @@ table {
 
 
 #LandingPage {
-  color: white;
+  color: @halftone;
   .FirstLevelContainer;
   .FlexContainer;
-  .Logo {
-    font-family: @header-font;
+  #Logo {
     @media (max-width: 799px) {
-      font-size: 3em;
+      font-size: 270%;
     }
     @media (min-width: 800px) {
-      font-size: 4em;
+      font-size: 350%;
     }
   }
   .Lead {
@@ -370,7 +371,7 @@ table {
     }
   }
   button {
-    border: 2px solid @halftone;
+    background: lighten(@prime, 10%);
     width: 15em;
   }
   button.prime {
@@ -403,7 +404,7 @@ table {
     #SubscriptionForm {
       text-align: center;
       input {
-        padding: 0.5em;
+        padding: 0.3em;
         font-size: 80%;
       }
       input[type="text"] {
