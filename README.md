@@ -1,4 +1,4 @@
-# &#9775; WikiZen
+# README
 
 > "Simplicity is prerequisite for reliability."
 
