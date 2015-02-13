@@ -110,6 +110,7 @@ var Sidebar = React.createClass({
         var isRoot = id == 0;
         var containerPage = !page.body;
         return <aside>
+            <div id="SidebarLogo" onClick={() => location.hash = "#landing"}>WikiZen</div>
             <button className="BackButton"
                 disabled={isRoot}
                 onClick={() => openPage(appState.getParent(id).id)}>
@@ -130,7 +131,7 @@ var Sidebar = React.createClass({
                 text="This wiki persists in your browser only."
                 display={appState.getProvider() == "local"} />
             <footer>
-                Powered by <Link to="landing" label="WikiZen"/>&nbsp;
+                Powered by WikiZen
                 <span className="VersionLabel">v{appState.getVersion()}</span>
             </footer>
         </aside>
@@ -296,7 +297,6 @@ var LandingPage = React.createClass({
         return <div id="LandingPage">
             <header>
                 <div className="Logo">
-                    <img src="images/wikizen.svg" />
                     WikiZen
                 </div>
                 <p className="Lead">Simple Markdown Wiki in your Dropbox.</p>

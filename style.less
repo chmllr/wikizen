@@ -126,6 +126,14 @@ nav {
   font-size: @helvetica-font-size;
 }
 
+#SidebarLogo {
+  color: @halftone;
+  font-family: @header-font;
+  font-size: 250%;
+  text-align: center;
+  cursor: pointer;
+}
+
 .Page {
   .FirstLevelContainer;
   .FlippingFlexBox;
@@ -341,15 +349,8 @@ table {
   .FlexContainer;
   .Logo {
     font-family: @header-font;
-    img {
-      width: 1em;
-      padding-right: 0.3em;
-    }
     @media (max-width: 799px) {
       font-size: 3em;
-      text-align: center;
-      .CenteredFlexBox;
-      .FlexContainer;
     }
     @media (min-width: 800px) {
       font-size: 4em;
@@ -439,7 +440,6 @@ table {
 
 .VersionLabel {
   opacity: 0.2;
-  float: right;
 }
 
 .ExportPage {
