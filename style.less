@@ -151,6 +151,9 @@ nav {
     padding: @padding;
     .helvetica;
     font-size: 90%;
+    button {
+      margin-top: @padding;
+    }
     .Menu {
       margin-top: 0;
       padding-top: @padding / 2;
@@ -163,34 +166,6 @@ nav {
       padding-bottom: @padding / 2;
       padding-top: @padding / 2;
     }
-    button {
-      opacity: 0.9;
-      margin-top: @padding;
-      border: 1px solid @halftone;
-      padding: @padding / 2.5;
-    }
-    button:first-child {
-      margin: 0;
-    }
-    button.prime {
-      border: none;
-      color: @prime;
-      background: @halftone;
-    }
-
-    button.prime:hover {
-      background: lighten(@halftone, 7%);
-    }
-
-    button.prime:active {
-      background: darken(@halftone, 20%);
-    }
-
-    button.BackButton {
-      border: 1px dotted @halftone;
-      border-radius: 2px;
-    }
-
     .separator {
       height: @padding * 1.25;
     }
@@ -283,26 +258,23 @@ h6 {
 
 button {
   .helvetica;
+  background: lighten(@prime, 10%);
   border: none;
   color: @halftone;
   font-size: 100%;
-  background: @prime;
 }
 
-button:disabled {
-  opacity: 0.4 !important;
-}
-
-button:disabled:hover {
-  background: @prime;
+button:disabled, button:disabled:hover {
+  opacity: 0.4;
+  background: lighten(@prime, 10%);
 }
 
 button:hover {
-  background: darken(@prime, 3%);
+  background: lighten(@prime, 7%);
 }
 
 button:active {
-  background: darken(@prime, 20%);
+  background: lighten(@prime, 4%);
 }
 
 ul {
@@ -370,7 +342,6 @@ table {
     }
   }
   button {
-    background: lighten(@prime, 10%);
     width: 15em;
   }
   button.prime {
@@ -431,7 +402,6 @@ table {
   }
   .monospace;
   button {
-    border: none !important;
     background: black;
     .monospace;
   }
