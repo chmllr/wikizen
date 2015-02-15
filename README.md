@@ -20,16 +20,18 @@ Pages can be [easily linked](#page=1) using Markdown syntax.
 
 The following keyboard shortcuts are supported.
 
-Shortcut            | Action
----                 | ---
-`e`                 | Edit page
-`a`                 | Add nested page
-`d`                 | Delete page
-`1` till `9`        | Open `n`th nested page
-`Left Arrow`        | Go to the parent page
-`Escape`            | Close editing mask or print page
-`0`                 | Go to the root page
-`Ctrl+s` / `Cmd+s`  | Save
+Shortcut                    | Action
+---                         | ---
+`e`                         | Edit page
+`a`                         | Add nested page
+`d`                         | Delete page
+`1` - `9`                   | Go to the `n`th nested page
+`0`                         | Go to the root page
+`Left Arrow`                | Go to the parent page
+`f`                         | Set focus to search field
+`Ctrl / Cmd` + `1` - `9`    | Open `n`th search result
+`Esc`                       | Close editing mask or print page
+`Ctrl / Cmd + s`            | Save
 
 ## More
 
