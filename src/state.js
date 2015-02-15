@@ -16,6 +16,15 @@ function State (provider) {
     };
     var version = utils.getFile("VERSION");
 
+    var search = (term, page) => {
+        var regExp = new RegExp(term, "i");
+        var results = [];
+        if (page.title.match(regExp) || page.body.match(regExp))
+            results.push({ id: page.id, title: page.title });
+        page.children.forEach(child => results = results.concat(search(term, child)));
+        return results;
+    };
+
     this.init = () => {
         return new Promise((resolve, reject) => {
             store.init().then(() => {
@@ -45,6 +54,9 @@ function State (provider) {
     this.undoDelta = () => {
         wiki.deltas.splice(wiki.deltas.length - 1, 1);
         update();
+    };
+    this.search = term => {
+        return search(term, state.root);
     };
     this.signOut = () => store.signOut();
     this.getProvider = () => provider;

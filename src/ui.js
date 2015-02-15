@@ -34,6 +34,7 @@ var keyMapping = {
     27: "escape",
     48: "home",
     83: "save",
+    70: "find",
     49: 1,
     50: 2,
     51: 3,
@@ -44,6 +45,16 @@ var keyMapping = {
     56: 8,
     57: 9
 };
+
+var registerShortcutHandler =
+        handler => document.onkeydown =
+                event => {
+                    if (event.target.id != "SearchField") {
+                        var result = handler(keyMapping[event.keyCode]) != false;
+                        if (!result) event.preventDefault();
+                        return result;
+                    }
+                };
 
 var Link = React.createClass({
     render: function () {
@@ -101,6 +112,38 @@ var WarningBox = React.createClass({
 
 var Logo = <div id="Logo" onClick={() => location.hash = "#landing"}>&#9775; WikiZen</div>;
 
+var Search = React.createClass({
+    getInitialState: function () {
+        return { term: null, results: [] }
+    },
+    search: function (event) {
+        var term = event.target.value;
+        var state = { term: term };
+        if (term.length > 2) state.results = appState.search(term);
+        this.setState(state);
+    },
+    shortcutHandler: function (event) {
+        var code = event.keyCode;
+        if ((event.metaKey || event.ctrlKey && !event.altKey) && code >= 49 && code < 58) {
+            openPage(code - 48);
+        }
+    },
+    render: function () {
+        var results = this.state.results;
+        return <div className="Search">
+            <input placeholder="Search" id="SearchField" type="text"
+                value={this.state.term}
+                onKeyDown={this.shortcutHandler}
+                onChange={this.search}/>
+            {results.length > 0 ? "Results:" : (this.state.term ? "Nothing found" : null)}
+            <ol>
+            {results.map(object =>
+                <li key={object.id}><Link to="page" param={object.id} label={object.title} /></li>)}
+            </ol>
+        </div>
+    }
+});
+
 var Sidebar = React.createClass({
     getInitialState: function () {
         return { menuHidden: true }
@@ -113,6 +156,7 @@ var Sidebar = React.createClass({
         var containerPage = !page.body;
         return <aside>
             {Logo}
+            <Search key={id} />
             <button className="BackButton"
                 disabled={isRoot}
                 onClick={() => openPage(appState.getParent(id).id)}>
@@ -163,9 +207,8 @@ var SidebarMenu = React.createClass({
 
 var Page = React.createClass({
     componentDidMount: function () {
-        document.onkeydown = event => {
+        registerShortcutHandler(code => {
             var page = this.props;
-            var code = keyMapping[event.keyCode];
             switch (code) {
                 case "home":
                     openPage(0);
@@ -183,11 +226,16 @@ var Page = React.createClass({
                     var parent = appState.getParent(page.id);
                     if(parent) openPage(parent.id);
                     break;
+                case "find":
+                    var searchField = document.getElementById("SearchField");
+                    searchField.focus();
+                    return false;
+                    break;
                 default:
                     var child = page.children[code-1];
                     if(child) openPage(child.id);
             }
-        };
+        });
     },
     render: function () {
         var page = this.props;
@@ -206,15 +254,7 @@ var Page = React.createClass({
 
 var PrintPage = React.createClass({
     componentDidMount: function () {
-        document.onkeydown = event => {
-            var code = keyMapping[event.keyCode];
-            switch (code) {
-                case "escape":
-                    window.history.back();
-                    break;
-                default:
-            }
-        };
+        registerShortcutHandler(code => code == "escape" && window.history.back());
         window.print();
     },
     render: function () {
@@ -254,10 +294,9 @@ var EditingForm = React.createClass({
     },
     componentDidMount: function () {
         this.refs.title.getDOMNode().focus();
-        document.onkeydown = event => {
+        registerShortcutHandler(code => {
             var props = this.props;
             var id = props.pageID;
-            var code = keyMapping[event.keyCode];
             switch (code) {
                 case "escape":
                     var page = props.mode == "EDIT" ? appState.getPage(id) : appState.getParent(id);
@@ -272,7 +311,7 @@ var EditingForm = React.createClass({
                 default:
                     break;
             }
-        };
+        });
     },
     render: function () {
         var state = this.state;
