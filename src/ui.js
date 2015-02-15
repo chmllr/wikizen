@@ -124,7 +124,7 @@ var Search = React.createClass({
     },
     shortcutHandler: function (event) {
         var code = event.keyCode;
-        if ((event.metaKey || event.ctrlKey && !event.altKey) && code >= 49 && code < 58) {
+        if (event.altKey && code >= 49 && code < 58) {
             openPage(code - 48);
         }
     },

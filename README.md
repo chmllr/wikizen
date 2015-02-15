@@ -29,7 +29,7 @@ Shortcut                    | Action
 `0`                         | Go to the root page
 `Left Arrow`                | Go to the parent page
 `f`                         | Set focus to search field
-`Ctrl / Cmd` + `1` - `9`    | Open `n`th search result
+`Alt` + `1` - `9`    | Open `n`th search result
 `Esc`                       | Close editing mask or print page
 `Ctrl / Cmd + s`            | Save
 
