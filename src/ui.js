@@ -46,15 +46,13 @@ var keyMapping = {
     57: 9
 };
 
-var registerShortcutHandler =
-        handler => document.onkeydown =
-                event => {
-                    if (event.target.id != "SearchField") {
-                        var result = handler(keyMapping[event.keyCode]) != false;
-                        if (!result) event.preventDefault();
-                        return result;
-                    }
-                };
+var registerShortcutHandler = handler => document.onkeydown = event => {
+    if (event.target.id != "SearchField") {
+        var result = handler(keyMapping[event.keyCode]) != false;
+        if (!result) event.preventDefault();
+        return result;
+    }
+};
 
 var Link = React.createClass({
     render: function () {
@@ -124,8 +122,9 @@ var Search = React.createClass({
     },
     shortcutHandler: function (event) {
         var code = event.keyCode;
-        if (event.altKey && code >= 49 && code < 58) {
-            openPage(code - 48);
+        if (event.altKey && !(event.metaKey || event.ctrlKey) && code >= 49 && code < 58) {
+            event.preventDefault();
+            openPage(this.state.results[code - 49].id);
         }
     },
     render: function () {
@@ -227,9 +226,11 @@ var Page = React.createClass({
                     if(parent) openPage(parent.id);
                     break;
                 case "find":
-                    var searchField = document.getElementById("SearchField");
-                    searchField.focus();
-                    return false;
+                    if(!event.metaKey && !event.ctrlKey) {
+                        var searchField = document.getElementById("SearchField");
+                        searchField.focus();
+                        return false;
+                    }
                     break;
                 default:
                     var child = page.children[code-1];
