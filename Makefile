@@ -22,7 +22,7 @@ pub:
 	git push
 	make
 	mkdir app
-	cp -rf Roadmap.md VERSION README.md Demo.md index.html wikizen.js style.css app/
+	cp -rf LANDING.md VERSION README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
 	git pull
 	mv app/* .
