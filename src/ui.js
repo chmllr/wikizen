@@ -1,3 +1,5 @@
+"use strict";
+
 var React = require('react');
 var marked = require('marked');
 var utils = require('./utils');
@@ -319,17 +321,17 @@ var EditingForm = React.createClass({
         return <div className="EditingForm">
             <input className="TitleInput" ref="title" type="text" placeholder="Title" value={state.title}
                 onChange={event => this.handleChange("title", event.target.value)}/>
-            <textarea className="BodyInput" ref="body" value={state.body}
+            <textarea id="BodyInput" ref="body" value={state.body}
                 onChange={event => this.handleChange("body", event.target.value)}></textarea>
-            <main className="Scrollable">
-                <article className="Main" dangerouslySetInnerHTML={{__html: marked(state.body || "")}}></article>
-            </main>
             <div className="ButtonBar">
                 <button onClick={() => window.history.back()}>Cancel</button>
                 <button onClick={this.applyChanges}>
                 {this.props.mode == "EDIT" ? "Save Page" : "Create New Page"}
                 </button>
             </div>
+            <main id="Preview" className="Scrollable">
+                <article className="Main" dangerouslySetInnerHTML={{__html: marked(state.body || "")}}></article>
+            </main>
         </div>
     }
 });
@@ -355,7 +357,7 @@ var LandingPage = React.createClass({
                 </a>
             </header>
             <main>
-                <article dangerouslySetInnerHTML={{__html: marked(utils.getFile("Roadmap.md"))}} />
+                <article dangerouslySetInnerHTML={{__html: marked(utils.getFile("LANDING.md"))}} />
             </main>
         </div>;
     }
