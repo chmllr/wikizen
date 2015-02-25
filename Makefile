@@ -21,6 +21,7 @@ deps:
 pub:
 	git push
 	make
+	rm -rf app
 	mkdir app
 	cp -rf LANDING.md VERSION README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
