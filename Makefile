@@ -7,6 +7,9 @@ dev:
 	browserify -t [ reactify --es6 --target es5 ] src/app.js > wikizen.js
 	lessc -x style.less > style.css
 
+server:
+	http-server
+
 tests:
 	jsx --harmony src/ test/builds/
 	nodeunit
@@ -17,6 +20,7 @@ deps:
 	npm install react
 	npm install marked
 	npm install nodeunit
+	npm install -g http-server
 
 pub:
 	git push
