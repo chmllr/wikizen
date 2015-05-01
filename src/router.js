@@ -1,3 +1,5 @@
+"use strict";
+
 function Router () {
     var handlers = {};
     this.addHandler = (pattern, handler) => {
