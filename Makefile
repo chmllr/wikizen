@@ -4,7 +4,7 @@ pub:
 	gulp build-css --prod
 	rm -rf app
 	mkdir app
-	cp -rf *.png LANDING.md VERSION README.md Demo.md index.html wikizen.js style.css app/
+	cp -rf LANDING.md VERSION README.md Demo.md index.html wikizen.js style.css app/
 	git co gh-pages
 	git pull
 	mv app/* .
