@@ -21,6 +21,8 @@ deps:
 	npm install marked
 	npm install nodeunit
 	npm install -g http-server
+	npm install -g browserify
+	npm install -g less
 
 pub:
 	git push
