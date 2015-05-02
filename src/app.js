@@ -5,8 +5,9 @@ var Router = require('./router');
 var UI = require('./ui');
 
 if (window.navigator.standalone) {
-    document.body.style.paddingTop = "25px";
-    document.body.style.height = (window.innerHeight - "25") + "px";
+    var statusBarHeight = 25;
+    document.body.style.paddingTop = statusBarHeight + "px";
+    document.body.style.height = (window.innerHeight - statusBarHeight) + "px";
 }
 
 var wikiZenURL = location.protocol + "//" + location.host + location.pathname;
