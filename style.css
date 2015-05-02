@@ -1,1 +1,108 @@
-body,html{background:#456;color:#ebeef1;height:100%;padding:0;margin:0}.FlexContainer{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column}.FlexContainerReverse{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}.FlexContainerHorizontal{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}.StretchedItem{flex-grow:1;-webkit-flex-grow:1}.SolidItem{flex-shrink:0;-webkit-flex-shrink:0}.FirstLevelContainer{box-sizing:border-box;min-height:100%}.EditingForm{box-sizing:border-box;min-height:100%;height:100% !important;display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column}.monospace{font-family:Menlo,Courier,monospace}.code{background:#ebeef1;font-size:87%;font-family:Menlo,Courier,monospace}code{background:#ebeef1;font-size:87%;font-family:Menlo,Courier,monospace}pre{background:#ebeef1;font-size:87%;font-family:Menlo,Courier,monospace;padding:1em;border-radius:3px;display:block}@media (max-width:799px){.FlippingFlexBox{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}}@media (min-width:800px){.FlippingFlexBox{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}}.ButtonBar{flex-shrink:0;-webkit-flex-shrink:0}@media (max-width:799px){.ButtonBar{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}}@media (min-width:800px){.ButtonBar{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}}.ButtonBar button{flex-grow:1;-webkit-flex-grow:1}main{background:white;color:black;padding-top:0 !important}@media (max-width:799px){main{padding:1em}}@media (min-width:800px){main{padding:3em}}nav{flex-shrink:0;-webkit-flex-shrink:0;font-family:Menlo,Courier,monospace;font-size:80%;padding:2em;padding-left:0}.helvetica{font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%}#Logo{color:#ebeef1;font-family:'Noticia Text','PT Serif',Georgia,serif;font-size:220%;text-align:center}.Page{box-sizing:border-box;min-height:100%}@media (max-width:799px){.Page{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}}@media (min-width:800px){.Page{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}}.Page main{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;flex:4 0;-webkit-flex:4 0}.Page aside{flex:1 0;-webkit-flex:1 0;display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;padding:1em;font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%;font-size:90%}.Page aside #Logo{cursor:pointer}.Page aside button{margin-top:1em}.Page aside .Menu{margin-top:0;padding-top:.5em}.Page aside ol{padding-left:0;list-style-position:inside}.Page aside li{padding-bottom:.5em;padding-top:.5em}.Page aside .separator{height:1.25em}.Page aside .filler{flex-grow:1;-webkit-flex-grow:1}.Page aside a,.Page aside a:visited{color:#9eaebe}.Page aside footer{font-size:90%}article{font-family:'PT Serif',Georgia,serif;font-size:1.1em}input,textarea,button{outline:none;padding:1em}input.TitleInput{font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%;padding-top:.5em;padding-bottom:.5em}#BodyInput{font-family:Menlo,Courier,monospace;min-height:40%;font-size:1em}.Scrollable{overflow:auto;flex-grow:1;-webkit-flex-grow:1}@media (max-width:799px){.Scrollable{display:none}}a,a:visited{text-decoration:none;border-bottom:1px dotted;color:#586e85}a:hover{border:none}h1,h2,h3,h4,h5,h6{font-family:'Noticia Text','PT Serif',Georgia,serif;font-weight:bold;color:#456}h1{font-size:1.8em;border-bottom:1px solid #ebeef1;border-top:1px solid #ebeef1;padding-top:.5em;padding-bottom:.5em;margin-top:0}h2{font-size:1.5em}h3{font-size:1.3em}h4{font-size:1.1em}h5{font-size:1em}h6{font-size:.9em}button{font-family:"Helvetica Neue",Helvetica,sans-serif;background:#586e85;border:none;color:#ebeef1;font-size:100%}button:disabled,button:disabled:hover{opacity:.4;background:#586e85}button:hover{background:#52677b}button:active{background:#4c5f72}ul{list-style-type:square}hr{height:1px;border:none;background:#ebeef1}.Export{box-sizing:border-box;min-height:100%;width:100%;font-family:Menlo,Courier,monospace}.CenteredFlexBox{align-items:center;-webkit-align-items:center;justify-content:center;-webkit-justify-content:center}.CenteredBox{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;box-sizing:border-box;min-height:100%;font-family:Menlo,Courier,monospace;align-items:center;-webkit-align-items:center;justify-content:center;-webkit-justify-content:center}table{width:100%;font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%}table th{text-align:left;border-bottom:1px solid #ebeef1}#LandingPage{color:#ebeef1;box-sizing:border-box;min-height:100%;display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column}@media (max-width:799px){#LandingPage #Logo{font-size:270%}}@media (min-width:800px){#LandingPage #Logo{font-size:350%}}#LandingPage .Lead{padding:1em;padding-bottom:1.5em;font-family:"Helvetica Neue",serif;font-weight:100}@media (max-width:799px){#LandingPage .Lead{font-size:1.5em;text-align:center}}@media (min-width:800px){#LandingPage .Lead{font-size:2em}}#LandingPage button{width:15em}#LandingPage button.prime{background:#219161;color:#ebeef1}#LandingPage button.prime:hover{background:#249d69}#LandingPage header{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;box-sizing:border-box;min-height:100%;font-family:Menlo,Courier,monospace;align-items:center;-webkit-align-items:center;justify-content:center;-webkit-justify-content:center;margin-top:5em;margin-bottom:4em}#LandingPage main{background:#ebeef1;flex-grow:1;-webkit-flex-grow:1}#LandingPage main article{font-weight:200;font-size:120% !important;font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%}@media (max-width:799px){#LandingPage main article{padding:3%}}@media (min-width:800px){#LandingPage main article{padding:16%;padding-top:5%}}#LandingPage main #SubscriptionForm{text-align:center}#LandingPage main #SubscriptionForm input{padding:.3em;font-size:80%}#LandingPage main #SubscriptionForm input[type="text"]{width:40%}#LandingPage main #SubscriptionForm input[type="submit"]{background:#456;color:#ebeef1;font-family:Menlo,Courier,monospace;border:none}.Warning{font-size:80%;text-align:center;padding:.5em;background:orange;color:black;font-family:Menlo,Courier,monospace;margin-bottom:2em}.Warning h3{color:black;margin:0}.Warning button{background:black;font-family:Menlo,Courier,monospace}.VersionLabel{opacity:.2}.ExportPage{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;box-sizing:border-box;min-height:100%}.ExportPage textarea{flex-grow:1;-webkit-flex-grow:1}.Search #SearchField{display:block;padding:.5em;box-sizing:border-box;width:100%;margin-bottom:1em;margin-top:1em}
+.code,code,pre{font-size:87%}
+.code,.monospace,code,nav,pre{font-family:Menlo,Courier,monospace}
+.EditingForm,.FirstLevelContainer,.Page{min-height:100%}
+.code,code,hr,pre{background:#ebeef1}
+.Export,table{width:100%}
+a:hover,button,hr{border:none}
+#LandingPage,#LandingPage header,.CenteredBox,.EditingForm,.Export,.ExportPage,.FirstLevelContainer,.Page,.Search #SearchField{box-sizing:border-box}
+body,html{background:#456;color:#ebeef1;height:100%;padding:0;margin:0}
+.FlexContainer{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column}
+.FlexContainerReverse{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}
+.FlexContainerHorizontal{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}
+.StretchedItem{flex-grow:1;-webkit-flex-grow:1}
+.SolidItem{flex-shrink:0;-webkit-flex-shrink:0}
+.EditingForm{height:100%!important;display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column}
+pre{padding:1em;border-radius:3px;display:block}
+@media (max-width:799px){.FlippingFlexBox{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}
+}
+@media (min-width:800px){.FlippingFlexBox{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}
+}
+.ButtonBar{flex-shrink:0;-webkit-flex-shrink:0}
+@media (max-width:799px){.ButtonBar{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}
+}
+@media (min-width:800px){.ButtonBar{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}
+}
+.ButtonBar button{flex-grow:1;-webkit-flex-grow:1}
+main{background:#fff;color:#000;padding-top:0!important}
+nav{flex-shrink:0;-webkit-flex-shrink:0;font-size:80%;padding:2em 2em 2em 0}
+.helvetica{font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%}
+#Logo{color:#ebeef1;font-family:'Noticia Text','PT Serif',Georgia,serif;font-size:220%;text-align:center}
+@media (max-width:799px){main{padding:1em}
+.Page{display:flex;display:-webkit-flex;flex-direction:column-reverse;-webkit-flex-direction:column-reverse}
+}
+@media (min-width:800px){main{padding:3em}
+.Page{display:flex;display:-webkit-flex;flex-direction:row;-webkit-flex-direction:row}
+}
+.Page main{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;flex:4 0;-webkit-flex:4 0}
+.Page aside{flex:1 0;-webkit-flex:1 0;display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;padding:1em;font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%;font-size:90%}
+.Page aside li,h1,input.TitleInput{padding-bottom:.5em}
+.Page aside #Logo{cursor:pointer}
+.Page aside button{margin-top:1em}
+.Page aside .Menu{margin-top:0;padding-top:.5em}
+.Page aside ol{padding-left:0;list-style-position:inside}
+.Page aside li{padding-top:.5em}
+.Page aside .separator{height:1.25em}
+.Page aside .filler{flex-grow:1;-webkit-flex-grow:1}
+.Page aside a,.Page aside a:visited{color:#9eaebe}
+.Page aside footer{font-size:90%}
+article{font-family:'PT Serif',Georgia,serif;font-size:1.1em}
+button,input,textarea{outline:0;padding:1em}
+input.TitleInput{font-family:"Helvetica Neue",Helvetica,sans-serif;font-size:100%;padding-top:.5em}
+#BodyInput,h5{font-size:1em}
+#BodyInput{font-family:Menlo,Courier,monospace;min-height:40%}
+button,table{font-size:100%}
+#LandingPage,.CenteredBox,.Export,.ExportPage{min-height:100%}
+.Scrollable{overflow:auto;flex-grow:1;-webkit-flex-grow:1}
+@media (max-width:799px){.Scrollable{display:none}
+}
+a,a:visited{text-decoration:none;border-bottom:1px dotted;color:#586e85}
+h1,table th{border-bottom:1px solid #ebeef1}
+h1,h2,h3,h4,h5,h6{font-family:'Noticia Text','PT Serif',Georgia,serif;font-weight:700;color:#456}
+h1{font-size:1.8em;border-top:1px solid #ebeef1;padding-top:.5em;margin-top:0}
+h2{font-size:1.5em}
+h3{font-size:1.3em}
+h4{font-size:1.1em}
+h6{font-size:.9em}
+button{font-family:"Helvetica Neue",Helvetica,sans-serif;background:#586e85;color:#ebeef1}
+.CenteredBox,.Export{font-family:Menlo,Courier,monospace}
+button:disabled,button:disabled:hover{opacity:.4;background:#586e85}
+button:hover{background:#52677b}
+button:active{background:#4c5f72}
+ul{list-style-type:square}
+hr{height:1px}
+.CenteredFlexBox{align-items:center;-webkit-align-items:center;justify-content:center;-webkit-justify-content:center}
+.CenteredBox{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;align-items:center;-webkit-align-items:center;justify-content:center;-webkit-justify-content:center}
+table{font-family:"Helvetica Neue",Helvetica,sans-serif}
+table th{text-align:left}
+#LandingPage main #SubscriptionForm,.Warning{text-align:center}
+#LandingPage{color:#ebeef1;display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column}
+@media (max-width:799px){#LandingPage #Logo{font-size:270%}
+}
+@media (min-width:800px){#LandingPage #Logo{font-size:350%}
+}
+#LandingPage .Lead{padding:1em 1em 1.5em;font-family:"Helvetica Neue",serif;font-weight:100}
+@media (max-width:799px){#LandingPage .Lead{font-size:1.5em;text-align:center}
+}
+@media (min-width:800px){#LandingPage .Lead{font-size:2em}
+}
+#LandingPage button{width:15em}
+#LandingPage button.prime{background:#219161;color:#ebeef1}
+#LandingPage button.prime:hover{background:#249d69}
+#LandingPage header{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column;min-height:100%;font-family:Menlo,Courier,monospace;align-items:center;-webkit-align-items:center;justify-content:center;-webkit-justify-content:center;margin-top:5em;margin-bottom:4em}
+#LandingPage main{background:#ebeef1;flex-grow:1;-webkit-flex-grow:1}
+#LandingPage main article{font-weight:200;font-size:120%!important;font-family:"Helvetica Neue",Helvetica,sans-serif}
+.Warning,.Warning button{font-family:Menlo,Courier,monospace}
+@media (max-width:799px){#LandingPage main article{padding:3%}
+}
+@media (min-width:800px){#LandingPage main article{padding:5% 16% 16%}
+}
+#LandingPage main #SubscriptionForm input{padding:.3em;font-size:80%}
+#LandingPage main #SubscriptionForm input[type=text]{width:40%}
+#LandingPage main #SubscriptionForm input[type=submit]{background:#456;color:#ebeef1;font-family:Menlo,Courier,monospace;border:none}
+.Warning{font-size:80%;padding:.5em;background:orange;color:#000;margin-bottom:2em}
+.Warning h3{color:#000;margin:0}
+.Warning button{background:#000}
+.VersionLabel{opacity:.2}
+.ExportPage{display:flex;display:-webkit-flex;flex-direction:column;-webkit-flex-direction:column}
+.ExportPage textarea{flex-grow:1;-webkit-flex-grow:1}
+.Search #SearchField{display:block;padding:.5em;width:100%;margin-bottom:1em;margin-top:1em}
