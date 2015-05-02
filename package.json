@@ -7,18 +7,28 @@
     "test": "test"
   },
   "dependencies": {
-    "browserify": "^10.0.0",
     "diff-match-patch": "^1.0.0",
-    "http-server": "^0.8.0",
-    "jest-cli": "^0.2.1",
-    "less": "^2.5.0",
     "marked": "^0.3.3",
-    "nodeunit": "^0.9.1",
-    "react": "^0.13.2",
-    "react-tools": "^0.13.2",
-    "reactify": "^1.1.0"
+    "react": "^0.13.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "browserify": "^10.0.0",
+    "gulp": "^3.8.11",
+    "gulp-if": "^1.2.5",
+    "gulp-less": "^3.0.3",
+    "gulp-minify-css": "^1.1.0",
+    "gulp-util": "^3.0.4",
+    "http-server": "^0.8.0",
+    "less": "^2.5.0",
+    "lodash.assign": "^3.1.0",
+    "nodeunit": "^0.9.1",
+    "react-tools": "^0.13.2",
+    "reactify": "^1.1.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.1",
+    "yargs": "^3.8.0"
+  },
   "scripts": {
     "test": "jsx --harmony src/ test/builds/ && nodeunit",
     "server": "http-server"
