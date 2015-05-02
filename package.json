@@ -1,0 +1,40 @@
+{
+  "name": "WikiZen",
+  "version": "1.0.0",
+  "description": "Minimalistic Markdown-based wiki",
+  "main": "wikizen.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "browserify": "^10.0.0",
+    "diff-match-patch": "^1.0.0",
+    "http-server": "^0.8.0",
+    "jest-cli": "^0.2.1",
+    "less": "^2.5.0",
+    "marked": "^0.3.3",
+    "nodeunit": "^0.9.1",
+    "react": "^0.13.2",
+    "react-tools": "^0.13.2",
+    "reactify": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jsx --harmony src/ test/builds/ && nodeunit",
+    "server": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chmllr/wikizen"
+  },
+  "keywords": [
+    "wiki",
+    "markdown"
+  ],
+  "author": "Christian Müller <notehub@icloud.com> (http://github.com/chmllr)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chmllr/wikizen/issues"
+  },
+  "homepage": "https://github.com/chmllr/wikizen"
+}
