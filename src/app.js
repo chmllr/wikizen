@@ -4,6 +4,9 @@ var State = require('./state');
 var Router = require('./router');
 var UI = require('./ui');
 
+if (window.navigator.standalone)
+    document.body.style.paddingTop = "25px";
+
 var wikiZenURL = location.protocol + "//" + location.host + location.pathname;
 self.onhashchange = Router.dispatcher;
 var appState;
