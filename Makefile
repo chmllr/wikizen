@@ -1,15 +1,7 @@
-all:
-	NODE_ENV=production make dev
-	mv wikizen.js /tmp
-	cat /tmp/wikizen.js | closure-compiler -W QUIET -O SIMPLE > wikizen.js
-
-dev:
-	browserify -t [ reactify --es6 --target es5 ] src/app.js > wikizen.js
-	lessc -x style.less > style.css
-
 pub:
 	git push
-	make
+	gulp build-js --prod
+	gulp build-css --prod
 	rm -rf app
 	mkdir app
 	cp -rf *.png LANDING.md VERSION README.md Demo.md index.html wikizen.js style.css app/
