@@ -1,6 +1,6 @@
 pub:
 	git push
-	gulp build-js --prod
+	NODE_ENV=production gulp build-js --prod
 	gulp build-css --prod
 	rm -rf app
 	mkdir app
