@@ -343,7 +343,7 @@ var LandingPage = React.createClass({
                 {Logo}
                 <p className="Lead">Simple Markdown Wiki in your Dropbox.</p>
                 <div className="ButtonBar">
-                    <button onClick={() => signIn()}>Connect To Dropbox</button>
+                    <button onClick={() => alert("Sorry, this functionality is deprecated due to changes in Dropbox API!")}>Connect To Dropbox</button>
                 &nbsp;
                 &nbsp;
                 &nbsp;

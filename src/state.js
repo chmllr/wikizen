@@ -5,11 +5,10 @@ var utils = require('./utils');
 
 var stores = {
     local: require('./persistence/local'),
-    dropbox: require('./persistence/dropbox')
 };
 
 function State (provider) {
-    var store = stores[provider] || stores.dropbox, wiki, state;
+    var store = stores[provider], wiki, state;
     var update = () => {
         state = engine.assembleRuntimeWiki(wiki);
         store.save(wiki);

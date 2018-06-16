@@ -1,5 +1,7 @@
 # README
 
+## Update 2018-06: Project deprecated; demo works in memory only!
+
 > "Simplicity is prerequisite for reliability."
 
 > — _Dijkstra_
